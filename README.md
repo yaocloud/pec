@@ -1,4 +1,4 @@
-# Noah
+# Pec
 
 OpenStackにおいて複数サーバの起動や、
 DHCPサーバがない状況でのIP自動採番を実現します。
@@ -6,16 +6,16 @@ DHCPサーバがない状況でのIP自動採番を実現します。
 ## インストール方法
 
 
-    $ gem install noah
+    $ gem install pec
 
 ## 使用方法
 ### コマンド
-実行ディレクトリに存在するNoah.yamlに基づきホストを作成します。
+実行ディレクトリに存在するPec.yamlに基づきホストを作成します。
 ホスト名が指定された場合はそのホストのみ作成します。
 
-    $ noah up <hostname>
+    $ pec up <hostname>
 
-    $ noah destroy <hostname>
+    $ pec destroy <hostname>
 
 ### 設定ファイル
 ```

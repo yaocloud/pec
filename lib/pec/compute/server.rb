@@ -1,5 +1,5 @@
 require 'json'
-module Noah
+module Pec
   class Compute
     class Server
       include Query

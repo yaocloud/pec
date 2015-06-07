@@ -1,11 +1,11 @@
-module Noah
+module Pec
   class VmDirector
     def initialize
-        @subnet = Noah::Network::Subnet.new
-        @flavor = Noah::Compute::Flavor.new
-        @image = Noah::Compute::Image.new
-        @security_group = Noah::Compute::Security_Group.new
-        @compute = Noah::Compute::Server.new
+        @subnet = Pec::Network::Subnet.new
+        @flavor = Pec::Compute::Flavor.new
+        @image = Pec::Compute::Image.new
+        @security_group = Pec::Compute::Security_Group.new
+        @compute = Pec::Compute::Server.new
     end
 
     def make(config)
@@ -14,7 +14,7 @@ module Noah
       image_ref = get_image(config.image)
       return false unless flavor_ref && image_ref
       options = {
-        "user_data" => Noah::Configure::UserData.make(config, ports),
+        "user_data" => Pec::Configure::UserData.make(config, ports),
         "security_groups" => config.security_group
       }
 
@@ -27,7 +27,7 @@ module Noah
         _subnet = get_subnet(ip)
         return false unless _subnet
 
-        _port = Noah::Network::Port.new(ether.name, ip.to_addr, _subnet)
+        _port = Pec::Network::Port.new(ether.name, ip.to_addr, _subnet)
 
         res = case
         when _port.exists? && !_port.used?

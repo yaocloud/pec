@@ -1,4 +1,4 @@
-module Noah
+module Pec
   class Network
     class Subnet
       include Query

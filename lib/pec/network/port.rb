@@ -1,5 +1,5 @@
 require 'json'
-module Noah
+module Pec
   class Network
     class Port
       attr_reader :name, :subnet

@@ -1,6 +1,6 @@
 require 'active_support/core_ext/string/inflections'
 require 'fog'
-module Noah
+module Pec
   module Query
     @@_list = Hash.new
     def get_adapter

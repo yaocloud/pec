@@ -1,5 +1,5 @@
 require 'base64'
-module Noah
+module Pec
   class Configure
     class UserData
       class << self

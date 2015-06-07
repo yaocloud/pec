@@ -1,4 +1,4 @@
-module Noah
+module Pec
   class Compute
     class Security_Group
       include Query

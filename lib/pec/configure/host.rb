@@ -1,4 +1,4 @@
-module Noah
+module Pec
   class Configure
     class Host
       attr_reader :name, :image, :flavor,:security_group, :user_data, :networks
@@ -19,7 +19,7 @@ module Noah
         def load(config)
           host = self.new(config) if check_require_key(config)
           config[1]["networks"].each do |net|
-            net_config = Noah::Configure::Ethernet.load(config[0], net)
+            net_config = Pec::Configure::Ethernet.load(config[0], net)
             return nil unless net_config
             host.append_network(net_config)
           end if host && config[1]["networks"]

@@ -1,4 +1,4 @@
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in noah.gemspec
+# Specify your gem's dependencies in pec.gemspec
 gemspec

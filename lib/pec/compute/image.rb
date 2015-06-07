@@ -1,6 +1,6 @@
-module Noah
+module Pec
   class Compute
-    class Flavor
+    class Image
       include Query
     end
   end

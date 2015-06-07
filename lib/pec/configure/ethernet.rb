@@ -1,4 +1,4 @@
-module Noah
+module Pec
   class Configure
     class Ethernet
       attr_reader :name, :bootproto, :ip_address, :options
