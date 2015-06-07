@@ -68,7 +68,7 @@ module Noah
       end
 
       def replace(ip)
-        delete(@config["id"])
+        delete(id)
         @@_list['port'] = nil
         create(ip)
       end

@@ -1,39 +1,48 @@
 # Noah
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/noah`. To experiment with that code, run `bin/console` for an interactive prompt.
+OpenStackにおいて複数サーバの起動や、
+DHCPサーバがない状況でのIP自動採番を実現します。
 
-TODO: Delete this and the text above, and describe your gem
+## インストール方法
 
-## Installation
-
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'noah'
-```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
 
     $ gem install noah
 
-## Usage
+## 使用方法
+### コマンド
+実行ディレクトリに存在するNoah.yamlに基づきホストを作成します。
+ホスト名が指定された場合はそのホストのみ作成します。
 
-TODO: Write usage instructions here
+    $ noah up <hostname>
 
-## Development
+    $ noah destroy <hostname>
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `bin/console` for an interactive prompt that will allow you to experiment. Run `bundle exec noah` to use the code located in this directory, ignoring other installed copies of this gem.
+### 設定ファイル
+```
+pyama-test001:
+  image: centos-7.1_chef-12.3_puppet-3.7
+  flavor: m1.small
+  networks:
+    eth0:
+      bootproto: static
+      ip_address: 157.7.190.128/26
+      gateway: 157.7.190.129
+      dns1: 8.8.8.8
+      dns2: 8.8.8.8
+    eth1:
+      bootproto: static
+      ip_address: 10.51.113.0/24
+      dns1: 8.8.8.8
+      dns2: 8.8.8.8
+  user_data:
+    hostname: www-19
+    fqdn: www-19.muumuu-domain.com
+    repo_releasever: 7.1.1503
+```
+`image`,`flavor`は必須項目です。
+`networks`について指定する場合は、`bootproto`,`ip_address`が必須です。`ip_address`は`xxx.xxx.xxx.xxx/yy`の方式を想定しており、ネットワークアドレスが指定された場合、そのサブネットで未使用のアドレスを自動で採番します。
+`user_data`については`nova api`にネットワーク設定を加えて引き渡すため、cloud-init記法に準拠します。
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release` to create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
-## Contributing
-
-1. Fork it ( https://github.com/[my-github-username]/noah/fork )
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
+## Author
+* pyama86
