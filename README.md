@@ -30,7 +30,7 @@ default:
 ```
 
 
-`~/Pec.yaml`
+`実行ディレクトリ/Pec.yaml`にVMの設定を実施します。
 ```
 pyama-test001:
   image: centos-7.1_chef-12.3_puppet-3.7
@@ -61,6 +61,7 @@ pyama-test002:
       gateway: 157.7.190.129
       dns1: 8.8.8.8
       dns2: 8.8.8.8
+      path: /etc/sysconfig/network-scripts/ifcfg-bond0
     eth1:
       bootproto: static
       ip_address: 10.51.113.0/24
@@ -71,8 +72,11 @@ pyama-test002:
     fqdn: pyama-test002.ikemen.com
     repo_releasever: 7.1.1503
 ```
-`image`,`flavor`は必須項目です。
+`VM名`,`image`,`flavor`は必須項目です。
 `networks`について指定する場合は、`bootproto`,`ip_address`が必須です。`ip_address`は`xxx.xxx.xxx.xxx/yy`の方式を想定しており、ネットワークアドレスが指定された場合、そのサブネットで未使用のアドレスを自動で採番します。
+またnetworksが指定された場合は自動でVM内に`/etc/sysconfig/network-script/ifcfg-ethXXX`を作成します。
+ファイルの保存パスに指定が必要な場合は`path`を指定してください。
+`bootproto`,`ip_address`,`path`以外の値が設定されている場合は、`ifcfg-ethXXX`にそのままの値が`KEY=value`形式で出力されます。
 `user_data`については`nova api`にネットワーク設定を加えて引き渡すため、cloud-init記法に準拠します。
 
 
