@@ -16,13 +16,13 @@ module Noah
             port_content["device"] = ether.name unless ether.options.key?('device')
             port_content["type"] = 'Ethernet' unless ether.options.key?('type')
             port_content["onboot"] = "yes" unless ether.options.key?('onboot')
+
             _path = "/etc/sysconfig/network-scripts/ifcfg-#{ether.name}" unless ether.options.key?('path')
 
             port = ports.find {|p| p.name == ether.name}
 
             if port
               port_content["netmask"] = port.netmask
-              port_content["gateway"] = port.subnet["gateway_ip"]
               port_content["hwaddr"] = port.mac_address
               port_content["ipaddr"] = port.ip_address
             end
