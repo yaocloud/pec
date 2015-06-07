@@ -38,13 +38,13 @@ pyama-test001:
   networks:
     eth0:
       bootproto: static
-      ip_address: 157.7.190.128/26
-      gateway: 157.7.190.129
+      ip_address: 10.1.1.1/24
+      gateway: 10.1.1.254
       dns1: 8.8.8.8
       dns2: 8.8.8.8
     eth1:
       bootproto: static
-      ip_address: 10.51.113.0/24
+      ip_address: 20.2.2.0/24
       dns1: 8.8.8.8
       dns2: 8.8.8.8
   user_data:
@@ -57,16 +57,13 @@ pyama-test002:
   networks:
     eth0:
       bootproto: static
-      ip_address: 157.7.190.128/26
-      gateway: 157.7.190.129
+      ip_address: 10.0.0.64/26
+      gateway: 10.0.0.127
       dns1: 8.8.8.8
       dns2: 8.8.8.8
       path: /etc/sysconfig/network-scripts/ifcfg-bond0
     eth1:
-      bootproto: static
-      ip_address: 10.51.113.0/24
-      dns1: 8.8.8.8
-      dns2: 8.8.8.8
+      bootproto: dhcp
   user_data:
     hostname: pyama-test002
     fqdn: pyama-test002.ikemen.com
