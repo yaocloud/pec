@@ -24,7 +24,9 @@ module Pec
     end
 
     def get_ref(name)
+      class_name = self.class.name.demodulize.downcase
       response = fetch(name)
+      raise(Pec::Errors::Query, "#{class_name}:#{name} ref is not fond!") unless response
       response["links"][0]["href"]
     end
   end

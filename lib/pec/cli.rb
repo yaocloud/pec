@@ -26,9 +26,18 @@ module Pec
       director = Pec::VmDirector.new
       config.each do |host|
         next if !host_name.nil? && host.name != host_name
-        puts "can't create server:#{host.name}" unless director.make(host)
+
+        begin
+          director.make(host)
+        rescue Pec::Errors::Error => e
+          puts e
+          puts "can't create server:#{host.name}"
+        rescue Excon::Errors::Error => e
+          JSON.parse(e.response[:body]).each { |e,m| puts "#{e}:#{m["message"]}" }
+        end
       end if config
     end
+
     option :force , type: :boolean, aliases: "-f"
     desc "destroy", "delete vm"
     def destroy(name = nil)
@@ -37,7 +46,14 @@ module Pec
 
       config.each do |host|
         next if !name.nil? && host.name != name
-        Pec::Compute::Server.new.destroy!(host.name) if yes?("#{host.name}: Are you sure you want to destroy the '#{host.name}' VM? [y/N]") || options["force"]
+        begin
+          Pec::Compute::Server.new.destroy!(host.name) if yes?("#{host.name}: Are you sure you want to destroy the '#{host.name}' VM? [y/N]") || options["force"]
+        rescue Pec::Errors::Error => e
+          puts e
+          puts "can't create server:#{host.name}"
+        rescue Excon::Errors::Error => e
+          JSON.parse(e.response[:body]).each { |e,m| puts "#{e}:#{m["message"]}" }
+        end
       end if config
     end
   end

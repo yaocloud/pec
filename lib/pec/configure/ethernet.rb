@@ -18,23 +18,19 @@ module Pec
 
         def check_require_key(name, config)
           err = %w(bootproto).find {|k| !config[1].key?(k)}
-          return true if err.nil?
-          puts "skip! #{name}: #{err} is required!"
-          false
+          raise(Pec::Errors::Ethernet, "skip! #{name}: #{err} is required!") unless err.nil?
+          true
         end
 
         def check_network_key(name, config)
           net = config[1]
           case
           when (net["bootproto"] == "static" && net["ip_address"].nil?)
-            puts "skip! #{name}: ip_address is required by bootproto static"
-            return false
+            raise(Pec::Errors::Ethernet, "skip! #{name}: ip_address is required by bootproto static")
           when (!net["bootproto"] == "static" && !net["bootproto"] == "dhcp")
-            puts "skip! #{name}: bootproto set the value dhcp or static"
-            return false
+            raise(Pec::Errors::Ethernet, "skip! #{name}: bootproto set the value dhcp or static")
           when (!net["bootproto"] == "static" && !net["bootproto"] == "dhcp")
-            puts "skip! #{name}: bootproto set the value dhcp or static"
-            return false
+            raise(Pec::Errors::Ethernet, "skip! #{name}: bootproto set the value dhcp or static")
           end
           true
         end

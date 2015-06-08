@@ -5,10 +5,7 @@ module Pec
       include Query
       def create(name, image_ref, flavor_ref, ports, options)
         networks = ports.map do |port|
-          if port.used?
-            puts "port-id:#{port.id} ip-addr:#{port.ip_address} in used"
-            return false
-          end
+          raise(Pec::Errors::Port, "port-id:#{port.id} ip-addr:#{port.ip_address} in used") if port.used?
           puts "#{name}: assingn ip #{port.ip_address}"
           { port_id: port.id }
         end if ports
@@ -22,10 +19,6 @@ module Pec
         end
 
         response.data[:body]["server"]["id"]
-
-        rescue Excon::Errors::Error => e
-          JSON.parse(e.response[:body]).each { |e,m| puts "#{e}:#{m["message"]}" }
-          false
       end
 
       def exists?(server_name)
@@ -34,20 +27,12 @@ module Pec
 
       def destroy!(server_name)
         server = fetch(server_name)
-        unless server
-          puts "server_name:#{server_name} is not fond!"
-          return
-        end
-
+        raise(Pec::Errors::Host, "server_name:#{server_name} is not fond!") unless server
         response = Fog::Compute[:openstack].delete_server(server["id"]) if server
 
         if response && response[:status] == 204
           puts "server_name:#{server_name} is deleted!"
         end
-
-        rescue Excon::Errors::Error => e
-          JSON.parse(e.response[:body]).each { |e,m| puts "#{e}:#{m["message"]}" }
-          false
       end
     end
   end

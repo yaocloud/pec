@@ -2,6 +2,7 @@ require 'fog'
 require 'ip'
 require "pec/version"
 require "pec/query"
+require "pec/errors"
 require "pec/vm_director"
 require "pec/configure"
 require "pec/configure/sample"

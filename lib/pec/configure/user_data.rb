@@ -14,11 +14,8 @@ module Pec
         def get_template(config)
           merge_template = {}
           config.templates.each do |template|
-            if FileTest.exist?("user_datas/#{template}")
-              merge_template.merge!(YAML.load_file("user_datas/#{template}").to_hash)
-            else
-              puts "template:#{temlate} is not fond!"
-            end
+            raise(Pec::Errors::UserData, "template:#{template} is not fond!") unless FileTest.exist?("user_datas/#{template}")
+            merge_template.merge!(YAML.load_file("user_datas/#{template}").to_hash)
           end if config.templates
           merge_template
         end
@@ -33,7 +30,7 @@ module Pec
             port_content["type"] = 'Ethernet' unless ether.options.key?('type')
             port_content["onboot"] = "yes" unless ether.options.key?('onboot')
 
-            _path = "/etc/sysconfig/network-scripts/ifcfg-#{ether.name}" unless ether.options.key?('path')
+            path = "/etc/sysconfig/network-scripts/ifcfg-#{ether.name}" unless ether.options.key?('path')
 
             port = ports.find {|p| p.name == ether.name}
 
@@ -48,7 +45,7 @@ module Pec
             {
               'content' => port_content.map {|k,v| "#{k.upcase}=#{v}"}.join("\n"),
               'owner' => "root:root",
-              'path' => _path,
+              'path' => path,
               'permissions' => "0644"
             }
           end

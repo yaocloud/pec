@@ -28,7 +28,7 @@ module Pec
         when !exists?
           create(ip)
         when used?
-          false
+          raise(Pec::Errors::Port, "ip:#{ip.to_addr} is used!")
         end
       end
 
@@ -89,18 +89,11 @@ module Pec
           @@use_ip_list << response.data[:body]["port"]["fixed_ips"][0]["ip_address"]
           response.data[:body]["port"]["id"]
         end
-
-        rescue Excon::Errors::Error => e
-          JSON.parse(e.response[:body]).each { |e,m| puts "#{e}:#{m["message"]}" }
-          false
       end
 
       def delete(ip)
         port = fetch(ip.to_addr)
         response =  Fog::Network[:openstack].delete_port(port["id"]) if port
-        rescue Excon::Errors::Error => e
-          JSON.parse(e.response[:body]).each { |e,m| puts "#{e}:#{m["message"]}" }
-          false
       end
 
       def replace(ip)
