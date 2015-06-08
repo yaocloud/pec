@@ -6,7 +6,8 @@ module Pec
     desc 'up', 'create vm by Pec.yaml'
     def up(host_name = nil)
       config = Pec::Configure.new
-      config.load("Pec.yaml")
+      filename = options[:filename] ? options[:filename] : "Pec.yaml"
+      config.load(filename)
       director = Pec::VmDirector.new
       config.each do |host|
         next if !host_name.nil? && host.name != host_name
