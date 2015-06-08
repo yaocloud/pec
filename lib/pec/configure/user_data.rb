@@ -12,7 +12,15 @@ module Pec
         end
 
         def get_template(config)
-          YAML.load_file("user_datas/#{config.template}").to_hash if config.template && FileTest.exist?("user_datas/#{config.template}")
+          merge_template = {}
+          config.templates.each do |template|
+            if FileTest.exist?("user_datas/#{template}")
+              merge_template.merge!(YAML.load_file("user_datas/#{template}").to_hash)
+            else
+              puts "template:#{temlate} is not fond!"
+            end
+          end if config.templates
+          merge_template
         end
 
         def make_port_content(config, ports)
