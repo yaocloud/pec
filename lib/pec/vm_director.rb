@@ -9,15 +9,20 @@ module Pec
     end
 
     def make(config)
+      if @compute.exists?(config.name)
+        puts "skip create server! name:#{config.name} is exists!"
+        return true
+      end
+
       ports = get_ports(config)
       flavor_ref = get_flavor(config.flavor)
       image_ref = get_image(config.image)
+
       return false unless flavor_ref && image_ref
+
       options = {
         "user_data" => Pec::Configure::UserData.make(config, ports),
-        "security_groups" => config.security_group
       }
-
       @compute.create(config.name, image_ref, flavor_ref, ports, options)
     end
 
@@ -25,20 +30,9 @@ module Pec
       config.networks.map do |ether|
         ip = IP.new(ether.ip_address)
         _subnet = get_subnet(ip)
-        return false unless _subnet
+        _port = Pec::Network::Port.new(ether.name, ip.to_addr, _subnet, get_security_group_id(config.security_group)) if _subnet
 
-        _port = Pec::Network::Port.new(ether.name, ip.to_addr, _subnet)
-
-        res = case
-        when _port.exists? && !_port.used?
-          _port.replace(ip)
-        when !_port.exists?
-          _port.create(ip)
-        when _port.used?
-          false
-        end
-
-        unless res
+        unless _port.assign!(ip)
           puts "ip addess:#{ip.to_addr} can't create port!"
           return false
         end
@@ -62,6 +56,13 @@ module Pec
       image_ref = @image.get_ref(name)
       puts "image:#{name} not fond!" if image_ref.nil?
       image_ref
+    end
+
+    def get_security_group_id(security_groups)
+      security_groups.map do |name|
+        sg = @security_group.fetch(name)
+        sg["id"] if sg
+      end if security_groups
     end
   end
 end

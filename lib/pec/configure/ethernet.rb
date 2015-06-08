@@ -4,7 +4,7 @@ module Pec
       attr_reader :name, :bootproto, :ip_address, :options
       def initialize(config)
         @name = config[0];
-        @bootprot = config[1]["bootproto"];
+        @bootproto = config[1]["bootproto"];
         @ip_address = config[1]["ip_address"];
         @options = config[1].select do |k,v|
           { k => v } if k != "bootproto" && k != "ip_address"
@@ -17,7 +17,7 @@ module Pec
         end
 
         def check_require_key(name, config)
-          err = %w(bootproto ip_address).find {|k| !config[1].key?(k)}
+          err = %w(bootproto).find {|k| !config[1].key?(k)}
           return true if err.nil?
           puts "skip! #{name}: #{err} is required!"
           false

@@ -4,17 +4,12 @@ module Pec
     class Server
       include Query
       def create(name, image_ref, flavor_ref, ports, options)
-        if exists?(name)
-          puts "skip create server! name:#{name} is exists!"
-          return true
-        end
-
         networks = ports.map do |port|
           if port.used?
             puts "port-id:#{port.id} ip-addr:#{port.ip_address} in used"
             return false
           end
-          { net_id: port.network_id, fixed_ip: port.ip_address, port_id: port.id }
+          { port_id: port.id }
         end if ports
 
         options.merge!({ 'nics' =>  networks })
@@ -22,8 +17,9 @@ module Pec
         if response[:status] == 202
           puts "success create for server_name:#{name}"
         end
-        true
-        rescue Excon::Errors::Conflict,Excon::Errors::BadRequest => e
+        response.data[:body]["server"]["id"]
+
+        rescue Excon::Errors::Error => e
           JSON.parse(e.response[:body]).each { |e,m| puts "#{e}:#{m["message"]}" }
           false
       end
@@ -43,6 +39,9 @@ module Pec
         if response && response[:status] == 204
           puts "server_name:#{server_name} is deleted!"
         end
+        rescue Excon::Errors::Error => e
+          JSON.parse(e.response[:body]).each { |e,m| puts "#{e}:#{m["message"]}" }
+          false
       end
     end
   end
