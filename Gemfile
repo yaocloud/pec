@@ -7,4 +7,8 @@ gem 'thor'
 gem 'ruby-ip'
 gem 'activesupport'
 gem "bundler"
-gem "rake"
+
+group :development, :test do
+  gem "rspec"
+  gem "rake"
+end

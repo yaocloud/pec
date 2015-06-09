@@ -2,6 +2,7 @@ require 'json'
 module Pec
   class Network
     class Port
+      @@use_ip_list = []
       attr_reader :name, :subnet
       include Query
       def initialize(name, ip_addr, subnet, security_groups)
@@ -27,7 +28,7 @@ module Pec
         when !exists?
           create(ip)
         when used?
-          false
+          raise(Pec::Errors::Port, "ip:#{ip.to_addr} is used!")
         end
       end
 
@@ -43,7 +44,8 @@ module Pec
         list.find do |p|
           p["fixed_ips"][0]["subnet_id"] == @subnet["id"] &&
           p["device_owner"].empty? &&
-          p["admin_state_up"]
+          p["admin_state_up"] &&
+          !@@use_ip_list.include?(p["fixed_ips"][0]["ip_address"])
         end
       end
 
@@ -82,20 +84,16 @@ module Pec
         end
         response = Fog::Network[:openstack].create_port(@subnet["network_id"], options)
 
-        @config = response.data[:body]["port"] if response
-        response.data[:body]["port"]["id"]
-        rescue Excon::Errors::Error => e
-          JSON.parse(e.response[:body]).each { |e,m| puts "#{e}:#{m["message"]}" }
-          false
+        if response
+          @config = response.data[:body]["port"] 
+          @@use_ip_list << response.data[:body]["port"]["fixed_ips"][0]["ip_address"]
+          response.data[:body]["port"]["id"]
+        end
       end
 
       def delete(ip)
         port = fetch(ip.to_addr)
         response =  Fog::Network[:openstack].delete_port(port["id"]) if port
-        @_list['ports'].delete(port)
-        rescue Excon::Errors::Error => e
-          JSON.parse(e.response[:body]).each { |e,m| puts "#{e}:#{m["message"]}" }
-          false
       end
 
       def replace(ip)

@@ -3,7 +3,9 @@ module Pec
     class Subnet
       include Query
       def fetch(cidr)
-        list.find {|p| p["cidr"] == cidr }
+        subnet = list.find {|p| p["cidr"] == cidr }
+        raise(Pec::Errors::Subnet, "cidr:#{cidr} is not fond!") unless subnet
+        subnet
       end
     end
   end

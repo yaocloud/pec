@@ -15,10 +15,8 @@ module Pec
       end
 
       ports = get_ports(config)
-      flavor_ref = get_flavor(config.flavor)
-      image_ref = get_image(config.image)
-
-      return false unless flavor_ref && image_ref
+      flavor_ref = @flavor.get_ref(config.flavor)
+      image_ref = @image.get_ref(config.image)
 
       options = {
         "user_data" => Pec::Configure::UserData.make(config, ports),
@@ -29,33 +27,14 @@ module Pec
     def get_ports(config)
       config.networks.map do |ether|
         ip = IP.new(ether.ip_address)
-        _subnet = get_subnet(ip)
-        _port = Pec::Network::Port.new(ether.name, ip.to_addr, _subnet, get_security_group_id(config.security_group)) if _subnet
+        subnet = @subnet.fetch(ip.network.to_s)
+        raise(Pec::Errors::Subnet, "subnet:#{ip.network.to_s} is not fond!") unless subnet
 
-        unless _port.assign!(ip)
-          puts "ip addess:#{ip.to_addr} can't create port!"
-          return false
-        end
-        _port
+        port = Pec::Network::Port.new(ether.name, ip.to_addr, subnet, get_security_group_id(config.security_group))
+
+        raise(Pec::Errors::Port, "ip addess:#{ip.to_addr} can't create port!") unless port.assign!(ip)
+        port
       end if config.networks
-    end
-
-    def get_subnet(ip)
-      _subnet = @subnet.fetch(ip.network.to_s)
-      puts "ip addess:#{ip.to_addr} subnet not fond!" if _subnet.nil?
-      _subnet
-    end
-
-    def get_flavor(name)
-      flavor_ref = @flavor.get_ref(name)
-      puts "flavor:#{name} not fond!" if flavor_ref.nil?
-      flavor_ref
-    end
-
-    def get_image(name)
-      image_ref = @image.get_ref(name)
-      puts "image:#{name} not fond!" if image_ref.nil?
-      image_ref
     end
 
     def get_security_group_id(security_groups)
