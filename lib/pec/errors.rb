@@ -7,5 +7,6 @@ module Pec
     class Host < Error; end
     class Query < Error; end
     class UserData < Error; end
+    class Configure < Error; end
   end
 end

@@ -17,21 +17,23 @@ module Pec
       ports = get_ports(config)
       flavor_ref = @flavor.get_ref(config.flavor)
       image_ref = @image.get_ref(config.image)
+      options = { "user_data" => Pec::Configure::UserData.make(config, ports) }
 
-      options = {
-        "user_data" => Pec::Configure::UserData.make(config, ports),
-      }
       @compute.create(config.name, image_ref, flavor_ref, ports, options)
     end
 
     def get_ports(config)
       config.networks.map do |ether|
-        ip = IP.new(ether.ip_address)
+        begin
+          ip = IP.new(ether.ip_address)
+        rescue ArgumentError => e
+          raise(Pec::Errors::Port, "ip:#{ether.ip_address} #{e}")
+        end
+
         subnet = @subnet.fetch(ip.network.to_s)
         raise(Pec::Errors::Subnet, "subnet:#{ip.network.to_s} is not fond!") unless subnet
 
         port = Pec::Network::Port.new(ether.name, ip.to_addr, subnet, get_security_group_id(config.security_group))
-
         raise(Pec::Errors::Port, "ip addess:#{ip.to_addr} can't create port!") unless port.assign!(ip)
         port
       end if config.networks
