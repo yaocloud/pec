@@ -1,5 +1,5 @@
 # Pec
-
+[![Build Status](https://travis-ci.org/pyama86/pec.svg?branch=master)](https://travis-ci.org/pyama86/pec)
 OpenStackにおいて複数サーバの起動や、
 DHCPサーバがない状況でのIP自動採番を実現します。
 
