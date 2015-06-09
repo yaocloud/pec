@@ -40,6 +40,10 @@ module Pec
           JSON.parse(e.response[:body]).each { |e,m| puts "#{e}:#{m["message"]}" }
         end
       end if config
+      rescue Errno::ENOENT => e
+        puts e
+      rescue Pec::Errors::Configure => e
+        puts "configure can't load"
     end
 
     option :force , type: :boolean, aliases: "-f"
@@ -55,10 +59,10 @@ module Pec
         rescue Pec::Errors::Error => e
           puts e
           puts "can't create server:#{host.name}"
-        rescue Excon::Errors::Error => e
-          JSON.parse(e.response[:body]).each { |e,m| puts "#{e}:#{m["message"]}" }
         end
       end if config
+      rescue Errno::ENOENT => e
+        puts e
     end
   end
 end
