@@ -12,34 +12,30 @@ module Pec
         end
 
         def get_template(config)
-          merge_template = {}
-          config.templates.each do |template|
+          config.templates.inject({}) do |merge_template, template|
             raise(Pec::Errors::UserData, "template:#{template} is not fond!") unless FileTest.exist?("user_datas/#{template}")
             merge_template.merge!(YAML.load_file("user_datas/#{template}").to_hash)
           end if config.templates
-          merge_template
         end
 
         def make_port_content(config, ports)
           config.networks.map do |ether|
             port_content = {}
-            port_content["bootproto"] = ether.bootproto
-            port_content["name"] = ether.name unless ether.options.key?('name')
-            port_content["name"] = ether.name unless ether.options.key?('name')
-            port_content["device"] = ether.name unless ether.options.key?('device')
-            port_content["type"] = 'Ethernet' unless ether.options.key?('type')
-            port_content["onboot"] = "yes" unless ether.options.key?('onboot')
+            %w(name device).each do |k|
+              port_content[k] = ether.name unless ether.options.key?(k)
+            end
 
-            path = "/etc/sysconfig/network-scripts/ifcfg-#{ether.name}" unless ether.options.key?('path')
+            port_content["bootproto"] = ether.bootproto
+            port_content["type"] = ether.options['type'] ||'Ethernet'
+            port_content["onboot"] = ether.options['onboot'] || 'yes'
+            path = ether.options['path'] || "/etc/sysconfig/network-scripts/ifcfg-#{ether.name}"
 
             port = ports.find {|p| p.name == ether.name}
+            port_content["hwaddr"] = port.mac_address
 
-            if port
-              if ether.bootproto == "static"
-                port_content["netmask"] = port.netmask
-                port_content["ipaddr"] = port.ip_address
-              end
-              port_content["hwaddr"] = port.mac_address
+            if ether.bootproto == "static"
+              port_content["netmask"] = port.netmask
+              port_content["ipaddr"] = port.ip_address
             end
             port_content.merge!(ether.options)
             {
