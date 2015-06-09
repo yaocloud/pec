@@ -9,8 +9,8 @@ module Pec
         @configure ||= []
         @configure << host if host
       end
-      rescue Psych::SyntaxError => e
-        puts e
+      rescue Psych::SyntaxError,NoMethodError => e
+        raise(Pec::Errors::Configure, e)
     end
 
     def each
