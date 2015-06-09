@@ -28,6 +28,7 @@ module Pec
       config.load("Pec.yaml")
 
       director = Pec::VmDirector.new
+
       config.each do |host|
         next if !host_name.nil? && host.name != host_name
 
@@ -51,11 +52,10 @@ module Pec
     def destroy(name = nil)
       config = Pec::Configure.new
       config.load("Pec.yaml")
-
       config.each do |host|
         next if !name.nil? && host.name != name
         begin
-          Pec::Compute::Server.new.destroy!(host.name) if yes?("#{host.name}: Are you sure you want to destroy the '#{host.name}' VM? [y/N]") || options["force"]
+          Pec::Compute::Server.new.destroy!(host.name) if options[:force] || yes?("#{host.name}: Are you sure you want to destroy the '#{host.name}' VM? [y/N]")
         rescue Pec::Errors::Error => e
           puts e
           puts "can't create server:#{host.name}"
