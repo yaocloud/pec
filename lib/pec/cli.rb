@@ -24,8 +24,7 @@ module Pec
 
     desc 'up', 'create vm by Pec.yaml'
     def up(host_name = nil)
-      config = Pec::Configure.new
-      config.load("Pec.yaml")
+      config = Pec::Configure.new("Pec.yaml")
 
       director = Pec::VmDirector.new
 
@@ -50,8 +49,7 @@ module Pec
     option :force , type: :boolean, aliases: "-f"
     desc "destroy", "delete vm"
     def destroy(name = nil)
-      config = Pec::Configure.new
-      config.load("Pec.yaml")
+      config = Pec::Configure.new("Pec.yaml")
       config.each do |host|
         next if !name.nil? && host.name != name
         begin

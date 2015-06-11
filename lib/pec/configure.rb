@@ -3,7 +3,7 @@ module Pec
   class Configure
     include Enumerable
 
-    def load(file_name)
+    def initialize(file_name)
       YAML.load_file(file_name).to_hash.each do |config|
         host = Pec::Configure::Host.load(config)
         @configure ||= []
