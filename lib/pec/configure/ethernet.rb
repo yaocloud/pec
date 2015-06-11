@@ -11,6 +11,10 @@ module Pec
         end
       end
 
+      def find_port(ports)
+        ports.find { |p| p.name == @name }
+      end
+
       class << self
         def load(name, config)
           self.new(config) if check_require_key(name, config) && check_network_key(name, config)

@@ -22,6 +22,10 @@ module Pec
       @compute.create(config.name, image_ref, flavor_ref, ports, options)
     end
 
+    def destroy!(server_name)
+      @compute.destroy!(host.name)
+    end
+
     def get_ports(config)
       config.networks.map do |ether|
         begin

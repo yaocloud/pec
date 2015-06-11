@@ -20,8 +20,6 @@ module Pec
 
         def make_port_content(config, ports)
           config.networks.map do |ether|
-            neutron_port = ports.find { |p| p.name == ether.name }
-
             ifcfg_content = {}
 
             ifcfg_content["bootproto"] = ether.bootproto
@@ -29,12 +27,12 @@ module Pec
             ifcfg_content["device"]    = ether.options["device"] || ether.name
             ifcfg_content["type"]      = ether.options['type']   ||'Ethernet'
             ifcfg_content["onboot"]    = ether.options['onboot'] || 'yes'
-            ifcfg_content["hwaddr"]    = neutron_port.mac_address
+            ifcfg_content["hwaddr"]    = ether.find_port(ports).mac_address
             path = ether.options['path'] || "/etc/sysconfig/network-scripts/ifcfg-#{ether.name}"
 
             if ether.bootproto == "static"
-              ifcfg_content["netmask"] = neutron_port.netmask
-              ifcfg_content["ipaddr"]  = neutron_port.ip_address
+              ifcfg_content["netmask"] = ether.find_port(ports).netmask
+              ifcfg_content["ipaddr"]  = ether.find_port(ports).ip_address
             end
             ifcfg_content.merge!(ether.options)
 
