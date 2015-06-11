@@ -13,6 +13,10 @@ module Pec
         raise(Pec::Errors::Configure, e)
     end
 
+    def filter_by_host(host_name)
+      @configure.select {|h| host_name.nil? || host_name == h.name}
+    end
+
     def each
       @configure.each do |config|
         yield config

@@ -27,7 +27,7 @@ module Pec
       config = Pec::Configure.new("Pec.yaml")
       director = Pec::VmDirector.new
 
-      config.find {|h| name.nil? || name == h.name}.each do |host|
+      config.filter_by_host(host_name).each do |host|
         begin
           director.make(host)
         rescue Pec::Errors::Error => e
@@ -45,9 +45,9 @@ module Pec
 
     option :force , type: :boolean, aliases: "-f"
     desc "destroy", "delete vm"
-    def destroy(name = nil)
+    def destroy(host_name = nil)
       config = Pec::Configure.new("Pec.yaml")
-      config.find {|h| name.nil? || name == h.name}.each do |host|
+      config.filter_by_host(host_name).each do |host|
         begin
           Pec::Compute::Server.new.destroy!(host.name) if options[:force] || yes?("#{host.name}: Are you sure you want to destroy the '#{host.name}' VM? [y/N]")
         rescue Pec::Errors::Error => e
