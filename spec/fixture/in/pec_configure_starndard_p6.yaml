@@ -1,0 +1,14 @@
+pyama-test001:
+  image: centos-7.1_chef-12.3_puppet-3.7
+  flavor: m1.small
+  security_group :
+    - default
+    - office
+  networks:
+    eth0:
+      ip_address: 10.10.10.10/24
+      gateway: 10.10.10.254
+  templates:
+    - "pec_configure_standard_p1.yaml"
+  user_data:
+    hostname: pyama-test001
