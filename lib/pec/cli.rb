@@ -25,12 +25,9 @@ module Pec
     desc 'up', 'create vm by Pec.yaml'
     def up(host_name = nil)
       config = Pec::Configure.new("Pec.yaml")
-
       director = Pec::VmDirector.new
 
-      config.each do |host|
-        next if !host_name.nil? && host.name != host_name
-
+      config.find {|h| name.nil? || name == h.name}.each do |host|
         begin
           director.make(host)
         rescue Pec::Errors::Error => e
@@ -50,8 +47,7 @@ module Pec
     desc "destroy", "delete vm"
     def destroy(name = nil)
       config = Pec::Configure.new("Pec.yaml")
-      config.each do |host|
-        next if !name.nil? && host.name != name
+      config.find {|h| name.nil? || name == h.name}.each do |host|
         begin
           Pec::Compute::Server.new.destroy!(host.name) if options[:force] || yes?("#{host.name}: Are you sure you want to destroy the '#{host.name}' VM? [y/N]")
         rescue Pec::Errors::Error => e

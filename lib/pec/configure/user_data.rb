@@ -20,25 +20,26 @@ module Pec
 
         def make_port_content(config, ports)
           config.networks.map do |ether|
-            port = ports.find {|p| p.name == ether.name}
-            port_content = {}
+            neutron_port = ports.find {|p| p.name == ether.name}
 
-            port_content["bootproto"] = ether.bootproto
-            port_content["name"]      = ether.options["name"]   || ether.name
-            port_content["device"]    = ether.options["device"] || ether.name
-            port_content["type"]      = ether.options['type']   ||'Ethernet'
-            port_content["onboot"]    = ether.options['onboot'] || 'yes'
-            port_content["hwaddr"]    = port.mac_address
+            ifcfg_content = {}
+
+            ifcfg_content["bootproto"] = ether.bootproto
+            ifcfg_content["name"]      = ether.options["name"]   || ether.name
+            ifcfg_content["device"]    = ether.options["device"] || ether.name
+            ifcfg_content["type"]      = ether.options['type']   ||'Ethernet'
+            ifcfg_content["onboot"]    = ether.options['onboot'] || 'yes'
+            ifcfg_content["hwaddr"]    = nautron_port.mac_address
             path = ether.options['path'] || "/etc/sysconfig/network-scripts/ifcfg-#{ether.name}"
 
             if ether.bootproto == "static"
-              port_content["netmask"] = port.netmask
-              port_content["ipaddr"]  = port.ip_address
+              ifcfg_content["netmask"] = neutron_port.netmask
+              ifcfg_content["ipaddr"]  = neutron_port.ip_address
             end
-            port_content.merge!(ether.options)
+            ifcfg_content.merge!(ether.options)
 
             {
-              'content' => port_content.map {|k,v| "#{k.upcase}=#{v}"}.join("\n"),
+              'content' => ifcfg_content.map {|k,v| "#{k.upcase}=#{v}"}.join("\n"),
               'owner' => "root:root",
               'path' => path,
               'permissions' => "0644"
