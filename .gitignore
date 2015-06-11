@@ -8,6 +8,6 @@
 /spec/reports/
 /tmp/
 /vendor
-*.yaml
+/*.yaml
 *.sample
 /user_datas
