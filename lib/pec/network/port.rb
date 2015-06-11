@@ -15,11 +15,8 @@ module Pec
       def assign!(ip)
         # dhcp ip recycle
         if request_any_address?(ip)
-          free = fetch_free_port
-          if free
-            ip = IP.new("#{free["fixed_ips"][0]["ip_address"]}/#{ip.pfxlen}")
-            @config = free
-          end
+          @config = fetch_free_port
+          ip = IP.new("#{@config["fixed_ips"][0]["ip_address"]}/#{ip.pfxlen}") unless @config.nil?
         end
 
         case
@@ -79,9 +76,7 @@ module Pec
 
       def create(ip)
         options = { security_groups: @security_groups }
-        if ip.to_s != subnet["cidr"]
-          options.merge!({ fixed_ips: [{ subnet_id: @subnet["id"], ip_address: ip.to_addr}]})
-        end
+        options.merge!({ fixed_ips: [{ subnet_id: @subnet["id"], ip_address: ip.to_addr}]}) if ip.to_s != subnet["cidr"]
         response = Fog::Network[:openstack].create_port(@subnet["network_id"], options)
 
         if response
