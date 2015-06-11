@@ -1,8 +1,10 @@
 # Pec
 [![Build Status](https://travis-ci.org/pyama86/pec.svg?branch=master)](https://travis-ci.org/pyama86/pec)
+[![Code Climate](https://codeclimate.com/github/pyama86/pec/badges/gpa.svg)](https://codeclimate.com/github/pyama86/pec)
+[![Test Coverage](https://codeclimate.com/github/pyama86/pec/badges/coverage.svg)](https://codeclimate.com/github/pyama86/pec/coverage)
 
-OpenStackにおいて複数サーバの起動や、
-DHCPサーバがない状況でのIP自動採番を実現します。
+OpenStackにおいて複数サーバの起動一括起動停止や、 DHCPサーバがない状況でのIP自動採番を実現します。
+作って壊してが驚くほどかんたんに。
 
 ## Install
 
