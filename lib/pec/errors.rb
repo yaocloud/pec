@@ -8,5 +8,6 @@ module Pec
     class Query < Error; end
     class UserData < Error; end
     class Configure < Error; end
+    class SecurityGroup < Error; end
   end
 end

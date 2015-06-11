@@ -29,7 +29,7 @@ module Pec
             ifcfg_content["device"]    = ether.options["device"] || ether.name
             ifcfg_content["type"]      = ether.options['type']   ||'Ethernet'
             ifcfg_content["onboot"]    = ether.options['onboot'] || 'yes'
-            ifcfg_content["hwaddr"]    = nautron_port.mac_address
+            ifcfg_content["hwaddr"]    = neutron_port.mac_address
             path = ether.options['path'] || "/etc/sysconfig/network-scripts/ifcfg-#{ether.name}"
 
             if ether.bootproto == "static"

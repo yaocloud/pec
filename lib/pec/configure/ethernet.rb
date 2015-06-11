@@ -17,8 +17,7 @@ module Pec
         end
 
         def check_require_key(name, config)
-          err = %w(bootproto).find {|k| !config[1].key?(k)}
-          raise(Pec::Errors::Ethernet, "skip! #{name}: #{err} is required!") unless err.nil?
+          raise(Pec::Errors::Ethernet, "skip! #{name}: #{err} is required!") if config[1]["bootproto"].nil?
           true
         end
 
