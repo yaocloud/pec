@@ -27,9 +27,7 @@ module Pec
           case
           when (net["bootproto"] == "static" && net["ip_address"].nil?)
             raise(Pec::Errors::Ethernet, "skip! #{name}: ip_address is required by bootproto static")
-          when (!net["bootproto"] == "static" && !net["bootproto"] == "dhcp")
-            raise(Pec::Errors::Ethernet, "skip! #{name}: bootproto set the value dhcp or static")
-          when (!net["bootproto"] == "static" && !net["bootproto"] == "dhcp")
+          when (net["bootproto"] != "static" && net["bootproto"] != "dhcp")
             raise(Pec::Errors::Ethernet, "skip! #{name}: bootproto set the value dhcp or static")
           end
           true

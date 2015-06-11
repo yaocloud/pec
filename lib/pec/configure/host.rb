@@ -27,7 +27,7 @@ module Pec
         end
 
         def check_require_key(config)
-          err = %w(image flavor).find {|r| !config[1].key?(r)}
+          err = %w(image flavor).find {|r| !config[1].key?(r) || config[1][r].nil? }
           raise(Pec::Errors::Host,"skip! #{config[0]}: #{err} is required!") unless  err.nil?
           true
         end
