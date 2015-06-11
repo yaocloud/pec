@@ -1,6 +1,6 @@
 # encoding: utf-8
-require 'coveralls'
-Coveralls.wear!
+require "codeclimate-test-reporter"
+CodeClimate::TestReporter.start
 require 'pec'
 require 'pec/configure'
 require 'rspec'
