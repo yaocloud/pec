@@ -20,24 +20,23 @@ module Pec
 
         def make_port_content(config, ports)
           config.networks.map do |ether|
+            port = ports.find {|p| p.name == ether.name}
             port_content = {}
-            %w(name device).each do |k|
-              port_content[k] = ether.name unless ether.options.key?(k)
-            end
 
             port_content["bootproto"] = ether.bootproto
-            port_content["type"] = ether.options['type'] ||'Ethernet'
-            port_content["onboot"] = ether.options['onboot'] || 'yes'
+            port_content["name"]      = ether.options["name"]   || ether.name
+            port_content["device"]    = ether.options["device"] || ether.name
+            port_content["type"]      = ether.options['type']   ||'Ethernet'
+            port_content["onboot"]    = ether.options['onboot'] || 'yes'
+            port_content["hwaddr"]    = port.mac_address
             path = ether.options['path'] || "/etc/sysconfig/network-scripts/ifcfg-#{ether.name}"
-
-            port = ports.find {|p| p.name == ether.name}
-            port_content["hwaddr"] = port.mac_address
 
             if ether.bootproto == "static"
               port_content["netmask"] = port.netmask
-              port_content["ipaddr"] = port.ip_address
+              port_content["ipaddr"]  = port.ip_address
             end
             port_content.merge!(ether.options)
+
             {
               'content' => port_content.map {|k,v| "#{k.upcase}=#{v}"}.join("\n"),
               'owner' => "root:root",
