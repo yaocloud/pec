@@ -20,7 +20,7 @@ module Pec
 
         def make_port_content(config, ports)
           config.networks.map do |ether|
-            neutron_port = ports.find {|p| p.name == ether.name}
+            neutron_port = ports.find { |p| p.name == ether.name }
 
             ifcfg_content = {}
 
