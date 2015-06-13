@@ -20,8 +20,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'thor'
   spec.add_dependency 'ruby-ip'
   spec.add_dependency 'activesupport'
-  spec.add_dependency "bundler"
   spec.add_dependency "colorator"
+  spec.add_development_dependency "bundler"
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "rake"
 end

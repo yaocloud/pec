@@ -8,8 +8,8 @@ OpenStackにおいて複数サーバの起動一括起動停止や、 DHCPサー
 
 ## Install
 
-
-    $ gem install pec
+    $ gem install specific_install
+    $ gem specific_install -l 'git@github.com:pyama86/pec.git'
 
 ## Usage
 
