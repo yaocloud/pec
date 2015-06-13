@@ -1,5 +1,6 @@
 require 'fog'
 require 'ip'
+require 'colorator'
 require "pec/version"
 require "pec/query"
 require "pec/errors"

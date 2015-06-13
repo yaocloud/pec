@@ -8,7 +8,7 @@ module Pec
           open("#{dirname}/web_server.yaml.sample","w") do |e|
             YAML.dump(Pec::Configure::Sample.user_data, e)
           end if FileTest.exist?(dirname)
-          puts "create directry user_datas"
+          puts "create directry user_datas".green
         end
       end
 
@@ -17,7 +17,7 @@ module Pec
           open("Pec.yaml","w") do |e|
             YAML.dump(Pec::Configure::Sample.pec_file, e)
           end
-          puts "create configure file Pec.yaml"
+          puts "create configure file Pec.yaml".green
         end
       end
 

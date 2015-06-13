@@ -12,7 +12,7 @@ module Pec
 
       def make(host)
         if Pec::Compute::Server.exists?(host.name)
-          puts "skip create server! name:#{host.name} is exists!"
+          puts "skip create server! name:#{host.name} is exists!".yellow
           return true
         end
 
@@ -27,8 +27,8 @@ module Pec
       end
 
       def err_message(e, host)
-          puts e
-          puts "can't create server:#{host.name}" if host
+          puts e.to_s.magenta
+          puts "can't create server:#{host.name}".magenta if host
       end
     end
   end

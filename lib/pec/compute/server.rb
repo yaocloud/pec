@@ -8,7 +8,7 @@ module Pec
           response = Pec::Resource.get.create_server(name, image_ref, flavor_ref, options)
 
           if response[:status] == 202
-            puts "success create for server_name:#{name}"
+            puts "success create for server_name:#{name}".blue
           end
 
           response.data[:body]["server"]["id"]
@@ -24,7 +24,7 @@ module Pec
           response = Pec::Resource.get.delete_server(server["id"]) if server
 
           if response && response[:status] == 204
-            puts "server_name:#{server_name} is deleted!"
+            puts "server_name:#{server_name} is deleted!".green
           end
         end
       end

@@ -15,8 +15,8 @@ module Pec
       end
 
       def err_message(e, host)
-          puts e
-          puts "can't destroy server:#{host.name}" if host
+          puts e.to_s.magenta
+          puts "can't destroy server:#{host.name}".magenta if host
       end
     end
   end

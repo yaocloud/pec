@@ -16,12 +16,12 @@ class Director
           end
         end if config
 
+        rescue Pec::Errors::Configure => e
+          config_load_err_message
         rescue Pec::Errors::Error => e
           err_message(e)
         rescue Errno::ENOENT => e
           err_messag(e)
-        rescue Pec::Errors::Configure => e
-          config_load_err_message
       end
 
       def assign_director(action, options)
@@ -38,15 +38,15 @@ class Director
       end
 
       def err_message(e)
-        puts e
+        puts e.to_s.magenta
       end
 
       def config_load_err_message
-        puts "configure can't load"
+        puts "can't load configfile".magenta
       end
 
       def excon_err_message(e)
-          JSON.parse(e.response[:body]).each { |e,m| puts "#{e}:#{m["message"]}" }
+          JSON.parse(e.response[:body]).each { |e,m| puts "#{e}:#{m["message"]}".magenta }
       end
     end
   end

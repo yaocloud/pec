@@ -23,15 +23,15 @@ module Pec
           compute_node = detail["OS-EXT-SRV-ATTR:host"]
           flavor = detail["flavor"]["id"]
           tenant_name = Pec::Compute::Tenant.get_name(detail["tenant_id"])
-          ip_address = Pec::Director::Helper.parse_from_addresses(detail["addresses"])
+          ip_address = Pec::Director::Helper.parse_from_addresses(detail["addresses"]).join(",")
         end
 
-        puts sprintf(" %-30s |%-10s | %-10s | %-10s | %-30s | %-48s", host.name, status, tenant_name, flavor, compute_node, ip_address.join(","))
+        puts sprintf(" %-30s |%-10s | %-10s | %-10s | %-30s | %-48s", host.name, status, tenant_name, flavor, compute_node, ip_address)
       end
 
       def err_message(e, host)
-          puts e
-          puts "can't create server:#{host.name}" if host
+          puts e.to_s.magenta
+          puts "can't create server:#{host.name}".magenta if host
       end
     end
   end

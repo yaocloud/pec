@@ -17,7 +17,7 @@ module Pec
             port = Pec::Network::Port.new.assign(ether.name, ip, port_subnet, get_security_group_id(host.security_group))
             raise(Pec::Errors::Port, "ip addess:#{ip.to_addr} can't create port!") unless port
 
-            puts "#{host.name}: assingn ip #{port.ip_address}"
+            puts "#{host.name}: assingn ip #{port.ip_address}".green
             port
           end if host.networks
         end
