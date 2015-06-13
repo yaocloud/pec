@@ -9,5 +9,6 @@ module Pec
     class UserData < Error; end
     class Configure < Error; end
     class SecurityGroup < Error; end
+    class Resource < Error; end
   end
 end

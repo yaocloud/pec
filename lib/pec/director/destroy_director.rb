@@ -6,8 +6,8 @@ module Pec
       end
 
       def execute!(host)
-        compute = Pec::Compute::Server.new
-        compute.destroy!(host.name)
+        Pec::Resource.set_tenant(host.tenant)
+        Pec::Compute::Server.destroy!(host.name)
       end
 
       def do_it?(host)
@@ -16,7 +16,7 @@ module Pec
 
       def err_message(e, host)
           puts e
-          puts "can't destroy server:#{host.name}"
+          puts "can't destroy server:#{host.name}" if host
       end
     end
   end

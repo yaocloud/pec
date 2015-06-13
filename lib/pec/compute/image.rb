@@ -1,7 +1,7 @@
 module Pec
   class Compute
     class Image
-      include Query
+      extend Query
     end
   end
 end

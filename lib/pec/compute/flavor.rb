@@ -1,7 +1,7 @@
 module Pec
   class Compute
     class Flavor
-      include Query
+      extend Query
     end
   end
 end

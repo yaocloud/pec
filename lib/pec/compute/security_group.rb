@@ -1,7 +1,7 @@
 module Pec
   class Compute
     class Security_Group
-      include Query
+      extend Query
     end
   end
 end

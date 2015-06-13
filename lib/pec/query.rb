@@ -1,23 +1,9 @@
 require 'active_support/core_ext/string/inflections'
-require 'fog'
 module Pec
   module Query
-    @@_list = {}
-    def get_adapter
-      case
-      when self.class.name.include?('Network')
-        Fog::Network[:openstack]
-      when self.class.name.include?('Compute')
-        Fog::Compute[:openstack]
-      else
-        raise
-      end
-    end
-
     def list
-      name = self.class.name.demodulize.downcase+"s"
-      @@_list ||= Hash.new
-      @@_list[name] ||= get_adapter.send("list_#{name}").data[:body][name]
+      class_name = self.name.demodulize.downcase
+      Pec::Resource.get.send("#{class_name}_list")
     end
 
     def fetch(name)

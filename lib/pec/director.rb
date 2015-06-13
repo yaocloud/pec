@@ -1,9 +1,11 @@
 module Pec
 class Director
     class << self
+
       def execute(action, host_name, options)
         config = Pec::Configure.new("Pec.yaml")
         director = assign_director(action, options)
+
         config.filter_by_host(host_name).each do |host|
           begin
             director.execute!(host) if director.do_it?(host)
@@ -13,7 +15,8 @@ class Director
             excon_err_message(e)
           end
         end if config
-
+        rescue Pec::Errors::Error => e
+          err_message(e)
         rescue Errno::ENOENT => e
           err_messag(e)
         rescue Pec::Errors::Configure => e
