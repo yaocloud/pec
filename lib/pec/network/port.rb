@@ -15,7 +15,6 @@ module Pec
           @port = fetch_free_port
           ip = IP.new("#{@port["fixed_ips"][0]["ip_address"]}/#{ip.pfxlen}") unless @port.nil?
         end
-
         case
         when exists? && !used?
           recreate(ip, subnet, security_group_ids)
