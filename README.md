@@ -44,6 +44,7 @@ default:
 #### Pec.yaml
 ```
 pyama-test001:
+  tenant: your_tenant
   image: centos-7.1_chef-12.3_puppet-3.7
   flavor: m1.small
   networks:
@@ -75,10 +76,11 @@ pyama-test002:
 
 | 項目名         | 説明                                           | 必須 | 例示                            |
 | -------------- | ---------------------------------------------- | ---- | ------------------------------- |
-| instance_name| インスタンス名                                              | ○    | pyama-test001                   |
+| instance_name  | インスタンス名                                 | ○    | pyama-test001                   |
+| tenant         | テナント名                                     | ○    | your_tenant                     |
 | image          | イメージ名                                     | ○    | centos-7.1_chef-12.3_puppet-3.7 |
 | flavor         | フレーバー名                                   | ○    | m1.small                        |
-| networks       | ネットワーク定義                               | -    | []                            |
+| networks       | ネットワーク定義                               | -    | []                              |
 | security_group | セキュリティグループ名                         | -    | [default,ssh]                   |
 | templates      | `user_data`のテンプレート.`./user_datas`に配置 | -    | [base.yaml,webserver.yaml]      |
 | user_data      | cloud-init記法に準拠                           | -    | -                               |

@@ -5,6 +5,7 @@ module Pec
         def pec_file
           {
             "sever_name" => {
+              "tenant" =>  "your_tenant",
               "image" =>  "centos-7",
               "flavor" =>  "m1.small",
               "networks" => [
