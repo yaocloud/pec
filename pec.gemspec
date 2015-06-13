@@ -18,6 +18,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
   spec.add_dependency 'thor'
+  spec.add_dependency 'fog'
   spec.add_dependency 'ruby-ip'
   spec.add_dependency 'activesupport'
   spec.add_dependency "colorator"
