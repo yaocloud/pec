@@ -1,7 +1,7 @@
 module Pec
   class Configure
     class Host
-      attr_reader :name, :image, :flavor,:security_group, :user_data, :networks, :templates
+      attr_reader :name, :image, :flavor,:security_group, :user_data, :networks, :templates, :tenant
       def initialize(config)
         @name = config[0];
         @image = config[1]["image"];
@@ -9,6 +9,7 @@ module Pec
         @security_group = config[1]["security_group"];
         @user_data = config[1]["user_data"];
         @templates = config[1]["templates"]
+        @tenant = config[1]["tenant"]
       end
 
       def append_network(network)
@@ -27,7 +28,7 @@ module Pec
         end
 
         def check_require_key(config)
-          err = %w(image flavor).find {|r| !config[1].key?(r) || config[1][r].nil? }
+          err = %w(image flavor tenant).find {|r| !config[1].key?(r) || config[1][r].nil? }
           raise(Pec::Errors::Host,"skip! #{config[0]}: #{err} is required!") unless  err.nil?
           true
         end

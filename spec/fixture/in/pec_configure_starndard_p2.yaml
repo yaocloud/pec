@@ -1,4 +1,5 @@
 pyama-test001:
+  tenant: test_tenant
   flavor: m1.small
   security_group :
     - default

@@ -43,6 +43,9 @@ describe Pec::Configure do
         it 'flavor' do
           expect(lambda { Pec::Configure.new("spec/fixture/in/pec_configure_starndard_p3.yaml") }).to raise_error(Pec::Errors::Host)
         end
+        it 'tenant' do
+          expect(lambda { Pec::Configure.new("spec/fixture/in/pec_configure_starndard_p9.yaml") }).to raise_error(Pec::Errors::Host)
+        end
       end
       describe 'is nil?' do
         it 'images' do

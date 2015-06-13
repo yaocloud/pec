@@ -1,4 +1,5 @@
 pyama-test001:
+  tenant: test_tenant
   image: centos-7.1_chef-12.3_puppet-3.7
   flavor: m1.small
   security_group :
