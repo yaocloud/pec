@@ -26,7 +26,7 @@ module Pec
           ip_address = Pec::Director::Helper.parse_from_addresses(detail["addresses"]).join(",")
         end
 
-        puts sprintf(" %-30s |%-10s | %-10s | %-10s | %-30s | %-48s", host.name, status, tenant_name, flavor, compute_node, ip_address)
+        puts sprintf(" %-35s %-10s %-10s %-10s %-35s %-48s", host.name, status, tenant_name, flavor, compute_node, ip_address)
       end
 
       def err_message(e, host)
