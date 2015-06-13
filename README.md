@@ -13,7 +13,7 @@ OpenStackにおいて複数サーバの起動一括起動停止や、 DHCPサー
 
 ## Usage
 
-定義ファイル作成
+セットアップ・定義ファイル作成
 
     $ pec init
 
@@ -21,7 +21,7 @@ OpenStackにおいて複数サーバの起動一括起動停止や、 DHCPサー
 create - /Pec.yaml
 create - /user_datas/web_server.yaml.sample
 ```
-        
+
 Pec.yamlに基づきホストを作成します。
 ホスト名が指定された場合はそのホストのみ作成、削除します。
 

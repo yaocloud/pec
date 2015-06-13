@@ -3,6 +3,7 @@ require 'ip'
 require "pec/version"
 require "pec/query"
 require "pec/errors"
+require "pec/init"
 require "pec/resource"
 require "pec/resource/openstack"
 require "pec/director"
