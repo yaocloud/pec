@@ -2,9 +2,10 @@ require 'json'
 module Pec
   class Network
     class Port
-      @@use_ip_list = []
       attr_reader :name, :subnet
+      @@use_ip_list = []
       include Query
+
       def initialize(name, ip_addr, subnet, security_groups)
         @name = name
         @subnet = subnet
@@ -16,7 +17,7 @@ module Pec
         # dhcp ip recycle
         if request_any_address?(ip)
           @port = fetch_free_port
-          ip = IP.new("#{@port["fixed_ips"][0]["ip_address"]}/#{ip.pfxlen}") unless @config.nil?
+          ip = IP.new("#{@port["fixed_ips"][0]["ip_address"]}/#{ip.pfxlen}") unless @port.nil?
         end
 
         case
@@ -27,6 +28,27 @@ module Pec
         when used?
           raise(Pec::Errors::Port, "ip:#{ip.to_addr} is used!")
         end
+      end
+
+      def create(ip)
+        options = { security_groups: @security_groups }
+        options.merge!({ fixed_ips: [{ subnet_id: @subnet["id"], ip_address: ip.to_addr}]}) if ip.to_s != subnet["cidr"]
+        response = Fog::Network[:openstack].create_port(@subnet["network_id"], options)
+
+        if response
+          @port = response.data[:body]["port"] 
+          @@use_ip_list << response.data[:body]["port"]["fixed_ips"][0]["ip_address"]
+          response.data[:body]["port"]["id"]
+        end
+      end
+
+      def delete(ip)
+        @port = fetch(ip.to_addr)
+        response =  Fog::Network[:openstack].delete_port(@port["id"]) if @port
+      end
+
+      def replace(ip)
+        create(ip) if delete(ip)
       end
 
       def request_any_address?(ip)
@@ -51,7 +73,7 @@ module Pec
       end
 
       def used?
-        @port && !@config["device_owner"].empty?
+        @port && !@port["device_owner"].empty?
       end
 
       def id
@@ -72,27 +94,6 @@ module Pec
 
       def netmask
         IP.new(@port["fixed_ips"][0]["ip_address"]).netmask.to_s
-      end
-
-      def create(ip)
-        options = { security_groups: @security_groups }
-        options.merge!({ fixed_ips: [{ subnet_id: @subnet["id"], ip_address: ip.to_addr}]}) if ip.to_s != subnet["cidr"]
-        response = Fog::Network[:openstack].create_port(@subnet["network_id"], options)
-
-        if response
-          @port = response.data[:body]["port"] 
-          @@use_ip_list << response.data[:body]["port"]["fixed_ips"][0]["ip_address"]
-          response.data[:body]["port"]["id"]
-        end
-      end
-
-      def delete(ip)
-        _port = fetch(ip.to_addr)
-        response =  Fog::Network[:openstack].delete_port(_port["id"]) if port
-      end
-
-      def replace(ip)
-        create(ip) if delete(ip)
       end
     end
   end

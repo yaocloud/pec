@@ -21,7 +21,6 @@ module Pec
         def make_port_content(config, ports)
           config.networks.map do |ether|
             ifcfg_content = {}
-
             ifcfg_content["bootproto"] = ether.bootproto
             ifcfg_content["name"]      = ether.options["name"]   || ether.name
             ifcfg_content["device"]    = ether.options["device"] || ether.name
