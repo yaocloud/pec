@@ -2,7 +2,7 @@ module Pec
 class Director
     class << self
 
-      def execute(action, host_name, options)
+      def execute(action, host_name, options=nil)
         config = Pec::Configure.new("Pec.yaml")
         director = assign_director(action, options)
 
@@ -15,6 +15,7 @@ class Director
             excon_err_message(e)
           end
         end if config
+
         rescue Pec::Errors::Error => e
           err_message(e)
         rescue Errno::ENOENT => e
@@ -26,9 +27,11 @@ class Director
       def assign_director(action, options)
         case
         when action == "make"
-          Pec::Director::MakeDirector.new(options)
+          Pec::Director::MakeDirector.new
         when action == "destroy"
           Pec::Director::DestroyDirector.new(options)
+        when action == "vm_status"
+          Pec::Director::VmStatusDirector.new
         else
           raise
         end

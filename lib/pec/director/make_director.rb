@@ -1,10 +1,6 @@
 module Pec
   class Director
     class MakeDirector
-      def initialize(command_options)
-        @command_options = command_options
-      end
-
       def execute!(host)
         Pec::Resource.set_tenant(host.tenant)
         make(host)

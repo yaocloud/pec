@@ -33,6 +33,14 @@ module Pec
             sg["id"]
           end if security_groups
         end
+
+        def parse_from_addresses(addresses)
+          addresses.map do |net, ethers|
+            ethers.map do |ether|
+              ether["addr"]
+            end
+          end.flatten
+        end
       end
     end
   end

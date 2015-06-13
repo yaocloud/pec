@@ -31,12 +31,20 @@ module Pec
         @_flavors ||= @compute.list_flavors[:body]['flavors']
       end
 
+      def tenant_list
+        @_tenants ||= @compute.list_tenants[:body]['tenants']
+      end
+
       def create_server(name, image_ref, flavor_ref, options)
         @compute.create_server(name, image_ref, flavor_ref, options)
       end
 
       def delete_server(server_id)
         @compute.delete_server(server_id)
+      end
+
+      def get_server_details(server_id)
+        @compute.get_server_details(server_id)[:body]['server']
       end
 
       def create_port(network_id, options)
@@ -46,6 +54,7 @@ module Pec
       def delete_port(port_id)
         @network.delete_port(port_id)
       end
+
     end
   end
 end

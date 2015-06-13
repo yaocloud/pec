@@ -39,7 +39,7 @@ module Pec
       end
 
       def delete(ip)
-        target_port = fetch(ip.to_addr)
+        target_port = fetch_by_ip(ip.to_addr)
         response = Pec::Resource.get.delete_port(target_port["id"]) if target_port
       end
 
@@ -55,7 +55,7 @@ module Pec
         Pec::Resource.get.port_list
       end
 
-      def fetch(ip_addr)
+      def fetch_by_ip(ip_addr)
         list.find {|p| p["fixed_ips"][0]["ip_address"] == ip_addr }
       end
 

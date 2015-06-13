@@ -27,9 +27,9 @@ module Pec
           thor.say("Start Configure by OpenStack", :yellow)
           params = {}
 
-          params = %w(auth_uri username api_key tenant).inject({}) do |p, c|
-            p["openstack_#{c}"] = thor.ask("openstack #{c}:")
-            p
+          params = %w(auth_uri username api_key tenant).inject({}) do |user_input, c|
+            user_input["openstack_#{c}"] = thor.ask("openstack #{c}:")
+            user_input
           end
 
           thor.say("Configure Complete!", :blue) if open(File.expand_path("~/.fog"), "w") do |e|

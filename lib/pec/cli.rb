@@ -12,13 +12,19 @@ module Pec
 
     desc 'up', 'create vm by Pec.yaml'
     def up(host_name = nil)
-      Pec::Director.execute("make", host_name, options)
+      Pec::Director.execute("make", host_name)
     end
 
     option :force , type: :boolean, aliases: "-f"
     desc "destroy", "delete vm"
     def destroy(host_name = nil)
       Pec::Director.execute("destroy", host_name, options)
+    end
+
+    desc "status", "vm status"
+    def status(host_name = nil)
+      say("Current machine stasus:", :yellow)
+      Pec::Director.execute("vm_status", host_name)
     end
   end
 end
