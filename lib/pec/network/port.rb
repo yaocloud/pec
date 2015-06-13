@@ -9,14 +9,14 @@ module Pec
         @name = name
         @subnet = subnet
         @security_groups = security_groups
-        @config = fetch(ip_addr)
+        @port = fetch(ip_addr)
       end
 
       def assign!(ip)
         # dhcp ip recycle
         if request_any_address?(ip)
-          @config = fetch_free_port
-          ip = IP.new("#{@config["fixed_ips"][0]["ip_address"]}/#{ip.pfxlen}") unless @config.nil?
+          @port = fetch_free_port
+          ip = IP.new("#{@port["fixed_ips"][0]["ip_address"]}/#{ip.pfxlen}") unless @config.nil?
         end
 
         case
@@ -47,31 +47,31 @@ module Pec
       end
 
       def exists?
-        !@config.nil?
+        !@port.nil?
       end
 
       def used?
-        @config && !@config["device_owner"].empty?
+        @port && !@config["device_owner"].empty?
       end
 
       def id
-        @config["id"]
+        @port["id"]
       end
 
       def mac_address
-        @config["mac_address"]
+        @port["mac_address"]
       end
 
       def ip_address
-        @config["fixed_ips"][0]["ip_address"]
+        @port["fixed_ips"][0]["ip_address"]
       end
 
       def network_id
-        @config["network_id"]
+        @port["network_id"]
       end
 
       def netmask
-        IP.new(@config["fixed_ips"][0]["ip_address"]).netmask.to_s
+        IP.new(@port["fixed_ips"][0]["ip_address"]).netmask.to_s
       end
 
       def create(ip)
@@ -80,15 +80,15 @@ module Pec
         response = Fog::Network[:openstack].create_port(@subnet["network_id"], options)
 
         if response
-          @config = response.data[:body]["port"] 
+          @port = response.data[:body]["port"] 
           @@use_ip_list << response.data[:body]["port"]["fixed_ips"][0]["ip_address"]
           response.data[:body]["port"]["id"]
         end
       end
 
       def delete(ip)
-        port = fetch(ip.to_addr)
-        response =  Fog::Network[:openstack].delete_port(port["id"]) if port
+        _port = fetch(ip.to_addr)
+        response =  Fog::Network[:openstack].delete_port(_port["id"]) if port
       end
 
       def replace(ip)
