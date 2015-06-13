@@ -31,7 +31,6 @@ class Director
         end
       end
 
-
       def err_message(e)
         puts e
       end

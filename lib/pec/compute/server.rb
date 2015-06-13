@@ -3,14 +3,7 @@ module Pec
   class Compute
     class Server
       include Query
-      def create(name, image_ref, flavor_ref, ports, options)
-        networks = ports.map do |port|
-          raise(Pec::Errors::Port, "port-id:#{port.id} ip-addr:#{port.ip_address} in used") if port.used?
-          puts "#{name}: assingn ip #{port.ip_address}"
-          { port_id: port.id }
-        end if ports
-
-        options.merge!({ 'nics' =>  networks })
+      def create(name, image_ref, flavor_ref, options)
 
         response = Fog::Compute[:openstack].create_server(name, image_ref, flavor_ref, options)
 

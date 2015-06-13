@@ -2,6 +2,7 @@ require 'active_support/core_ext/string/inflections'
 require 'fog'
 module Pec
   module Query
+    @@_list = {}
     def get_adapter
       case
       when self.class.name.include?('Network')
@@ -15,8 +16,8 @@ module Pec
 
     def list
       name = self.class.name.demodulize.downcase+"s"
-      @_list ||= Hash.new
-      @_list[name] ||= get_adapter.send("list_#{name}").data[:body][name]
+      @@_list ||= Hash.new
+      @@_list[name] ||= get_adapter.send("list_#{name}").data[:body][name]
     end
 
     def fetch(name)
