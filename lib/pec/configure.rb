@@ -4,7 +4,13 @@ module Pec
     include Enumerable
 
     def initialize(file_name)
-      YAML.load_file(file_name).to_hash.each do |config|
+      if file_name.is_a?(Hash)
+        hash = file_name
+      else
+        hash = YAML.load_file(file_name).to_hash
+      end
+
+      hash.each do |config|
         host = Pec::Configure::Host.load(config)
         @configure ||= []
         @configure << host if host

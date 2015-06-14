@@ -3,7 +3,7 @@ require 'base64'
 describe Pec::Configure do
   describe 'standard' do
     before do
-      @configure = Pec::Configure.new("spec/fixture/in/pec_configure_starndard_p1.yaml")
+      @configure = Pec::Configure.new("spec/fixture/in/pec_configure_p1.yaml")
     end
 
     it 'host' do
@@ -34,40 +34,67 @@ describe Pec::Configure do
       )
     end
   end
+
   describe 'validate' do
     describe 'host' do
-      describe 'require' do
-        it 'images' do
-          expect(lambda { Pec::Configure.new("spec/fixture/in/pec_configure_starndard_p2.yaml") }).to raise_error(Pec::Errors::Host)
+      describe 'must column' do
+        shared_examples_for 'require test' do
+          it do
+            hash =  YAML.load_file("spec/fixture/in/pec_configure_p1.yaml")
+            hash["pyama-test001"].delete(column)
+            expect(lambda { Pec::Configure.new(hash)}).to raise_error(Pec::Errors::Host)
+          end
         end
-        it 'flavor' do
-          expect(lambda { Pec::Configure.new("spec/fixture/in/pec_configure_starndard_p3.yaml") }).to raise_error(Pec::Errors::Host)
+
+        shared_examples_for 'null test' do
+          it do
+            hash =  YAML.load_file("spec/fixture/in/pec_configure_p1.yaml")
+            hash["pyama-test001"][column] = nil
+            expect(lambda { Pec::Configure.new(hash)}).to raise_error(Pec::Errors::Host)
+          end
         end
-        it 'tenant' do
-          expect(lambda { Pec::Configure.new("spec/fixture/in/pec_configure_starndard_p9.yaml") }).to raise_error(Pec::Errors::Host)
+        describe 'image' do
+          let(:column) { "image" }
+          it_behaves_like 'require test'
+          it_behaves_like 'null test'
         end
-      end
-      describe 'is nil?' do
-        it 'images' do
-          expect(lambda { Pec::Configure.new("spec/fixture/in/pec_configure_starndard_p4.yaml") }).to raise_error(Pec::Errors::Host)
+        describe 'flavor' do
+          let(:column) { "flavor" }
+          it_behaves_like 'require test'
+          it_behaves_like 'null test'
         end
-        it 'flavor' do
-          expect(lambda { Pec::Configure.new("spec/fixture/in/pec_configure_starndard_p5.yaml") }).to raise_error(Pec::Errors::Host)
+        describe 'tenant' do
+          let(:column) { "tenant" }
+          it_behaves_like 'require test'
+          it_behaves_like 'null test'
         end
       end
     end
     describe 'network' do
       describe 'require' do
-        it 'bootproto' do
-          expect(lambda { Pec::Configure.new("spec/fixture/in/pec_configure_starndard_p6.yaml") }).to raise_error(Pec::Errors::Ethernet)
+        describe 'bootproto' do
+          before do
+            @hash =  YAML.load_file("spec/fixture/in/pec_configure_p1.yaml")
+            @hash["pyama-test001"]["networks"]["eth0"].delete("bootproto")
+          end
+          it { expect(lambda { Pec::Configure.new(@hash)}).to raise_error(Pec::Errors::Ethernet) }
         end
-        it 'ip address by bootproto is static' do
-          expect(lambda { Pec::Configure.new("spec/fixture/in/pec_configure_starndard_p7.yaml") }).to raise_error(Pec::Errors::Ethernet)
+        describe 'ip address by bootproto is static' do
+          before do
+            @hash =  YAML.load_file("spec/fixture/in/pec_configure_p1.yaml")
+            @hash["pyama-test001"]["networks"]["eth0"]["bootproto"] = "static"
+            @hash["pyama-test001"]["networks"]["eth0"].delete("ip_address")
+          end
+          it { expect(lambda { Pec::Configure.new(@hash)}).to raise_error(Pec::Errors::Ethernet) }
         end
       end
       describe 'unknown bootproto' do
-        it 'not static and dhcp' do
-          expect(lambda { Pec::Configure.new("spec/fixture/in/pec_configure_starndard_p8.yaml") }).to raise_error(Pec::Errors::Ethernet)
+        describe 'not static and dhcp' do
+          before do
+            @hash =  YAML.load_file("spec/fixture/in/pec_configure_p1.yaml")
+            @hash["pyama-test001"]["networks"]["eth0"]["bootproto"] = "hoge"
+          end
+          it { expect(lambda { Pec::Configure.new(@hash)}).to raise_error(Pec::Errors::Ethernet) }
         end
       end
     end
