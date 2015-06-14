@@ -27,8 +27,8 @@ module Pec
           response = Pec::Resource.get.create_port(subnet["network_id"], options)
 
           raise(Pec::Errors::Port, "ip:#{ip.to_addr} is not created!") unless response
+          append_assigned_ip(response)
 
-          @@use_ip_list << response.data[:body]["port"]["fixed_ips"][0]["ip_address"]
           response.data[:body]["port"]
         end
 
@@ -38,6 +38,14 @@ module Pec
 
         def set_fixed_ip(options, subnet, ip)
           ip.to_s != subnet["cidr"] ? options.merge({ fixed_ips: [{ subnet_id: subnet["id"], ip_address: ip.to_addr}]}) : options
+        end
+
+        def append_assigned_ip(response)
+          @@use_ip_list << response.data[:body]["port"]["fixed_ips"][0]["ip_address"]
+        end
+
+        def assigned_ip?(port)
+          @@use_ip_list.include?(port["fixed_ips"][0]["ip_address"])
         end
 
         def get_free_port_ip(ip, subnet)
@@ -67,7 +75,7 @@ module Pec
             p["fixed_ips"][0]["subnet_id"] == subnet["id"] &&
             p["device_owner"].empty? &&
             p["admin_state_up"] &&
-            !@@use_ip_list.include?(p["fixed_ips"][0]["ip_address"])
+            !assigned_ip?
           end
         end
       end
