@@ -28,14 +28,14 @@ module Pec
             ifcfg_content["type"]      = ether.options['type']   ||'Ethernet'
             ifcfg_content["onboot"]    = ether.options['onboot'] || 'yes'
             ifcfg_content["hwaddr"]    = ether.find_port(ports).mac_address
-            path = ether.options['path'] || "/etc/sysconfig/network-scripts/ifcfg-#{ether.name}"
-
             if ether.bootproto == "static"
               ifcfg_content["netmask"] = ether.find_port(ports).netmask
               ifcfg_content["ipaddr"]  = ether.find_port(ports).ip_address
             end
+
             ifcfg_content.merge!(ether.options)
 
+            path = ether.options['path'] || "/etc/sysconfig/network-scripts/ifcfg-#{ether.name}"
             {
               'content' => ifcfg_content.map {|k,v| "#{k.upcase}=#{v}"}.join("\n"),
               'owner' => "root:root",

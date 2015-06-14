@@ -21,14 +21,9 @@ module Pec
           Pec::Network::PortState.new(name, assign_port)
         end
 
-        def get_free_port_ip(ip, subnet)
-          port = fetch_free_port(subnet)
-          port ? IP.new("#{port["fixed_ips"][0]["ip_address"]}/#{ip.pfxlen}") : ip
-        end
-
         def create(ip, subnet, security_group_ids)
-          options = set_security_group(security_group_ids)
-          options = set_fixed_ip(options, subnet, ip)
+          options  = set_security_group(security_group_ids)
+          options  = set_fixed_ip(options, subnet, ip)
           response = Pec::Resource.get.create_port(subnet["network_id"], options)
 
           raise(Pec::Errors::Port, "ip:#{ip.to_addr} is not created!") unless response
@@ -43,6 +38,11 @@ module Pec
 
         def set_fixed_ip(options, subnet, ip)
           ip.to_s != subnet["cidr"] ? options.merge({ fixed_ips: [{ subnet_id: subnet["id"], ip_address: ip.to_addr}]}) : options
+        end
+
+        def get_free_port_ip(ip, subnet)
+          port = fetch_free_port(subnet)
+          port ? IP.new("#{port["fixed_ips"][0]["ip_address"]}/#{ip.pfxlen}") : ip
         end
 
         def delete(ip)

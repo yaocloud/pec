@@ -20,8 +20,7 @@ module Pec
         flavor_ref = Pec::Compute::Flavor.get_ref(host.flavor)
         image_ref  = Pec::Compute::Image.get_ref(host.image)
         options    = { "user_data" => Pec::Configure::UserData.make(host, ports) }
-
-        options.merge!(Pec::Director::Helper.get_nics(ports))
+        options    = Pec::Director::Helper.set_nics(options, ports)
 
         Pec::Compute::Server.create(host.name, image_ref, flavor_ref, options)
       end

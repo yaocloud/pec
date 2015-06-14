@@ -22,8 +22,8 @@ module Pec
           end if host.networks
         end
 
-        def get_nics(ports)
-          { 'nics' =>  ports.map { |port| { port_id: port.id } }}
+        def set_nics(options, ports)
+          ports ? options.merge({ 'nics' =>  ports.map { |port| { port_id: port.id } } }) : options
         end
 
         def get_security_group_id(security_groups)
