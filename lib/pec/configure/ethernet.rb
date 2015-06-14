@@ -7,7 +7,7 @@ module Pec
         @bootproto  = config[1]["bootproto"];
         @ip_address = config[1]["ip_address"];
         @options    = config[1].reject do |k,v|
-          { k => v } if k == "bootproto" && k == "ip_address"
+          { k => v } if k == "bootproto" || k == "ip_address"
         end
       end
 
