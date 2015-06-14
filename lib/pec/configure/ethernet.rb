@@ -3,16 +3,16 @@ module Pec
     class Ethernet
       attr_reader :name, :bootproto, :ip_address, :options
       def initialize(config)
-        @name = config[0];
-        @bootproto = config[1]["bootproto"];
+        @name       = config[0];
+        @bootproto  = config[1]["bootproto"];
         @ip_address = config[1]["ip_address"];
-        @options = config[1].select do |k,v|
+        @options    = config[1].select do |k,v|
           { k => v } if k != "bootproto" && k != "ip_address"
         end
       end
 
       def find_port(ports)
-        ports.find { |p| p.name == @name }
+        ports.find { |p| p.device_name == @name }
       end
 
       class << self

@@ -14,7 +14,7 @@ module Pec
             port_subnet = Pec::Network::Subnet.fetch(ip.network.to_s)
             raise(Pec::Errors::Subnet, "subnet:#{ip.network.to_s} is not fond!") unless port_subnet
 
-            port = Pec::Network::Port.new.assign(ether.name, ip, port_subnet, get_security_group_id(host.security_group))
+            port = Pec::Network::Port.assign(ether.name, ip, port_subnet, get_security_group_id(host.security_group))
             raise(Pec::Errors::Port, "ip addess:#{ip.to_addr} can't create port!") unless port
 
             puts "#{host.name}: assingn ip #{port.ip_address}".green

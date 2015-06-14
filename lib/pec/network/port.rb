@@ -3,96 +3,73 @@ module Pec
   class Network
     class Port
       extend Query
-      attr_reader :name, :subnet
-      @@use_ip_list = []
+      class << self
+        @@use_ip_list = []
 
-      def assign(name, ip, subnet, security_group_ids)
-        @name = name
-        @subnet = subnet
+        def assign(name, ip, subnet, security_group_ids)
+          ip = get_free_port_ip(ip, subnet) if request_any_address?(ip, subnet)
+          port_state = Pec::Network::PortState.new(name, fetch_by_ip(ip.to_addr))
 
-        # dhcp ip recycle
-        if request_any_address?(ip)
-          @port = fetch_free_port
-          ip = IP.new("#{@port["fixed_ips"][0]["ip_address"]}/#{ip.pfxlen}") unless @port.nil?
+          assign_port = case
+            when port_state.exists? &&  !port_state.used?
+              recreate(ip, subnet, security_group_ids)
+            when !port_state.exists?
+              create(ip, subnet, security_group_ids)
+            when port_state.used?
+              raise(Pec::Errors::Port, "ip:#{ip.to_addr} is used!")
+          end
+          Pec::Network::PortState.new(name, assign_port)
         end
-        case
-        when exists? && !used?
-          recreate(ip, subnet, security_group_ids)
-        when !exists?
-          create(ip, subnet, security_group_ids)
-        when used?
-          raise(Pec::Errors::Port, "ip:#{ip.to_addr} is used!")
-        end
-        self
-      end
 
-      def create(ip, subnet, security_group_ids)
-        options = { security_groups: security_group_ids }
-        options.merge!({ fixed_ips: [{ subnet_id: subnet["id"], ip_address: ip.to_addr}]}) if ip.to_s != subnet["cidr"]
-        response = Pec::Resource.get.create_port(subnet["network_id"], options)
-        if response
-          @port = response.data[:body]["port"] 
+        def get_free_port_ip(ip, subnet)
+          port = fetch_free_port(subnet)
+          port ? IP.new("#{port["fixed_ips"][0]["ip_address"]}/#{ip.pfxlen}") : ip
+        end
+
+        def create(ip, subnet, security_group_ids)
+          options = set_security_group(security_group_ids)
+          options = set_fixed_ip(options, subnet, ip)
+          response = Pec::Resource.get.create_port(subnet["network_id"], options)
+
+          raise(Pec::Errors::Port, "ip:#{ip.to_addr} is not created!") unless response
+
           @@use_ip_list << response.data[:body]["port"]["fixed_ips"][0]["ip_address"]
-          response.data[:body]["port"]["id"]
+          response.data[:body]["port"]
         end
-      end
 
-      def delete(ip)
-        target_port = fetch_by_ip(ip.to_addr)
-        response = Pec::Resource.get.delete_port(target_port["id"]) if target_port
-      end
-
-      def recreate(ip, subnet, security_group_ids)
-        create(ip, subnet, security_group_ids) if delete(ip)
-      end
-
-      def request_any_address?(ip)
-        ip.to_s == subnet["cidr"]
-      end
-
-      def list
-        Pec::Resource.get.port_list
-      end
-
-      def fetch_by_ip(ip_addr)
-        list.find {|p| p["fixed_ips"][0]["ip_address"] == ip_addr }
-      end
-
-      def fetch_free_port
-        list.find do |p|
-          p["fixed_ips"][0]["subnet_id"] == @subnet["id"] &&
-          p["device_owner"].empty? &&
-          p["admin_state_up"] &&
-          !@@use_ip_list.include?(p["fixed_ips"][0]["ip_address"])
+        def set_security_group(security_group_ids)
+          { security_groups: security_group_ids }
         end
-      end
 
-      def exists?
-        !@port.nil?
-      end
+        def set_fixed_ip(options, subnet, ip)
+          ip.to_s != subnet["cidr"] ? options.merge({ fixed_ips: [{ subnet_id: subnet["id"], ip_address: ip.to_addr}]}) : options
+        end
 
-      def used?
-        @port && !@port["device_owner"].empty?
-      end
+        def delete(ip)
+          target_port = fetch_by_ip(ip.to_addr)
+          response = Pec::Resource.get.delete_port(target_port["id"]) if target_port
+        end
 
-      def id
-        @port["id"]
-      end
+        def recreate(ip, subnet, security_group_ids)
+          create(ip, subnet, security_group_ids) if delete(ip)
+        end
 
-      def mac_address
-        @port["mac_address"]
-      end
+        def request_any_address?(ip, subnet)
+          ip.to_s == subnet["cidr"]
+        end
 
-      def ip_address
-        @port["fixed_ips"][0]["ip_address"]
-      end
+        def fetch_by_ip(ip_addr)
+          list.find {|p| p["fixed_ips"][0]["ip_address"] == ip_addr }
+        end
 
-      def network_id
-        @port["network_id"]
-      end
-
-      def netmask
-        IP.new(@port["fixed_ips"][0]["ip_address"]).netmask.to_s
+        def fetch_free_port(subnet)
+          list.find do |p|
+            p["fixed_ips"][0]["subnet_id"] == subnet["id"] &&
+            p["device_owner"].empty? &&
+            p["admin_state_up"] &&
+            !@@use_ip_list.include?(p["fixed_ips"][0]["ip_address"])
+          end
+        end
       end
     end
   end

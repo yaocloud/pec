@@ -23,6 +23,7 @@ require "pec/compute/image"
 require "pec/compute/tenant"
 require "pec/compute/security_group"
 require "pec/network/port"
+require "pec/network/port_state"
 require "pec/network/subnet"
 require "pec/cli"
 
