@@ -75,7 +75,7 @@ module Pec
             p["fixed_ips"][0]["subnet_id"] == subnet["id"] &&
             p["device_owner"].empty? &&
             p["admin_state_up"] &&
-            !assigned_ip?
+            !assigned_ip?(p)
           end
         end
       end
