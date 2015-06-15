@@ -27,10 +27,10 @@ describe Pec::Configure do
 
     it "user_data" do
       host = @configure.first
-      allow(YAML).to receive(:load_file).and_return(YAML.load_file("spec/fixture/stub/pec_configure_standard_p1.yaml"))
+      allow(YAML).to receive(:load_file).and_return(YAML.load_file("spec/fixture/stub/pec_configure_p1.yaml"))
       allow(FileTest).to receive(:exist?).and_return(true)
       expect(Pec::Configure::UserData.make(host, nil)).to eq(
-        Base64.encode64("#cloud-config\n" + host.user_data.merge(YAML.load_file("spec/fixture/stub/pec_configure_standard_p1.yaml").to_hash).to_yaml)
+        Base64.encode64("#cloud-config\n" + host.user_data.merge(YAML.load_file("spec/fixture/stub/pec_configure_p1.yaml").to_hash).to_yaml)
       )
     end
   end
