@@ -13,7 +13,7 @@ module Pec
 
         def get_template(config)
           config.templates.inject({}) do |merge_template, template|
-            template.concat('.yaml') unless template.match(/.*\.yaml/)
+            template.to_s.concat('.yaml') unless template.to_s.match(/.*\.yaml/)
             raise(Pec::Errors::UserData, "template:#{template} is not fond!") unless FileTest.exist?("user_datas/#{template}")
             merge_template.merge!(YAML.load_file("user_datas/#{template}").to_hash)
           end if config.templates
