@@ -39,17 +39,14 @@ class Director
 
       def err_message(e)
         puts e.to_s.magenta
-        false
       end
 
       def config_load_err_message
         puts "can't load configfile".magenta
-        false
       end
 
       def excon_err_message(e)
           JSON.parse(e.response[:body]).each { |e,m| puts "#{e}:#{m["message"]}".magenta }
-          false
       end
     end
   end

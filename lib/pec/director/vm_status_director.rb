@@ -32,7 +32,6 @@ module Pec
       def err_message(e, host)
           puts e.magenta
           puts "can't create server:#{host.name}".magenta if host
-          false
       end
     end
   end
