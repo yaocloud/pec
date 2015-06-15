@@ -5,11 +5,7 @@ module Pec
 
         def ports_assign(host)
           host.networks.map do |ether|
-            begin
-              ip = IP.new(ether.ip_address)
-            rescue ArgumentError => e
-              raise(Pec::Errors::Port, "ip:#{ether.ip_address} #{e}")
-            end
+            ip = IP.new(ether.ip_address)
 
             port_subnet = Pec::Network::Subnet.fetch_by_cidr(ip.network.to_s)
             raise(Pec::Errors::Subnet, "subnet:#{ip.network.to_s} is not fond!") unless port_subnet
@@ -20,6 +16,8 @@ module Pec
             puts "#{host.name}: assingn ip #{port.ip_address}".green
             port
           end if host.networks
+          rescue ArgumentError => e
+            raise(Pec::Errors::Port, "ip:#{ether.ip_address} #{e}")
         end
 
         def set_nics(options, ports)
