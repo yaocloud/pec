@@ -5,7 +5,6 @@ class Director
       def execute(action, host_name, options=nil)
         config = Pec::Configure.new("Pec.yaml")
         director = assign_director(action, options)
-
         config.filter_by_host(host_name).each do |host|
           begin
             director.execute!(host) if director.do_it?(host)

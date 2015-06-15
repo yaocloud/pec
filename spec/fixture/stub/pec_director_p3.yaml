@@ -1,0 +1,15 @@
+10:
+  tenant: 10
+  image: 10
+  flavor: 10
+  security_group :
+    - 10
+  networks:
+    eth0:
+      bootproto: static
+      ip_address: 10.10.10.10/104
+      gateway: 10.10.10.1054
+  templates:
+    - 10
+  user_data:
+    hostname: 10

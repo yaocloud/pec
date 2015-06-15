@@ -9,6 +9,8 @@ module Pec
         raise(Pec::Errors::Resource, "Please be tenant is always set") unless @@_tenant
         unless ENV['PEC_TEST']
           @@_resource[@@_tenant] ||= Pec::Resource::OpenStack.new(@@_tenant)
+        else
+          @@_resource[@@_tenant] ||= Pec::Resource::Mock.new(@@_tenant)
         end
       end
 

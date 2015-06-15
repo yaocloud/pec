@@ -42,7 +42,7 @@ describe Pec::Configure do
           it do
             hash =  YAML.load_file("spec/fixture/in/pec_configure_p1.yaml")
             hash["pyama-test001"].delete(column)
-            expect(lambda { Pec::Configure.new(hash)}).to raise_error(Pec::Errors::Host)
+            expect { Pec::Configure.new(hash)}.to raise_error(Pec::Errors::Host)
           end
         end
 
@@ -50,7 +50,7 @@ describe Pec::Configure do
           it do
             hash =  YAML.load_file("spec/fixture/in/pec_configure_p1.yaml")
             hash["pyama-test001"][column] = nil
-            expect(lambda { Pec::Configure.new(hash)}).to raise_error(Pec::Errors::Host)
+            expect { Pec::Configure.new(hash)}.to raise_error(Pec::Errors::Host)
           end
         end
         describe 'image' do
@@ -77,7 +77,7 @@ describe Pec::Configure do
             @hash =  YAML.load_file("spec/fixture/in/pec_configure_p1.yaml")
             @hash["pyama-test001"]["networks"]["eth0"].delete("bootproto")
           end
-          it { expect(lambda { Pec::Configure.new(@hash)}).to raise_error(Pec::Errors::Ethernet) }
+          it { expect { Pec::Configure.new(@hash)}.to raise_error(Pec::Errors::Ethernet) }
         end
         describe 'ip address by bootproto is static' do
           before do
@@ -85,7 +85,7 @@ describe Pec::Configure do
             @hash["pyama-test001"]["networks"]["eth0"]["bootproto"] = "static"
             @hash["pyama-test001"]["networks"]["eth0"].delete("ip_address")
           end
-          it { expect(lambda { Pec::Configure.new(@hash)}).to raise_error(Pec::Errors::Ethernet) }
+          it { expect { Pec::Configure.new(@hash)}.to raise_error(Pec::Errors::Ethernet) }
         end
       end
       describe 'unknown bootproto' do
@@ -94,7 +94,7 @@ describe Pec::Configure do
             @hash =  YAML.load_file("spec/fixture/in/pec_configure_p1.yaml")
             @hash["pyama-test001"]["networks"]["eth0"]["bootproto"] = "hoge"
           end
-          it { expect(lambda { Pec::Configure.new(@hash)}).to raise_error(Pec::Errors::Ethernet) }
+          it { expect { Pec::Configure.new(@hash)}.to raise_error(Pec::Errors::Ethernet) }
         end
       end
     end
