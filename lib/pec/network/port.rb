@@ -55,7 +55,7 @@ module Pec
 
         def delete(ip)
           target_port = fetch_by_ip(ip.to_addr)
-          response = Pec::Resource.get.delete_port(target_port["id"]) if target_port
+          Pec::Resource.get.delete_port(target_port["id"]) if target_port
         end
 
         def recreate(ip, subnet, security_group_ids)
