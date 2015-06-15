@@ -25,11 +25,20 @@ module Pec
           options  = set_security_group(security_group_ids)
           options  = set_fixed_ip(options, subnet, ip)
           response = Pec::Resource.get.create_port(subnet["network_id"], options)
-
-          raise(Pec::Errors::Port, "ip:#{ip.to_addr} is not created!") unless response
+          raise(Pec::Errors::Port, "ip:#{ip.to_addr} is not created!") unless response[:status] == 201
           append_assigned_ip(response)
+          port_from_response(response)
+        end
 
-          response.data[:body]["port"]
+        def delete(ip)
+          target_port = fetch_by_ip(ip.to_addr)
+          response = Pec::Resource.get.delete_port(target_port["id"]) if target_port
+          raise(Pec::Errors::Host, "ip:#{ip.to_addr} response err status:#{response[:status]}") unless response[:status] == 204
+          true
+        end
+
+        def recreate(ip, subnet, security_group_ids)
+          create(ip, subnet, security_group_ids) if delete(ip)
         end
 
         def set_security_group(security_group_ids)
@@ -41,42 +50,53 @@ module Pec
         end
 
         def append_assigned_ip(response)
-          @@use_ip_list << response.data[:body]["port"]["fixed_ips"][0]["ip_address"]
+          @@use_ip_list << ip_from_port(port_from_response(response))
         end
 
         def assigned_ip?(port)
-          @@use_ip_list.include?(port["fixed_ips"][0]["ip_address"])
+          @@use_ip_list.include?(ip_from_port(port))
         end
 
         def get_free_port_ip(ip, subnet)
-          port = fetch_free_port(subnet)
-          port ? IP.new("#{port["fixed_ips"][0]["ip_address"]}/#{ip.pfxlen}") : ip
+          port = get_free_port(subnet)
+          port ? IP.new("#{ip_from_port(port)}/#{ip.pfxlen}") : ip
         end
 
-        def delete(ip)
-          target_port = fetch_by_ip(ip.to_addr)
-          Pec::Resource.get.delete_port(target_port["id"]) if target_port
+        def fetch_by_ip(ip_addr)
+          list.find {|p| ip_from_port(p) == ip_addr }
         end
 
-        def recreate(ip, subnet, security_group_ids)
-          create(ip, subnet, security_group_ids) if delete(ip)
+        def port_from_response(response)
+          response.data[:body]["port"]
+        end
+
+        def ip_from_port(port)
+          port["fixed_ips"][0]["ip_address"] 
+        end
+
+        def get_free_port(subnet)
+          list.find do |p|
+            same_subnet?(p, subnet) &&
+            unused?(p) &&
+            admin_state_up?(p) &&
+            !assigned_ip?(p)
+          end
         end
 
         def request_any_address?(ip, subnet)
           ip.to_s == subnet["cidr"]
         end
 
-        def fetch_by_ip(ip_addr)
-          list.find {|p| p["fixed_ips"][0]["ip_address"] == ip_addr }
+        def same_subnet?(port, subnet)
+          port["fixed_ips"][0]["subnet_id"] == subnet["id"]
         end
 
-        def fetch_free_port(subnet)
-          list.find do |p|
-            p["fixed_ips"][0]["subnet_id"] == subnet["id"] &&
-            p["device_owner"].empty? &&
-            p["admin_state_up"] &&
-            !assigned_ip?(p)
-          end
+        def unused?(port)
+          port["device_owner"].empty?
+        end
+
+        def admin_state_up?(port)
+          port["admin_state_up"]
         end
       end
     end

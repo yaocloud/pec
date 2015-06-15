@@ -15,7 +15,7 @@ module Pec
               }
             ],
             "network_id" => c,
-            "device_owner" => c % 2 == 0 ? c.to_s : nil,
+            "device_owner" => c % 2 == 0 ? c.to_s : "",
             "admin_state_up" => c % 2 == 0 ? "True" : "False"
           }
        end
@@ -85,13 +85,13 @@ module Pec
 
       def create_server(name, image_ref, flavor_ref, options)
         object = Object.new
-        object.set_value(name)
+        object.set_value(name, 202)
         object
       end
 
       def delete_server(server_id)
         object = Object.new
-        object.set_value(server_id)
+        object.set_value(server_id, 204)
         object
       end
 
@@ -128,21 +128,23 @@ module Pec
       end
       def create_port(network_id, options)
         object = Object.new
-        object.set_value(network_id)
+        object.set_value(network_id, 201)
         object
       end
 
       def delete_port(port_id)
-          port_id % 2 == 0 ? false : true
+        object = Object.new
+        object.set_value(port_id, 204)
+        object
       end
     end
   end
 end
 class Object
   attr_reader :status
-  def set_value(value)
+  def set_value(value, status)
     @value = value
-    @status = @value.to_i % 2 == 0 ? 204 : 202
+    @status = @value.to_i % 2 == 0 ? 999 : status
   end
 
   def [](key)
@@ -161,7 +163,7 @@ class Object
             }
           ],
           "network_id" => @value,
-          "device_owner" => @value.to_s,
+          "device_owner" => @value.to_i % 2 == 0 ? @value : "",
           "admin_state_up" => @value.to_i % 2 == 0 ? "True" : "False"
         },
         "server" => {
