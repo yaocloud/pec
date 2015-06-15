@@ -34,7 +34,7 @@ describe Pec::Director do
   end
 
   describe 'destroy director' do
-    describe 'NG' do
+    describe 'OK' do
       before do
         allow(YAML).to receive(:load_file).and_return(YAML.load_file("spec/fixture/stub/pec_director_p3.yaml"))
         @configure = Pec::Configure.new("spec/fixture/stub/pec_director_p3.yaml")

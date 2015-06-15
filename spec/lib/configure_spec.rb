@@ -1,7 +1,8 @@
 require 'spec_helper'
+require 'support/configure'
 require 'base64'
 describe Pec::Configure do
-  describe 'standard' do
+  describe 'value check' do
     before do
       @configure = Pec::Configure.new("spec/fixture/in/pec_configure_p1.yaml")
     end
@@ -29,6 +30,7 @@ describe Pec::Configure do
       host = @configure.first
       allow(YAML).to receive(:load_file).and_return(YAML.load_file("spec/fixture/stub/pec_configure_p1.yaml"))
       allow(FileTest).to receive(:exist?).and_return(true)
+
       expect(Pec::Configure::UserData.make(host, nil)).to eq(
         Base64.encode64("#cloud-config\n" + host.user_data.merge(YAML.load_file("spec/fixture/stub/pec_configure_p1.yaml").to_hash).to_yaml)
       )
@@ -40,17 +42,13 @@ describe Pec::Configure do
       describe 'must column' do
         shared_examples_for 'require test' do
           it do
-            hash =  YAML.load_file("spec/fixture/in/pec_configure_p1.yaml")
-            hash["pyama-test001"].delete(column)
-            expect { Pec::Configure.new(hash)}.to raise_error(Pec::Errors::Host)
+            expect { Pec::Configure.new(get_delete_column_hash(column))}.to raise_error(Pec::Errors::Host)
           end
         end
 
         shared_examples_for 'null test' do
           it do
-            hash =  YAML.load_file("spec/fixture/in/pec_configure_p1.yaml")
-            hash["pyama-test001"][column] = nil
-            expect { Pec::Configure.new(hash)}.to raise_error(Pec::Errors::Host)
+            expect { Pec::Configure.new(get_nil_column_hash(column))}.to raise_error(Pec::Errors::Host)
           end
         end
         describe 'image' do
@@ -73,30 +71,18 @@ describe Pec::Configure do
     describe 'network' do
       describe 'require' do
         describe 'bootproto' do
-          before do
-            @hash =  YAML.load_file("spec/fixture/in/pec_configure_p1.yaml")
-            @hash["pyama-test001"]["networks"]["eth0"].delete("bootproto")
-          end
-          it { expect { Pec::Configure.new(@hash)}.to raise_error(Pec::Errors::Ethernet) }
+          it { expect { Pec::Configure.new(get_delete_network_column_hash("bootproto")) }.to raise_error(Pec::Errors::Ethernet) }
         end
         describe 'ip address by bootproto is static' do
-          before do
-            @hash =  YAML.load_file("spec/fixture/in/pec_configure_p1.yaml")
-            @hash["pyama-test001"]["networks"]["eth0"]["bootproto"] = "static"
-            @hash["pyama-test001"]["networks"]["eth0"].delete("ip_address")
-          end
-          it { expect { Pec::Configure.new(@hash)}.to raise_error(Pec::Errors::Ethernet) }
+          it { expect { Pec::Configure.new(get_delete_network_column_hash("ip_address")) }.to raise_error(Pec::Errors::Ethernet) }
         end
       end
       describe 'unknown bootproto' do
         describe 'not static and dhcp' do
-          before do
-            @hash =  YAML.load_file("spec/fixture/in/pec_configure_p1.yaml")
-            @hash["pyama-test001"]["networks"]["eth0"]["bootproto"] = "hoge"
-          end
-          it { expect { Pec::Configure.new(@hash)}.to raise_error(Pec::Errors::Ethernet) }
+          it { expect { Pec::Configure.new(set_network_bootproto("hoge")) }.to raise_error(Pec::Errors::Ethernet) }
         end
       end
     end
   end
 end
+

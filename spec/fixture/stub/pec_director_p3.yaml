@@ -1,15 +1,15 @@
-10:
-  tenant: 10
-  image: 10
-  flavor: 10
+11:
+  tenant: 11
+  image: 11
+  flavor: 11
   security_group :
-    - 10
+    - 11
   networks:
     eth0:
       bootproto: static
-      ip_address: 10.10.10.10/104
-      gateway: 10.10.10.1054
+      ip_address: 11.11.11.11/114
+      gateway: 11.11.11.1154
   templates:
-    - 10
+    - 11
   user_data:
-    hostname: 10
+    hostname: 11
