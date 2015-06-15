@@ -13,7 +13,7 @@ module Pec
       end
 
       def used?
-        @port && !@port["device_owner"].empty?
+        @port && !@port["device_owner"].nil?
       end
 
       def id
