@@ -11,7 +11,7 @@ module Pec
               raise(Pec::Errors::Port, "ip:#{ether.ip_address} #{e}")
             end
 
-            port_subnet = Pec::Network::Subnet.fetch(ip.network.to_s)
+            port_subnet = Pec::Network::Subnet.fetch_by_cider(ip.network.to_s)
             raise(Pec::Errors::Subnet, "subnet:#{ip.network.to_s} is not fond!") unless port_subnet
 
             port = Pec::Network::Port.assign(ether.name, ip, port_subnet, get_security_group_id(host.security_group))
