@@ -51,18 +51,14 @@ module Pec
       end
 
       def image_list
-        1.upto(10).map do |c|
-          {
-            "id" => c,
-            "name" => c,
-            "links" => [
-              "href" => c
-            ]
-          }
-        end
+        ref_list
       end
 
       def flavor_list
+        ref_list
+      end
+
+      def ref_list
         1.upto(10).map do |c|
           {
             "id" => c,
@@ -72,6 +68,7 @@ module Pec
             ]
           }
         end
+
       end
 
       def tenant_list
