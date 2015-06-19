@@ -16,7 +16,7 @@ class Director
         end if config
 
         rescue Pec::Errors::Configure => e
-          config_load_err_message(e)
+          config_load_err_message
         rescue Pec::Errors::Error => e
           err_message(e)
         rescue Errno::ENOENT => e
@@ -45,7 +45,11 @@ class Director
       end
 
       def excon_err_message(e)
+        if e.response
           JSON.parse(e.response[:body]).each { |e,m| puts "#{e}:#{m["message"]}".magenta }
+        else
+          puts e
+        end
       end
     end
   end
