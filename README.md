@@ -8,11 +8,6 @@ OpenStackにおいて複数サーバの起動一括起動停止や、 DHCPサー
 
 ## Install
 
-    $ gem install specific_install
-
-    # この手順は限定的です.
-    $ gem specific_install 'git@github.com:fog/fog.git'
-
     $ gem install pec
 
 ## Usage
