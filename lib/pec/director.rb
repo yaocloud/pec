@@ -16,7 +16,7 @@ class Director
         end if config
 
         rescue Pec::Errors::Configure => e
-          config_load_err_message
+          config_load_err_message(e)
         rescue Pec::Errors::Error => e
           err_message(e)
         rescue Errno::ENOENT => e
