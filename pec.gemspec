@@ -17,11 +17,11 @@ Gem::Specification.new do |spec|
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
-  spec.add_dependency 'thor'
-  spec.add_dependency 'fog'
-  spec.add_dependency 'ruby-ip'
-  spec.add_dependency 'activesupport'
-  spec.add_dependency "colorator"
+  spec.add_dependency 'thor', '~> 0.19.1'
+  spec.add_dependency 'fog', '~> 1.30.0'
+  spec.add_dependency 'ruby-ip', '~> 0.9.3'
+  spec.add_dependency 'activesupport', '~> 4.2.1'
+  spec.add_dependency 'colorator', '~> 0.1'
   spec.add_development_dependency "bundler"
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "rake"
