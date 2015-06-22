@@ -47,7 +47,7 @@ module Pec
       end
 
       def netmask(ports)
-        ports.find { |p| p.device_name == @name }.netmask(@ipaddress.split("/").last)
+        ports.find { |p| p.device_name == @name }.netmask(@ip_address.split("/").last)
       end
 
       def port_ip_address(ports)
