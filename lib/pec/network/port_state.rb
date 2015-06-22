@@ -32,8 +32,8 @@ module Pec
         @port["network_id"]
       end
 
-      def netmask
-        IP.new(@port["fixed_ips"][0]["ip_address"]).netmask.to_s
+      def netmask(cidr)
+        IP.new("#{@port["fixed_ips"][0]["ip_address"]}/#{cidr}").netmask.to_s
       end
     end
   end
