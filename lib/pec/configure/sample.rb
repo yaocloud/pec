@@ -4,7 +4,7 @@ module Pec
       class << self
         def pec_file
           {
-            "sever_name" => {
+            "your_sever_name" => {
               "tenant" =>  "your_tenant",
               "image" =>  "centos-7",
               "flavor" =>  "m1.small",
