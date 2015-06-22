@@ -8,22 +8,20 @@ module Pec
               "tenant" =>  "your_tenant",
               "image" =>  "centos-7",
               "flavor" =>  "m1.small",
-              "networks" => [
-                {
-                  "eth0" => {
-                    "bootproto" => "static",
-                    "ip_address" => "10.0.0.0/24",
-                    "gateway" =>  "10.0.0.254",
-                    "dns1" => "10.0.0.10"
-                  },
-                  "eth1" => {
-                    "bootproto" => "static",
-                    "ip_address" => "20.0.0.11/24",
-                    "gateway" =>  "20.0.0.254",
-                    "dns1" => "20.0.0.10"
-                  }
+              "networks" => {
+                "eth0" => {
+                  "bootproto" => "static",
+                  "ip_address" => "10.0.0.0/24",
+                  "gateway" =>  "10.0.0.254",
+                  "dns1" => "10.0.0.10"
+                },
+                "eth1" => {
+                  "bootproto" => "static",
+                  "ip_address" => "20.0.0.11/24",
+                  "gateway" =>  "20.0.0.254",
+                  "dns1" => "20.0.0.10"
                 }
-              ],
+              },
               "security_group" => [
                 "default",
                 "www from any"
