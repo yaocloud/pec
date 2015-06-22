@@ -39,7 +39,12 @@ describe Pec::Configure do
 
   describe 'validate' do
     describe 'host' do
-      describe 'must column' do
+      describe 'require column' do
+        shared_examples_for 'base no error' do
+          it do
+            expect { Pec::Configure.new(get_delete_column_hash(column))}.not_to raise_error
+          end
+        end
         shared_examples_for 'require test' do
           it do
             expect { Pec::Configure.new(get_delete_column_hash(column))}.to raise_error(Pec::Errors::Host)
@@ -49,6 +54,12 @@ describe Pec::Configure do
         shared_examples_for 'null test' do
           it do
             expect { Pec::Configure.new(get_nil_column_hash(column))}.to raise_error(Pec::Errors::Host)
+          end
+        end
+
+        shared_examples_for 'format test' do
+          it do
+            expect { Pec::Configure.new(get_array_column_to_string_hash(column))}.to raise_error(Pec::Errors::Host)
           end
         end
         describe 'image' do
@@ -66,8 +77,20 @@ describe Pec::Configure do
           it_behaves_like 'require test'
           it_behaves_like 'null test'
         end
+        describe 'security_group' do
+          let(:column) { "security_group" }
+          it_behaves_like 'base no error'
+          it_behaves_like 'format test'
+
+        end
+        describe 'templates' do
+          let(:column) { "templates" }
+          it_behaves_like 'base no error'
+          it_behaves_like 'format test'
+        end
       end
     end
+
     describe 'network' do
       describe 'require' do
         describe 'bootproto' do

@@ -19,17 +19,24 @@ module Pec
 
       class << self
         def load(config)
-          host = self.new(config) if check_require_key(config)
+          host = self.new(config) if check_format(config)
+
           config[1]["networks"].each do |net|
+            raise(Pec::Errors::Ethernet, "please! network interface format is Array") unless net.kind_of?(Array)
+
             net_config = Pec::Configure::Ethernet.load(config[0], net)
             host.append_network(net_config) if net_config
+
           end if host && config[1]["networks"]
           host
         end
 
-        def check_require_key(config)
+        def check_format(config)
           err = %w(image flavor tenant).find {|r| !config[1].key?(r) || config[1][r].nil? }
           raise(Pec::Errors::Host,"skip! #{config[0]}: #{err} is required!") unless  err.nil?
+
+          err = %w(security_group templates).find {|r| config[1].key?(r) && !config[1][r].kind_of?(Array) }
+          raise(Pec::Errors::Host,"#{config[0]}: please! #{err} format is Array!") unless err.nil?
           true
         end
       end
