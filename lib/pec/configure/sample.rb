@@ -26,7 +26,9 @@ module Pec
                 "default",
                 "www from any"
               ],
-              "templates" => "web_server.yaml",
+              "templates" => [
+                "web_server.yaml"
+              ],
               "user_data" => {
                   "hostname" => "pec",
                   "fqdn" => "pec.pyama.com"
