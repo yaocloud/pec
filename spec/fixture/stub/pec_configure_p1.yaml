@@ -1,1 +1,2 @@
-fqdn: pyama-test001.test.com
+users:
+  - name: 2

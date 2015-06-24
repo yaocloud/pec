@@ -6,8 +6,8 @@ module Pec
         def make(config, ports)
           user_data = {}
           user_data["write_files"] = make_port_content(config, ports) if ports
-          user_data.merge!(config.user_data) if config.user_data
-          user_data.merge!(get_template(config)) if get_template(config)
+          user_data.deep_merge!(config.user_data) if config.user_data
+          user_data.deep_merge!(get_template(config)) if get_template(config)
           Base64.encode64("#cloud-config\n" + user_data.to_yaml)
         end
 
@@ -15,7 +15,7 @@ module Pec
           config.templates.inject({}) do |merge_template, template|
             template.to_s.concat('.yaml') unless template.to_s.match(/.*\.yaml/)
             raise(Pec::Errors::UserData, "template:#{template} is not fond!") unless FileTest.exist?("user_datas/#{template}")
-            merge_template.merge!(YAML.load_file("user_datas/#{template}").to_hash)
+            merge_template.deep_merge!(YAML.load_file("user_datas/#{template}").to_hash)
           end if config.templates
         end
 
@@ -34,3 +34,4 @@ module Pec
     end
   end
 end
+

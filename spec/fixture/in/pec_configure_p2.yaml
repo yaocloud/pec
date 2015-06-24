@@ -1,0 +1,5 @@
+hostname: pyama-test001
+fqdn: pyama-test001.test.com
+users:
+  - name: 1
+  - name: 2

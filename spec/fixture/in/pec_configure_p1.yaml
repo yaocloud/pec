@@ -14,3 +14,6 @@ pyama-test001:
     - "pec_configure_standard_p1.yaml"
   user_data:
     hostname: pyama-test001
+    fqdn: pyama-test001.test.com
+    users:
+      - name: 1
