@@ -20,7 +20,7 @@ class Director
         rescue Pec::Errors::Error => e
           err_message(e)
         rescue Errno::ENOENT => e
-          err_messag(e)
+          err_message(e)
       end
 
       def assign_director(action, options)
