@@ -7,11 +7,13 @@ module Pec
           host.networks.map do |ether|
             ip = IP.new(ether.ip_address)
 
-            port_subnet = Pec::Network::Subnet.fetch_by_cidr(ip.network.to_s)
-            raise(Pec::Errors::Subnet, "subnet:#{ip.network.to_s} is not fond!") unless port_subnet
+            unless port_subnet = Pec::Network::Subnet.fetch_by_cidr(ip.network.to_s)
+              raise(Pec::Errors::Subnet, "subnet:#{ip.network.to_s} is not fond!")
+            end
 
-            port = Pec::Network::Port.assign(ether.name, ip, port_subnet, get_security_group_id(host.security_group))
-            raise(Pec::Errors::Port, "ip addess:#{ip.to_addr} can't create port!") unless port
+            unless port = Pec::Network::Port.assign(ether.name, ip, port_subnet, get_security_group_id(host.security_group))
+              raise(Pec::Errors::Port, "ip addess:#{ip.to_addr} can't create port!")
+            end
 
             puts "#{host.name}: assingn ip #{port.ip_address}".green
             port

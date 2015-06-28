@@ -4,6 +4,8 @@ module Pec
     include Enumerable
 
     def initialize(file_name)
+      @configure = []
+
       if file_name.is_a?(Hash)
         hash = file_name
       else
@@ -11,8 +13,7 @@ module Pec
       end
 
       hash.each do |config|
-        host = Pec::Configure::Host.load(config)
-        @configure ||= []
+        host = Pec::Configure::Host.new(config)
         @configure << host if host
       end
       rescue Psych::SyntaxError,NoMethodError => e
