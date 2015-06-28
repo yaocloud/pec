@@ -10,6 +10,8 @@ class Director
             director.execute!(host) if director.do_it?(host)
           rescue Pec::Errors::Error => e
             director.err_message(e, host)
+          rescue Excon::Errors::SocketError => e
+            err_message(e)
           rescue Excon::Errors::Error => e
             excon_err_message(e)
           end
