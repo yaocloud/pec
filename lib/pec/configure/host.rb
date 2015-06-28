@@ -24,7 +24,7 @@ module Pec
           config[1]["networks"].each do |net|
             raise(Pec::Errors::Ethernet, "please! network interface format is Array") unless net.kind_of?(Array)
 
-            net_config = Pec::Configure::Ethernet.load(config[0], net)
+            net_config = Pec::Configure::Ethernet.new(config[0], net)
             host.append_network(net_config) if net_config
 
           end if host && config[1]["networks"]

@@ -2,7 +2,10 @@ module Pec
   class Configure
     class Ethernet
       attr_reader :name, :bootproto, :ip_address, :options
-      def initialize(config)
+      def initialize(name, config)
+        check_require_key(name, config)
+        check_network_key(name, config)
+
         @name       = config[0];
         @bootproto  = config[1]["bootproto"];
         @ip_address = config[1]["ip_address"];
@@ -58,26 +61,20 @@ module Pec
         @bootproto == "static"
       end
 
-      class << self
-        def load(name, config)
-          self.new(config) if check_require_key(name, config) && check_network_key(name, config)
-        end
+      def check_require_key(name, config)
+        raise(Pec::Errors::Ethernet, "skip! #{name}: bootproto is required!") if config[1]["bootproto"].nil?
+        true
+      end
 
-        def check_require_key(name, config)
-          raise(Pec::Errors::Ethernet, "skip! #{name}: bootproto is required!") if config[1]["bootproto"].nil?
-          true
+      def check_network_key(name, config)
+        net = config[1]
+        case
+        when (net["bootproto"] == "static" && net["ip_address"].nil?)
+          raise(Pec::Errors::Ethernet, "skip! #{name}: ip_address is required by bootproto static")
+        when (net["bootproto"] != "static" && net["bootproto"] != "dhcp")
+          raise(Pec::Errors::Ethernet, "skip! #{name}: bootproto set the value dhcp or static")
         end
-
-        def check_network_key(name, config)
-          net = config[1]
-          case
-          when (net["bootproto"] == "static" && net["ip_address"].nil?)
-            raise(Pec::Errors::Ethernet, "skip! #{name}: ip_address is required by bootproto static")
-          when (net["bootproto"] != "static" && net["bootproto"] != "dhcp")
-            raise(Pec::Errors::Ethernet, "skip! #{name}: bootproto set the value dhcp or static")
-          end
-          true
-        end
+        true
       end
     end
   end
