@@ -28,7 +28,7 @@ module Pec
 
         def get_security_group_id(security_groups)
           security_groups.map do |sg_name|
-            sg = Pec::Compute::Security_Group.fetch(sg_name)
+            sg = Pec::Network::Security_Group.fetch(sg_name)
             raise(Pec::Errors::SecurityGroup, "security_group:#{sg_name} is not found!") unless sg
             sg["id"]
           end if security_groups

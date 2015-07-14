@@ -1,5 +1,5 @@
 module Pec
-  class Compute
+  class Network
     class Security_Group
       extend Query
     end

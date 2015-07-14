@@ -20,7 +20,7 @@ module Pec
       end
 
       def security_group_list
-        @_security_groups ||= @compute.list_security_groups[:body]['security_groups']
+        @_security_groups ||= @network.list_security_groups[:body]['security_groups']
       end
 
       def image_list
