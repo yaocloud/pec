@@ -4,7 +4,11 @@ module Pec
       extend Query
       class << self
         def get_name(id)
-          list.find {|p| p["id"] == id }["name"]
+          begin
+            list.find {|p| p["id"] == id }["name"]
+          rescue
+            Pec::Resource.get_tenant
+          end
         end
       end
     end

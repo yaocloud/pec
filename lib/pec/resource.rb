@@ -17,6 +17,10 @@ module Pec
       def set_tenant(tenant)
         @@_tenant = tenant
       end
+
+      def get_tenant
+        @@_tenant
+      end
     end
   end
 end
