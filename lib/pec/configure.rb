@@ -12,7 +12,17 @@ module Pec
         hash = YAML.load_file(file_name).to_hash
       end
 
+      config_default = nil
       hash.each do |config|
+        if not config_default.nil?
+          config[1] = config_default.update(config[1])
+        else
+          if config[0] == '_DEFAULT_'
+            config_default = config[1]
+            next
+          end
+        end
+
         host = Pec::Configure::Host.new(config)
         @configure << host if host
       end
