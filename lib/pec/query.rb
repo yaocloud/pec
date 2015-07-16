@@ -16,5 +16,9 @@ module Pec
       raise(Pec::Errors::Query, "#{class_name}:#{name} ref is not fond!") unless response
       response["links"][0]["href"]
     end
+        
+    def get_name(id)
+      list.find {|p| p["id"] == id }["name"]
+    end
   end
 end
