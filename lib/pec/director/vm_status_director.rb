@@ -21,8 +21,8 @@ module Pec
           detail = Pec::Resource.get.get_server_details(server["id"])
           status = detail["status"] 
           compute_node = detail["OS-EXT-SRV-ATTR:host"]
-          flavor = detail["flavor"]["id"]
           tenant_name = Pec::Compute::Tenant.get_name(detail["tenant_id"])
+          flavor = Pec::Compute::Flavor.get_name(detail["flavor"]["id"])
           ip_address = Pec::Director::Helper.parse_from_addresses(detail["addresses"]).join(",")
         end
 
