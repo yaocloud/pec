@@ -20,6 +20,9 @@ module Pec
         end
         config[1] = config_default.update(config[1])
 
+        config[1]['user_data'] ||= {}
+        config[1]['user_data']['fqdn'] ||= config[0]
+
         host = Pec::Configure::Host.new(config)
         @configure << host if host
       end
