@@ -12,13 +12,8 @@ module Pec
         hash = YAML.load_file(file_name).to_hash
       end
 
-      config_default = {}
       hash.each do |config|
-        if config[0] =~ /^_DEFAULT_/
-          config_default = config_default.update(config[1])
-          next
-        end
-        config[1] = config_default.update(config[1])
+        next if config[0] =~ /^_.+_$/
 
         config[1]['user_data'] ||= {}
         config[1]['user_data']['fqdn'] ||= config[0]
