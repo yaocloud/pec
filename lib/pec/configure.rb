@@ -13,6 +13,8 @@ module Pec
       end
 
       hash.each do |config|
+        next if config[0] =~ /^_.+_$/
+
         config[1]['user_data'] ||= {}
         config[1]['user_data']['fqdn'] ||= config[0]
 
