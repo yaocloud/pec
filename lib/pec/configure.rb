@@ -11,11 +11,11 @@ module Pec
       else
         hash = YAML.load_file(file_name).to_hash
       end
-
-      hash.each do |config|
+     
+      hash.reject {|c| c[0].to_s.match(/^_/)}.each do |config|
 
         config[1]['user_data'] ||= {}
-        config[1]['user_data']['fqdn'] ||= config[0]
+        config[1]['user_data']['fqdn'] ||= config[0].to_s
 
         host = Pec::Configure::Host.new(config)
         @configure << host if host
