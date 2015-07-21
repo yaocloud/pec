@@ -1,7 +1,7 @@
 module Pec
   class Configure
     class Host
-      attr_reader :name, :image, :flavor,:security_group, :user_data, :networks, :templates, :tenant
+      attr_reader :name, :image, :flavor,:security_group, :user_data, :networks, :templates, :tenant, :availability_zone
       def initialize(config)
         check_format(config)
         append_network(config[1])
@@ -12,6 +12,7 @@ module Pec
         @user_data      = config[1]["user_data"];
         @templates      = config[1]["templates"]
         @tenant         = config[1]["tenant"]
+        @availability_zone = config[1]["availability_zone"]
       end
 
       def append_network(config)
