@@ -2,13 +2,13 @@ module Pec
   class Init
     class << self
       def create_template_dir
-        dirname = "user_datas"
+        dirname = "user_data"
         unless FileTest.exist?(dirname)
-          FileUtils.mkdir_p(dirname) 
+          FileUtils.mkdir_p(dirname)
           open("#{dirname}/web_server.yaml.sample","w") do |e|
             YAML.dump(Pec::Configure::Sample.user_data, e)
           end if FileTest.exist?(dirname)
-          puts "create directry user_datas".green
+          puts "create directry user_data".green
         end
       end
 
@@ -23,7 +23,7 @@ module Pec
 
       def create_fog_config
         thor = Thor.new
-        if !File.exist?(File.expand_path("~/.fog")) || thor.yes?("Do you want to overwrite the existing ~/.fog? [y/N]") 
+        if !File.exist?(File.expand_path("~/.fog")) || thor.yes?("Do you want to overwrite the existing ~/.fog? [y/N]")
           thor.say("Start Configure by OpenStack", :yellow)
           params = {}
 
