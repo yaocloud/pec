@@ -18,7 +18,7 @@ OpenStackにおいて複数サーバの起動一括起動停止や、 DHCPサー
 
 ```
 create - /Pec.yaml
-create - /user_datas/web_server.yaml.sample
+create - /user_data/web_server.yaml.sample
 ```
 
 Pec.yamlに基づきホストを作成します。
@@ -74,7 +74,7 @@ pyama-test002:
 | flavor         | フレーバー名                                   | ○    | m1.small                        |
 | networks       | ネットワーク定義                               | -    | []                              |
 | security_group | セキュリティグループ名                         | -    | [default,ssh]                   |
-| templates      | `user_data`のテンプレート.`./user_datas`に配置 | -    | [base.yaml,webserver.yaml]      |
+| templates      | `user_data`のテンプレート.`./user_data`に配置 | -    | [base.yaml,webserver.yaml]      |
 | user_data      | cloud-init記法に準拠                           | -    | -                               |
 * 先頭が_で開始されるインスタンス名はyaml merge記法用途と認識し、スキップします
 
