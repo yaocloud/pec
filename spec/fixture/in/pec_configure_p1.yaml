@@ -1,6 +1,7 @@
 _default: &def
   image: centos-7.1_chef-12.3_puppet-3.7
   flavor: m1.small
+  availability_zone: nova
 pyama-test001.test.com:
   <<: *def
   tenant: test_tenant

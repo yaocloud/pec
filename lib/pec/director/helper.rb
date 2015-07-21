@@ -26,8 +26,8 @@ module Pec
           ports ? options.merge({ 'nics' =>  ports.map { |port| { port_id: port.id } } }) : options
         end
 
-        def set_availability_zone(options, availability_zone)
-          availability_zone ? options.merge({ 'availability_zone' => availability_zone }) : options
+        def set_availability_zone(options, host)
+          host.availability_zone ? options.merge({ 'availability_zone' => host.availability_zone }) : options
         end
 
         def get_security_group_id(security_groups)

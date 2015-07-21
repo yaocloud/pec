@@ -12,6 +12,7 @@ describe Pec::Configure do
       expect(host.flavor).to eq("m1.small")
       expect(host.image).to eq("centos-7.1_chef-12.3_puppet-3.7")
       expect(host.name).to eq("pyama-test001.test.com")
+      expect(host.availability_zone).to eq("nova")
     end
 
     it 'ether' do

@@ -21,7 +21,7 @@ module Pec
         image_ref  = Pec::Compute::Image.get_ref(host.image)
         options    = { "user_data" => Pec::Configure::UserData.make(host, ports) }
         options    = Pec::Director::Helper.set_nics(options, ports)
-        options    = Pec::Director::Helper.set_availability_zone(options, host.availability_zone)
+        options    = Pec::Director::Helper.set_availability_zone(options, host)
 
         Pec::Compute::Server.create(host.name, image_ref, flavor_ref, options)
       end

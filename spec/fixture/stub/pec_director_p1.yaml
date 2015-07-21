@@ -2,6 +2,7 @@
   tenant: 1 
   image: 1
   flavor: 1
+  availability_zone: 1
   security_group :
     - 1
   networks:
