@@ -37,7 +37,7 @@ _default_: &def
   tenant: your_tenant
   image: centos-7.1_chef-12.3_puppet-3.7
   flavor: m1.small
-  availability_zone:  nova
+  availability_zone: nova
 
 pyama-test001:
   <<: *def
@@ -75,7 +75,7 @@ pyama-test002:
 | flavor         | フレーバー名                                   | ○    | m1.small                        |
 | networks       | ネットワーク定義                               | -    | []                              |
 | security_group | セキュリティグループ名                         | -    | [default,ssh]                   |
-| templates      | `user_data`のテンプレート.`./user_data`に配置 | -    | [base.yaml,webserver.yaml]      |
+| templates      | `user_data`のテンプレート `./user_data` に配置 | -    | [base.yaml,webserver.yaml]      |
 | user_data      | cloud-init記法に準拠                           | -    | -                               |
 | availability_zone | アベイラビリティゾーン                     |  -    | nova                     |
 
