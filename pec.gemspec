@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["pyama@pepabo.com"]
 
   spec.summary       = %q{openstack vm booter.}
-  spec.description   = %q{openstac vm booter.}
+  spec.description   = %q{openstack vm booter.}
   spec.homepage      = "http://ten-snapon.com"
   spec.license       = "MIT"
 
