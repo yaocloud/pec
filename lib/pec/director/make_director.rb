@@ -16,7 +16,7 @@ module Pec
           return true
         end
 
-        ports      = Pec::Director::Helper.ports_assign(host)
+        ports      = host.ports
         flavor_ref = Pec::Compute::Flavor.get_ref(host.flavor)
         image_ref  = Pec::Compute::Image.get_ref(host.image)
         options    = { "user_data" => Pec::Configure::UserData.make(host, ports) }

@@ -35,6 +35,22 @@ module Pec
         raise(Pec::Errors::Host,"#{config[0]}: please! #{err} format is Array!") unless err.nil?
         true
       end
+
+      def ports
+        self.networks.map do |ether|
+          begin
+            ip = IP.new(ether.ip_address)
+          rescue ArgumentError => e
+            raise(Pec::Errors::Port, "ip:#{ether.ip_address} #{e}")
+          end
+
+          unless port = Pec::Network::Port.assign(ether.name, ip, self.security_group)
+            raise(Pec::Errors::Port, "ip addess:#{ip.to_addr} can't create port!")
+          end
+          puts "#{self.name}: assingn ip #{port.ip_address}".green
+          port
+        end if self.networks
+      end
     end
   end
 end

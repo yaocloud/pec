@@ -18,6 +18,7 @@ module Pec
         tenant_name       = ""
         flavor            = ""
         ip_address        = ""
+
         if server
           detail = Pec::Resource.get.get_server_details(server["id"])
           status = detail["status"] 
