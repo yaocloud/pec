@@ -9,7 +9,6 @@ module Pec
         def assign(name, ip, security_group_ids)
           ip = get_free_port_ip(ip) if request_any_address?(ip)
           port_state = Pec::Network::PortState.new(name, fetch_by_ip(ip.to_addr))
-
           assign_port = case
             when port_state.exists? &&  !port_state.used?
               create(ip, security_group_ids) if delete(ip)
@@ -72,7 +71,6 @@ module Pec
             admin_state_up?(p) &&
             !assigned_ip?(p)
           end
-
           port ? IP.new("#{fixed_ip(port)}/#{ip.pfxlen}") : ip
         end
 

@@ -3,12 +3,12 @@ module Pec
   class Configure
     class UserData
       class << self
-        def make(config, ports)
+        def make(config)
           user_data = {}
-          user_data["write_files"] = make_port_content(config, ports) if ports
+          user_data["write_files"] = make_port_content(config) if config.ports
           user_data.deep_merge!(config.user_data) if config.user_data
           user_data.deep_merge!(get_template(config)) if get_template(config)
-          Base64.encode64("#cloud-config\n" + user_data.to_yaml)
+          { "user_data" => Base64.encode64("#cloud-config\n" + user_data.to_yaml) }
         end
 
         def get_template(config)
@@ -19,11 +19,11 @@ module Pec
           end if config.templates
         end
 
-        def make_port_content(config, ports)
+        def make_port_content(config)
           config.networks.map do |ether|
             path = ether.options['path'] || "/etc/sysconfig/network-scripts/ifcfg-#{ether.name}"
             {
-              'content' => ether.get_port_content(ports),
+              'content' => ether.get_port_content(config.ports),
               'owner' => "root:root",
               'path' => path,
               'permissions' => "0644"

@@ -5,13 +5,13 @@ module Pec
       def initialize(config)
         check_format(config)
         append_network(config[1])
-        @name           = config[0];
-        @image          = config[1]["image"];
-        @flavor         = config[1]["flavor"];
-        @security_group = config[1]["security_group"];
-        @user_data      = config[1]["user_data"];
-        @templates      = config[1]["templates"]
-        @tenant         = config[1]["tenant"]
+        @name              = config[0];
+        @image             = config[1]["image"];
+        @flavor            = config[1]["flavor"];
+        @security_group    = config[1]["security_group"];
+        @user_data         = config[1]["user_data"];
+        @templates         = config[1]["templates"]
+        @tenant            = config[1]["tenant"]
         @availability_zone = config[1]["availability_zone"]
       end
 
@@ -37,7 +37,7 @@ module Pec
       end
 
       def ports
-        self.networks.map do |ether|
+        @_ports ||= self.networks.map do |ether|
           begin
             ip = IP.new(ether.ip_address)
           rescue ArgumentError => e
@@ -50,6 +50,7 @@ module Pec
           puts "#{self.name}: assingn ip #{port.ip_address}".green
           port
         end if self.networks
+        @_ports
       end
     end
   end
