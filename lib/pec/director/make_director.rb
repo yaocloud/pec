@@ -16,12 +16,12 @@ module Pec
           return true
         end
 
-        ports      = Pec::Director::Helper.ports_assign(host)
         flavor_ref = Pec::Compute::Flavor.get_ref(host.flavor)
         image_ref  = Pec::Compute::Image.get_ref(host.image)
-        options    = { "user_data" => Pec::Configure::UserData.make(host, ports) }
-        options    = Pec::Director::Helper.set_nics(options, ports)
-        options    = Pec::Director::Helper.set_availability_zone(options, host)
+
+        options    = Pec::Configure::UserData.make(host)
+        options    = host.ports ? options.merge({ 'nics' =>  host.ports.map { |port| { port_id: port.id } } }) : options
+        options    = host.availability_zone ? options.merge({ 'availability_zone' => host.availability_zone }) : options
 
         Pec::Compute::Server.create(host.name, image_ref, flavor_ref, options)
       end

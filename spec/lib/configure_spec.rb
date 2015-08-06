@@ -5,6 +5,7 @@ describe Pec::Configure do
   describe 'value check' do
     before do
       @configure = Pec::Configure.new("spec/fixture/in/pec_configure_p1.yaml")
+      Pec::Resource.set_tenant("1")
     end
 
     it 'host' do
@@ -18,23 +19,22 @@ describe Pec::Configure do
     it 'ether' do
       net = @configure.first.networks.first
       expect(net.bootproto).to eq("static")
-      expect(net.ip_address).to eq("10.10.10.10/24")
+      expect(net.ip_address).to eq("1.1.1.1/24")
       expect(net.name).to eq("eth0")
-      expect(net.options).to eq({"gateway" => "10.10.10.254"})
+      expect(net.options).to eq({"gateway" => "1.1.1.254"})
     end
 
     it "security_group" do
-      expect(@configure.first.security_group).to eq(["default", "office"])
+      expect(@configure.first.security_group).to eq([1, 2])
     end
 
     it "user_data" do
       host = @configure.first
+      expect_data = YAML.load_file("spec/fixture/in/pec_configure_p2.yaml").to_hash
       allow(YAML).to receive(:load_file).and_return(YAML.load_file("spec/fixture/stub/pec_configure_p1.yaml"))
       allow(FileTest).to receive(:exist?).and_return(true)
-
-      # override fqdn
-      expect(Pec::Configure::UserData.make(host, nil)).to eq(
-        Base64.encode64("#cloud-config\n" + host.user_data.deep_merge(YAML.load_file("spec/fixture/in/pec_configure_p2.yaml").to_hash).to_yaml)
+      expect(Pec::Configure::UserData.make(host)).to eq(
+        { 'user_data' => Base64.encode64("#cloud-config\n" + expect_data.deep_merge(host.user_data).to_yaml) }
       )
     end
   end

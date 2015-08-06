@@ -18,6 +18,7 @@ module Pec
         tenant_name       = ""
         flavor            = ""
         ip_address        = ""
+
         if server
           detail = Pec::Resource.get.get_server_details(server["id"])
           status = detail["status"] 
@@ -25,12 +26,20 @@ module Pec
           compute_node = detail["OS-EXT-SRV-ATTR:host"]
           tenant_name = Pec::Compute::Tenant.get_name(detail["tenant_id"])
           flavor = Pec::Compute::Flavor.get_name(detail["flavor"]["id"])
-          ip_address = Pec::Director::Helper.parse_from_addresses(detail["addresses"]).join(",")
+          ip_address = parse_from_addresses(detail["addresses"]).join(",")
         end
 
         puts sprintf(" %-35s %-10s %-10s %-10s %-10s %-35s %-48s",
                      host.name, status, tenant_name, flavor, availability_zone, compute_node, ip_address)
       end
+        
+      def parse_from_addresses(addresses)                                                                                                 
+        addresses.map do |net, ethers|                                                                                                    
+          ethers.map do |ether|                                                                                                           
+            ether["addr"]                                                                                                                 
+          end                                                                                                                             
+        end.flatten                                                                                                                       
+      end   
 
       def err_message(e, host)
           puts e.magenta
