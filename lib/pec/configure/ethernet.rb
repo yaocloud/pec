@@ -1,14 +1,20 @@
 module Pec
   class Configure
     class Ethernet
-      attr_reader :name, :bootproto, :ip_address, :options
+      attr_reader :name, :bootproto, :ip_address, :allowed_address_pairs, :options
       def initialize(name, config)
         check_require_key(name, config)
         check_network_key(name, config)
 
         @name       = config[0];
-        @bootproto  = config[1]["bootproto"];
-        @ip_address = config[1]["ip_address"];
+        %w(
+          bootproto
+          ip_address
+          allowed_address_pairs
+        ).each do |c|
+          instance_variable_set('@'+c, config[1][c])
+        end
+
         @options    = config[1].reject do |k,v|
           { k => v } if k == "bootproto" || k == "ip_address"
         end

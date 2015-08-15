@@ -1,10 +1,12 @@
 require 'spec_helper'
+require 'support/configure'
 describe Pec::Network::Port do
   describe 'assign' do
     describe 'FreePort' do
       describe 'fixedip' do
         before do
-          @port = Pec::Network::Port.assign("eth0", IP.new("1.1.1.1/24"), nil)
+          ether = Pec::Configure::Ethernet.new("eth0", get_ether_static_config)
+          @port = Pec::Network::Port.assign(ether, nil)
         end
         it do
           expect( @port.ip_address ).to eq("1.1.1.1")
@@ -14,7 +16,8 @@ describe Pec::Network::Port do
       end
       describe 'dhcp' do
         before do
-          @port = Pec::Network::Port.assign("eth0", IP.new("1.1.1.0/24"), nil)
+          ether = Pec::Configure::Ethernet.new("eth0", get_ether_dhcp_config)
+          @port = Pec::Network::Port.assign(ether, nil)
         end
         it do
           expect( @port.ip_address ).to eq("1.1.1.1")
@@ -23,15 +26,15 @@ describe Pec::Network::Port do
         end
       end
     end
+
     describe 'Used' do
       describe 'fixedip' do
-        it do
-          expect{ Pec::Network::Port.assign("eth0", IP.new("2.2.2.2/24"), nil) }.to raise_error(Pec::Errors::Port)
+        before do
+          @ether = Pec::Configure::Ethernet.new("eth0", get_ether_use_static_config)
         end
-      end
-      describe 'dhcp' do
+
         it do
-          expect{ Pec::Network::Port.assign("eth0", IP.new("2.2.2.0/24"), nil) }.to raise_error(Pec::Errors::Port)
+          expect{ Pec::Network::Port.assign(@ether, nil) }.to raise_error(Pec::Errors::Port)
         end
       end
     end

@@ -10,6 +10,9 @@
       bootproto: static
       ip_address: 1.1.1.1/24
       gateway: 1.1.1.254
+      allow_address_pairs:
+        - ip_address: 2.2.2.2/24
+        mac_address: 00:00:00:00:00:00
   templates:
     - 1
   user_data:
