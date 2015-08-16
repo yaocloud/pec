@@ -59,11 +59,6 @@ describe Pec::Configure do
           end
         end
 
-        shared_examples_for 'format test' do
-          it do
-            expect { Pec::Configure.new(get_array_column_to_string_hash(column))}.to raise_error(Pec::Errors::Host)
-          end
-        end
         describe 'image' do
           let(:column) { "image" }
           it_behaves_like 'require test'
@@ -78,17 +73,6 @@ describe Pec::Configure do
           let(:column) { "tenant" }
           it_behaves_like 'require test'
           it_behaves_like 'null test'
-        end
-        describe 'security_group' do
-          let(:column) { "security_group" }
-          it_behaves_like 'base no error'
-          it_behaves_like 'format test'
-
-        end
-        describe 'templates' do
-          let(:column) { "templates" }
-          it_behaves_like 'base no error'
-          it_behaves_like 'format test'
         end
       end
     end
