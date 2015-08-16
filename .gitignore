@@ -11,3 +11,4 @@
 /*.yaml
 *.sample
 /user_datas
+.ruby-version
