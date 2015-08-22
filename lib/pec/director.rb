@@ -23,6 +23,11 @@ module Pec
         
         Pec::Logger.info "create success! #{host.name}" if Pec.compute.servers.create(attribute)
       end
+
+      rescue Excon::Errors::Error => e
+        excon_err_message(e)
+      rescue => e
+        Pec::Logger.critical(e)
     end
 
     def self.destroy(host_name, options)
@@ -41,6 +46,10 @@ module Pec
           Pec::Logger.info "#{host.name} is deleted!" if Pec.compute.servers.destroy(server.id)
         end
       end
+      rescue Excon::Errors::Error => e
+        excon_err_message(e)
+      rescue => e
+        Pec::Logger.critical(e)
     end
 
     def self.status(host_name)
@@ -69,6 +78,19 @@ module Pec
             "uncreated"
           )
         end
+      end
+
+      rescue Excon::Errors::Error => e
+        excon_err_message(e)
+      rescue => e
+        Pec::Logger.critical(e)
+    end
+
+    def excon_err_message(e)
+      if e.response
+        JSON.parse(e.response[:body]).each { |e,m| Pec::Logger.critical("#{e}:#{m["message"]}") }
+      else
+        Pec::Logger.critical(e)
       end
     end
   end

@@ -10,7 +10,11 @@ module Pec
       end
       
       def warning(m)
-        puts m.yellow
+        puts m.to_s.yellow
+      end
+      
+      def critical(m)
+        puts m.to_s.magenta
       end
     end
   end

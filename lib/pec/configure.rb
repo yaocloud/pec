@@ -1,6 +1,7 @@
 module Pec
   class Configure
     def initialize(config)
+      validate(config)
       @_config = config
     end
 
@@ -11,6 +12,17 @@ module Pec
     def method_missing(method, *args)
       nil unless @_config[1][method.to_s]
       @_config[1][method.to_s]
+    end
+
+    def validate(host)
+      %w(
+        tenant 
+        image
+        flavor
+        networks
+      ).each do |k|
+        raise "host key #{k} is require" unless host[1][k]
+      end
     end
   end
 end

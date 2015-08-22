@@ -7,6 +7,7 @@ module Pec
         @user_data = []
 
         host.networks.each do |network|
+          validate(network)
           port = create_port(host, network)
           Pec::Logger.notice "assgin ip : #{port.fixed_ips.first["ip_address"]}"
           ports << port
@@ -15,6 +16,15 @@ module Pec
         {
           nics: ports.map {|port| { port_id: port.id }}
         }
+      end
+
+      def validate(network)
+        %w(
+          bootproto
+          ip_address
+        ).each do |k|
+          raise "network key #{k} is require" unless network[1][k]
+        end
       end
 
       def create_port(host, network)
