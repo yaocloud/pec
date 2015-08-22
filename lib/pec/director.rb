@@ -1,0 +1,96 @@
+module Pec
+  class Director
+    def self.make(host_name)
+      Pec.load_config
+      Pec.configure.each do |host|
+        next if host_name && host.name != host_name
+        Pec::Logger.info "make start #{host.name}"
+        
+        Pec.compute.set_tenant(host.tenant)
+        Pec.neutron.set_tenant_patch(host.tenant)
+       
+        port_builder = Pec::Builder::Port.new
+        server_builder = Pec::Builder::Server.new
+        user_data_builder = Pec::Builder::UserData.new
+
+        attribute = {}
+        attribute.merge!(server_builder.build(host))
+        attribute.merge!(port_builder.build(host))
+
+        if user_data = user_data_builder.build(host, port_builder.user_data)
+          attribute.merge!(user_data)
+        end
+        
+        Pec::Logger.info "create success! #{host.name}" if Pec.compute.servers.create(attribute)
+      end
+    end
+
+    def self.destroy(host_name, options)
+      Pec.load_config
+      Pec.configure.each do |host|
+        next if host_name && host.name != host_name
+        Pec.compute.set_tenant(host.tenant)
+        
+        server = Pec.compute.servers.find {|s|s.name == host.name}
+        unless server
+          Pec::Logger.notice "not be created #{host.name}"
+          next
+        end
+        
+        if options[:force] || Thor.new.yes?("#{host.name}: Are you sure you want to destroy the '#{host.name}' VM? [y/N]")
+          Pec::Logger.info "#{host.name} is deleted!" if Pec.compute.servers.destroy(server.id)
+        end
+      end
+    end
+
+    def self.status(host_name)
+      Pec.load_config
+      Pec.configure.each do |host|
+        next if host_name && host.name != host_name
+        server = Pec.compute.servers.find {|s|s.name == host.name}
+        if server
+          puts sprintf(" %-35s %-10s %-10s %-10s %-10s %-35s %-48s",
+            host.name,
+            server.state,
+            Pec.identity.tenants.find_by_id(server.tenant_id),
+            Pec.compute.flavors.get(server.flavor['id']).name,
+            server.availability_zone,
+            server.os_ext_srv_attr_host,
+            server.addresses.map do |net, ethers|                                                                                                    
+              ethers.map do |ether|                                                                                                           
+                ether["addr"]                                                                                                                 
+              end                                                                                                                             
+            end.flatten.join(",")
+          )
+
+        else
+          puts sprintf(" %-35s %-10s",
+            host.name,
+            "uncreated"
+          )
+        end
+      end
+    end
+  end
+end
+
+module Fog
+  module Network
+    class OpenStack
+      class Real
+        def set_tenant_patch(tenant)
+          @openstack_must_reauthenticate = true
+          @openstack_tenant = tenant.to_s
+          authenticate
+          @path.sub!(/\/$/, '')
+          unless @path.match(SUPPORTED_VERSIONS)
+            @path = "/" + Fog::OpenStack.get_supported_version(SUPPORTED_VERSIONS,
+                                                               @openstack_management_uri,
+                                                               @auth_token,
+                                                               @connection_options)
+          end
+        end
+      end
+    end
+  end
+end
