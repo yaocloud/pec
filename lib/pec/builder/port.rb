@@ -1,7 +1,7 @@
 module Pec
   module Builder
     class Port
-      attr_reader :all, :user_data
+      attr_reader :user_data
       def build(host)
         ports = []
         @user_data = []
@@ -76,7 +76,7 @@ module Pec
         base.merge!(
           {
             "netmask" => IP.new(network[1]['ip_address']).netmask.to_s,
-            "ipaddr"  => port.fixed_ips.first['ip_address']
+            "ipaddr"  => port.fixed_ips.first['ip_address'].split("/").first
           }
         ) if network[1]['bootproto'] == "static"
 
