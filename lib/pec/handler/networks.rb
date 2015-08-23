@@ -6,13 +6,16 @@ module Pec::Handler
     autoload :AllowedAddressPairs, "pec/handler/networks/allowed_address_pairs"
     
     class << self
+      NAME = 0
+      CONFIG = 1
+
       def build(host)
         ports = []
         user_data = []
 
         host.networks.each do |network|
           validate(network)
-          Pec::Logger.notice "port create start : #{network[0]}"
+          Pec::Logger.notice "port create start : #{network[NAME]}"
           port = create_port(host, network)
           Pec::Logger.notice "assgin ip : #{port.fixed_ips.first["ip_address"]}"
           ports << port
@@ -31,7 +34,7 @@ module Pec::Handler
           bootproto
           ip_address
         ).each do |k|
-          raise "network key #{k} is require" unless network[1][k]
+          raise "network key #{k} is require" unless network[CONFIG][k]
         end
       end
 
@@ -41,10 +44,10 @@ module Pec::Handler
       end
      
       def gen_port_attribute(host, network)
-        ip = IP.new(network[1]['ip_address'])
+        ip = IP.new(network[CONFIG]['ip_address'])
         subnet = Pec.neutron.subnets.find {|s|s.cidr == ip.network.to_s}
         attribute = {
-          name: network[0],
+          name: network[NAME],
           network_id: subnet.network_id
         }
         
@@ -52,7 +55,7 @@ module Pec::Handler
           security_group(host)
         ) if host.security_group
 
-        network[1].keys.each do |k|
+        network[CONFIG].keys.each do |k|
           Pec::Handler::Networks.constants.each do |c|
             if Object.const_get("Pec::Handler::Networks::#{c}").kind == k &&
                 ops = Object.const_get("Pec::Handler::Networks::#{c}").build(network)
@@ -65,7 +68,7 @@ module Pec::Handler
       end
      
       def gen_user_data(network, port)
-        path = network[1]['path'] || "/etc/sysconfig/network-scripts/ifcfg-#{port.name}"
+        path = network[CONFIG]['path'] || "/etc/sysconfig/network-scripts/ifcfg-#{port.name}"
         {
           'content' => ifcfg_config(network, port),
           'owner' => "root:root",
@@ -85,18 +88,18 @@ module Pec::Handler
         
         base.merge!(
           {
-            "netmask" => IP.new(network[1]['ip_address']).netmask.to_s,
+            "netmask" => IP.new(network[CONFIG]['ip_address']).netmask.to_s,
             "ipaddr"  => port.fixed_ips.first['ip_address'].split("/").first
           }
-        ) if network[1]['bootproto'] == "static"
+        ) if network[CONFIG]['bootproto'] == "static"
 
         # delete option column
         Pec::Handler::Networks.constants.each do |c|
-          network[1].delete(Object.const_get("Pec::Handler::Networks::#{c}").kind)
+          network[CONFIG].delete(Object.const_get("Pec::Handler::Networks::#{c}").kind)
         end 
 
         base.merge!(
-          network[1]
+          network[CONFIG]
         )
         base.map {|k,v| "#{k.upcase}=#{v}"}.join("\n")
       end
