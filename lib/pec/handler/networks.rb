@@ -36,13 +36,13 @@ module Pec::Handler
       end
 
       def create_port(host, network)
-        ip = IP.new(network[1]['ip_address'])
-        subnet = Pec.neutron.subnets.find {|s|s.cidr == ip.network.to_s}
-        attribute = gen_port_attribute(host, network, subnet, ip)
+        attribute = gen_port_attribute(host, network)
         Pec.neutron.ports.create(attribute)
       end
      
-      def gen_port_attribute(host, network, subnet, ip)
+      def gen_port_attribute(host, network)
+        ip = IP.new(network[1]['ip_address'])
+        subnet = Pec.neutron.subnets.find {|s|s.cidr == ip.network.to_s}
         attribute = {
           name: network[0],
           network_id: subnet.network_id

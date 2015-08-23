@@ -16,10 +16,8 @@ module Pec
             end
           end
         end
-
-        if attribute[:user_data]
-          attribute[:user_data] = "#cloud-config\n" + attribute[:user_data].to_yaml
-        end
+        
+        attribute[:user_data] = "#cloud-config\n" + attribute[:user_data].to_yaml if attribute[:user_data]
         Pec::Logger.info "create success! #{host.name}" if Pec.compute.servers.create(attribute)
       end
 
@@ -71,7 +69,6 @@ module Pec
               end                                                                                                                             
             end.flatten.join(",")
           )
-
         else
           puts sprintf(" %-35s %-10s",
             host.name,

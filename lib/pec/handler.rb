@@ -6,5 +6,6 @@ module Pec
     autoload :Flavor,           "pec/handler/flavor"
     autoload :Networks,         "pec/handler/networks"
     autoload :UserData,         "pec/handler/user_data"
+    autoload :Templates,        "pec/handler/templates"
   end
 end
