@@ -23,7 +23,7 @@ describe Pec::Director do
       mac_address: '00:00:00:00:00:00',
       fixed_ips: [
         {
-          'ip_address' => "10.10.10.10/24"
+          'ip_address' => "10.10.10.10"
         }
       ]
     }))

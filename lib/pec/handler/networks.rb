@@ -85,11 +85,10 @@ module Pec::Handler
           "onboot"    => 'yes',
           "hwaddr"    => port.mac_address
         }
-        
         base.merge!(
           {
             "netmask" => IP.new(network[CONFIG]['ip_address']).netmask.to_s,
-            "ipaddr"  => port.fixed_ips.first['ip_address'].split("/").first
+            "ipaddr"  => port.fixed_ips.first['ip_address']
           }
         ) if network[CONFIG]['bootproto'] == "static"
 
