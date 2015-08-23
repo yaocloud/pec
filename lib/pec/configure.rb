@@ -9,6 +9,10 @@ module Pec
       @_config[0]
     end
 
+    def keys
+      @_config[1].keys
+    end
+
     def method_missing(method, *args)
       nil unless @_config[1][method.to_s]
       @_config[1][method.to_s]

@@ -1,10 +1,14 @@
-module Pec
-  module Builder
-    class Port
-      attr_reader :user_data
+module Pec::Handler
+  class Networks < Base 
+    self.kind = 'networks'
+    autoload :OptionBase,          "pec/handler/networks/option_base"
+    autoload :IpAddress,           "pec/handler/networks/ip_address"
+    autoload :AllowedAddressPairs, "pec/handler/networks/allowed_address_pairs"
+    
+    class << self
       def build(host)
         ports = []
-        @user_data = []
+        user_data = []
 
         host.networks.each do |network|
           validate(network)
@@ -12,10 +16,13 @@ module Pec
           port = create_port(host, network)
           Pec::Logger.notice "assgin ip : #{port.fixed_ips.first["ip_address"]}"
           ports << port
-          @user_data << gen_user_data(network, port)
+          user_data << gen_user_data(network, port)
         end
         {
-          nics: ports.map {|port| { port_id: port.id }}
+          nics: ports.map {|port| { port_id: port.id }},
+          user_data: {
+            'write_files' => user_data
+          }
         }
       end
 
@@ -40,18 +47,20 @@ module Pec
           name: network[0],
           network_id: subnet.network_id
         }
-
-        attribute.merge!(
-          fixed_ip(subnet, ip) 
-        ) if ip.to_s != subnet.cidr
-
+        
         attribute.merge!(
           security_group(host)
         ) if host.security_group
 
-        attribute.merge!(
-          allowed_address_pairs(network)
-        ) if network[1]['allowed_address_pairs']
+        network[1].keys.each do |k|
+          Pec::Handler::Networks.constants.each do |c|
+            if Object.const_get("Pec::Handler::Networks::#{c}").kind == k &&
+                ops = Object.const_get("Pec::Handler::Networks::#{c}").build(network)
+              attribute.deep_merge!(ops)
+            end
+          end
+        end
+
         attribute
       end
      
@@ -81,39 +90,22 @@ module Pec
           }
         ) if network[1]['bootproto'] == "static"
 
-        # delete options
-        %w(allowed_address_pairs ip_address).each {|name| network[1].delete(name)}
-        
+        # delete option column
+        Pec::Handler::Networks.constants.each do |c|
+          network[1].delete(Object.const_get("Pec::Handler::Networks::#{c}").kind)
+        end 
+
         base.merge!(
           network[1]
         )
-
         base.map {|k,v| "#{k.upcase}=#{v}"}.join("\n")
       end
 
-      #
-      # after port options
-      #
-      def fixed_ip(subnet, ip)
-        { 
-          fixed_ips: [
-            { subnet_id: subnet.id, ip_address: ip.to_addr}
-          ]
-        }
-      end
-
       def security_group(host)
-        ids =  host.security_group.map do |name|
+        ids = host.security_group.map do |name|
           Pec.neutron.security_groups.find {|sg| sg.name == name}.id
         end
         { security_groups: ids }
-      end
-
-      def allowed_address_pairs(network)
-        pairs = network[1]['allowed_address_pairs'].map do |pair|
-          { ip_address: pair['ip_address'] }
-        end
-        { allowed_address_pairs: pairs }
       end
     end
   end
