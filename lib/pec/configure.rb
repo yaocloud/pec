@@ -14,7 +14,6 @@ module Pec
     end
 
     def method_missing(method, *args)
-      nil unless @_config[1][method.to_s]
       @_config[1][method.to_s]
     end
 

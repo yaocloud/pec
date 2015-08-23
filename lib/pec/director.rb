@@ -51,8 +51,7 @@ module Pec
     def self.status(host_name)
       Pec.configure.each do |host|
         next if host_name && host.name != host_name
-        server = Pec.compute.servers.find {|s|s.name == host.name}
-        if server
+        if server = Pec.compute.servers.find {|s|s.name == host.name}
           puts sprintf(" %-35s %-10s %-10s %-10s %-10s %-35s %-48s",
             host.name,
             server.state,
@@ -60,8 +59,8 @@ module Pec
             Pec.compute.flavors.get(server.flavor['id']).name,
             server.availability_zone,
             server.os_ext_srv_attr_host,
-            server.addresses.map do |net, ethers|                                                                                                    
-              ethers.map do |ether|                                                                                                           
+            server.addresses.map do |ethers|                                                                                                    
+              ethers[1].map do |ether|                                                                                                           
                 ether["addr"]                                                                                                                 
               end                                                                                                                             
             end.flatten.join(",")
