@@ -1,7 +1,6 @@
 module Pec
   class Director
     def self.make(host_name)
-      Pec.load_config
       Pec.configure.each do |host|
         next if host_name && host.name != host_name
         Pec::Logger.info "make start #{host.name}"
@@ -28,7 +27,6 @@ module Pec
     end
 
     def self.destroy(host_name, options)
-      Pec.load_config
       Pec.configure.each do |host|
         next if host_name && host.name != host_name
         Pec.compute.set_tenant(host.tenant)
@@ -51,7 +49,6 @@ module Pec
     end
 
     def self.status(host_name)
-      Pec.load_config
       Pec.configure.each do |host|
         next if host_name && host.name != host_name
         server = Pec.compute.servers.find {|s|s.name == host.name}

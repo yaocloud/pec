@@ -39,6 +39,7 @@ module Pec
   end
 
   def self.configure
+    load_config unless @_configure
     @_configure
   end
 end
