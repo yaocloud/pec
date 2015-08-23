@@ -1,5 +1,5 @@
 require 'spec_helper'
-describe Pec::Builder::UserData do
+describe Pec::Handler::UserData do
   before do
     Pec.load_config("spec/fixture/load_config_001.yaml")
     allow(FileTest).to receive(:exist?).and_return(true)
@@ -7,13 +7,22 @@ describe Pec::Builder::UserData do
   end
 
   subject {
-    described_class.new.build(Pec.configure.first, nil)
+    described_class.build(Pec.configure.first)
   }  
   
   it 'value_check' do
     expect(subject).to eq(
       {
-        user_data: "#cloud-config\n---\nhostname: pyama-test001\nusers:\n- name: 1\n- name: 2\nfqdn: pyama-test001.test.com\n"
+        :user_data =>
+        {
+          "hostname" => "pyama-test001",
+          "users"=> [
+            {
+              "name" => 1
+            }
+          ],
+          "fqdn" => "pyama-test001.test.com"
+        }
       }
     )
   end

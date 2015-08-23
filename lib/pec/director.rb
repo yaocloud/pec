@@ -5,22 +5,19 @@ module Pec
       Pec.configure.each do |host|
         next if host_name && host.name != host_name
         Pec::Logger.info "make start #{host.name}"
-        
         Pec.compute.set_tenant(host.tenant)
         Pec.neutron.set_tenant_patch(host.tenant)
-       
-        port_builder = Pec::Builder::Port.new
-        server_builder = Pec::Builder::Server.new
-        user_data_builder = Pec::Builder::UserData.new
 
-        attribute = {}
-        attribute.merge!(server_builder.build(host))
-        attribute.merge!(port_builder.build(host))
-
-        if user_data = user_data_builder.build(host, port_builder.user_data)
-          attribute.merge!(user_data)
+        attribute = { name: host.name}
+        host.keys.each do |k|
+          Pec::Handler.constants.each do |c|
+            if Object.const_get("Pec::Handler::#{c}").kind == k
+              attribute.deep_merge!(Object.const_get("Pec::Handler::#{c}").build(host))
+            end
+          end
         end
         
+        attribute[:user_data] = "#cloud-config\n" + attribute[:user_data].to_yaml if attribute[:user_data]
         Pec::Logger.info "create success! #{host.name}" if Pec.compute.servers.create(attribute)
       end
 
@@ -46,6 +43,7 @@ module Pec
           Pec::Logger.info "#{host.name} is deleted!" if Pec.compute.servers.destroy(server.id)
         end
       end
+
       rescue Excon::Errors::Error => e
         excon_err_message(e)
       rescue => e
@@ -71,7 +69,6 @@ module Pec
               end                                                                                                                             
             end.flatten.join(",")
           )
-
         else
           puts sprintf(" %-35s %-10s",
             host.name,
