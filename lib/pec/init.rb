@@ -27,7 +27,7 @@ module Pec
           thor.say("Start Configure by OpenStack", :yellow)
           params = {}
 
-          params = %w(auth_url username api_key tenant identity_endpoint).inject({}) do |user_input, c|
+          params = %w(auth_url username api_key tenant).inject({}) do |user_input, c|
             user_input["openstack_#{c}"] = thor.ask("openstack #{c}:")
             user_input
           end
