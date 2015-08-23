@@ -5,9 +5,10 @@ module Pec::Handler
 
       %w(image flavor).each do |name|
         define_method("fetch_#{name}", -> (host) {
-          r = Pec.compute.send("#{name}s").find {|val|val.name == host.send(name)}
-          raise "not fond #{name} #{host.send(name)}" unless r
-          r
+          unless resource = Pec.compute.send("#{name}s").find {|val|val.name == host.send(name)}
+            raise "not fond #{name} #{host.send(name)}"
+          end
+          resource
         })
       end
     end
