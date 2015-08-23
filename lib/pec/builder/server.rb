@@ -12,14 +12,17 @@ module Pec
         hash[:availability_zone] = host.availability_zone if host.availability_zone
         hash
       end
-
-      def fetch_image(host)
-        Pec.compute.images.find {|image|image.name == host.image}
+      
+      def self.resource(name)
+        define_method("fetch_#{name}", -> (host) {
+          r = Pec.compute.send("#{name}s").find {|val|val.name == host.send(name)}
+          raise "not fond #{name} #{host.send(name)}" unless r
+          r
+        })
       end
 
-      def fetch_flavor(host)
-        Pec.compute.flavors.find {|flavor|flavor.name == host.flavor}
-      end
+      resource 'flavor'
+      resource 'image'
     end
   end
 end

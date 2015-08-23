@@ -86,7 +86,7 @@ module Pec
         Pec::Logger.critical(e)
     end
 
-    def excon_err_message(e)
+    def self.excon_err_message(e)
       if e.response
         JSON.parse(e.response[:body]).each { |e,m| Pec::Logger.critical("#{e}:#{m["message"]}") }
       else

@@ -8,6 +8,7 @@ module Pec
 
         host.networks.each do |network|
           validate(network)
+          Pec::Logger.notice "port create start : #{network[0]}"
           port = create_port(host, network)
           Pec::Logger.notice "assgin ip : #{port.fixed_ips.first["ip_address"]}"
           ports << port
