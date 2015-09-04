@@ -6,6 +6,8 @@ require "pec/logger"
 require "pec/configure"
 require "pec/director"
 require "pec/handler"
+require "pec/sample"
+require "pec/init"
 require "pec/cli"
 
 module Pec
