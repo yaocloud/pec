@@ -3,17 +3,14 @@
 [![Code Climate](https://codeclimate.com/github/pyama86/pec/badges/gpa.svg)](https://codeclimate.com/github/pyama86/pec)
 [![Test Coverage](https://codeclimate.com/github/pyama86/pec/badges/coverage.svg)](https://codeclimate.com/github/pyama86/pec/coverage)
 
-OpenStackにおいて複数サーバの起動一括起動停止や、 DHCPサーバがない状況でのIP自動採番を実現します。
-作って壊してが驚くほどかんたんに。
+OpenStack Vm create wrapper
 
 ## Install
 
     $ gem install pec
 
 ## Usage
-
-セットアップ・定義ファイル作成
-
+    # set up
     $ pec init
 
 ```
@@ -21,8 +18,7 @@ create - /Pec.yaml
 create - /user_data/web_server.yaml.sample
 ```
 
-Pec.yamlに基づきホストを作成します。
-ホスト名が指定された場合はそのホストのみ作成、削除します。
+create VM by Pec.yaml
 
     $ pec up <hostname>
 
@@ -38,12 +34,12 @@ _default_: &def
   image: centos-7.1_chef-12.3_puppet-3.7
   flavor: m1.small
   availability_zone: nova
-
 pyama-test001:
   <<: *def
   networks:
     eth0:
       bootproto: static
+      allowed_address_pairs: 10.1.1.5/24
       ip_address: 10.1.1.1/24
       gateway: 10.1.1.254
       dns1: 8.8.8.8
@@ -67,29 +63,30 @@ pyama-test002:
 ```
 ##### Detail
 
-| 項目名         | 説明                                           | 必須 | 例示                            |
-| -------------- | ---------------------------------------------- | ---- | ------------------------------- |
-| instance_name  | インスタンス名                                 | ○    | pyama-test001*                   |
-| tenant         | テナント名                                     | ○    | your_tenant                     |
-| image          | イメージ名                                     | ○    | centos-7.1_chef-12.3_puppet-3.7 |
-| flavor         | フレーバー名                                   | ○    | m1.small                        |
-| networks       | ネットワーク定義                               | -    | []                              |
-| security_group | セキュリティグループ名                         | -    | [default,ssh]                   |
-| templates      | `user_data`のテンプレート `./user_data` に配置 | -    | [base.yaml,webserver.yaml]      |
-| user_data      | cloud-init記法に準拠                           | -    | -                               |
-| availability_zone | アベイラビリティゾーン                     |  -    | nova                     |
+| column            | require | value                           |
+| ----------------- | ------- | ------------------------------- |
+| instance_name     |    ○    | pyama-test001*                  |
+| tenant            |    ○    | your_tenant                     |
+| image             |    ○    | centos-7.1_chef-12.3_puppet-3.7 |
+| flavor            |    ○    | m1.small                        |
+| networks          |    -    | []                              |
+| security_group    |    -    | [default,ssh]                   |
+| templates         |    -    | [base.yaml,webserver.yaml]      |
+| user_data         |    -    | -                               |
+| availability_zone |    -    | nova                            |
 
-* 先頭が_で開始されるインスタンス名はyaml merge記法用途と認識し、スキップします
+* it begins with `_' instance name is yaml merge template
 
 ##### Networks
-| 項目名       | 説明             | 必須 | 例示           |
-| ------------ | ---------------- | ---- | -------------- |
-| device_name | デバイス名       | ○    | eth0           |
-| bootproto    | 設定方式         | ○    | static or dhcp |
-| ip_address   | IPアドレス(CIDR) | ※    | 10.1.1.1/24    |
-| path   | NW設定保存パス |     | default:/etc/sysconfig/network-scripts/ifcfg-[device_name]    |
-※ bootproto=staticの場合必須
-上記以外の項目は設定ファイルに`KEY=value`形式で出力されます。
+| column                | require | value                                                      |
+| --------------------- | --------| ---------------------------------------------------------- |
+| bootproto             |    ○    | static or dhcp                                             |
+| ip_address            |    ※    | 10.1.1.1/24                                                |
+| path                  |         | default:/etc/sysconfig/network-scripts/ifcfg-[device_name] |
+| allowed_address_pairs |         | 10.1.1.2/24                                                |
+
+※ bootproto=static is required
+Items other than the above are output to the configuration file with `KEY = value` format
 
 ## Author
 * pyama86
