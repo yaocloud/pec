@@ -76,7 +76,7 @@ pyama-test002:
 | user_data         |    -    | -                               |
 | availability_zone |    -    | nova                            |
 
-* it begins with `_' instance name is yaml merge template
+* it begins with `_` instance name is yaml merge template
 
 ##### Networks
 | column                | require | value                                                      |
