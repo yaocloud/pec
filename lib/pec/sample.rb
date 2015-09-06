@@ -8,10 +8,12 @@ module Pec
               "tenant" =>  "your_tenant",
               "image" =>  "centos-7",
               "flavor" =>  "m1.small",
+              "allowed_address_pairs" => "nova",
               "networks" => {
                 "eth0" => {
                   "bootproto" => "static",
                   "ip_address" => "10.0.0.0/24",
+                  "allowed_address_pairs" => ["10.0.0.1"],
                   "gateway" =>  "10.0.0.254",
                   "dns1" => "10.0.0.10"
                 },
@@ -24,7 +26,7 @@ module Pec
               },
               "security_group" => [
                 "default",
-                "www from any"
+                "www_from_any"
               ],
               "templates" => [
                 "web_server.yaml"
@@ -36,6 +38,7 @@ module Pec
             }
           }
         end
+
         def user_data
           {
             "hostname" => "pec",

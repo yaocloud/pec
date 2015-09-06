@@ -4,6 +4,7 @@ module Pec
 
     desc 'init', 'create sample config'
     def init
+      Pec::Init.show_env_setting
       Pec::Init.create_template_dir
       Pec::Init.create_sample_config
     end

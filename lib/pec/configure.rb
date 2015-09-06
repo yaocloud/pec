@@ -19,7 +19,7 @@ module Pec
 
     def validate(host)
       %w(
-        tenant 
+        tenant
         image
         flavor
         networks

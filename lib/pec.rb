@@ -16,6 +16,7 @@ require "pec/cli"
 
 module Pec
   def self.init_yao(_tenant_name=nil)
+    check_env
     Yao.configure do
       auth_url "#{ENV["OS_AUTH_URL"]}/tokens"
       username ENV["OS_USERNAME"]
@@ -36,6 +37,17 @@ module Pec
     load_config unless @_configure
     @_configure
   end
+
+  def self.check_env
+    %w(
+      OS_AUTH_URL
+      OS_USERNAME
+      OS_PASSWORD
+    ).each do |name|
+      raise "please set env #{name}" unless ENV[name]
+    end
+  end
+
 end
 
 class ::Hash
