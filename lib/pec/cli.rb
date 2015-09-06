@@ -30,7 +30,6 @@ module Pec
             end
           end
         end
-        p 1
         attribute[:user_data] = Base64.encode64("#cloud-config\n" + attribute[:user_data].to_yaml) if attribute[:user_data]
 
         Yao::Server.create(attribute)
