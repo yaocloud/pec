@@ -9,6 +9,8 @@ require "pec/version"
 require "pec/logger"
 require "pec/configure"
 require "pec/handler"
+require "pec/sample"
+require "pec/init"
 require "pec/cli"
 
 
