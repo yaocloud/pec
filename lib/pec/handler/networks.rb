@@ -1,10 +1,10 @@
 module Pec::Handler
-  class Networks < Base 
+  class Networks < Base
     self.kind = 'networks'
     autoload :OptionBase,          "pec/handler/networks/option_base"
     autoload :IpAddress,           "pec/handler/networks/ip_address"
     autoload :AllowedAddressPairs, "pec/handler/networks/allowed_address_pairs"
-    
+
     class << self
       NAME = 0
       CONFIG = 1
@@ -22,7 +22,7 @@ module Pec::Handler
           user_data << gen_user_data(network, port)
         end
         {
-          nics: ports.map {|port| { port_id: port.id }},
+          networks: ports.map {|port| { uuid: nil, port: port.id }},
           user_data: {
             'write_files' => user_data
           }
@@ -40,17 +40,17 @@ module Pec::Handler
 
       def create_port(host, network)
         attribute = gen_port_attribute(host, network)
-        Pec.neutron.ports.create(attribute)
+        Yao::Port.create(attribute)
       end
-     
+
       def gen_port_attribute(host, network)
         ip = IP.new(network[CONFIG]['ip_address'])
-        subnet = Pec.neutron.subnets.find {|s|s.cidr == ip.network.to_s}
+        subnet = Yao::Subnet.list.find {|s|s.cidr == ip.network.to_s}
         attribute = {
           name: network[NAME],
           network_id: subnet.network_id
         }
-        
+
         attribute.merge!(
           security_group(host)
         ) if host.security_group
@@ -66,7 +66,7 @@ module Pec::Handler
 
         attribute
       end
-     
+
       def gen_user_data(network, port)
         path = network[CONFIG]['path'] || "/etc/sysconfig/network-scripts/ifcfg-#{port.name}"
         {
@@ -76,7 +76,7 @@ module Pec::Handler
           'permissions' => "0644"
         }
       end
-      
+
       def ifcfg_config(network, port)
         base = {
           "name"      => port.name,
@@ -95,7 +95,7 @@ module Pec::Handler
         # delete option column
         Pec::Handler::Networks.constants.each do |c|
           network[CONFIG].delete(Object.const_get("Pec::Handler::Networks::#{c}").kind)
-        end 
+        end
 
         base.merge!(
           network[CONFIG]
@@ -105,7 +105,9 @@ module Pec::Handler
 
       def security_group(host)
         ids = host.security_group.map do |name|
-          Pec.neutron.security_groups.find {|sg| sg.name == name}.id
+          sg = Yao::SecurityGroup.list.find {|sg| sg.name == name}
+          raise "security group #{name} is not found" unless sg
+          sg.id
         end
         { security_groups: ids }
       end

@@ -7,11 +7,10 @@ pyama-test001.test.com:
   tenant: test_tenant
   security_group :
     - 1
-    - 2
   networks:
     eth0:
       allowed_address_pairs:
-        - ip_address: "10.2.0.0"
+        - "10.2.0.0"
       bootproto: static
       ip_address: 1.1.1.1/24
       gateway: 1.1.1.254

@@ -5,7 +5,7 @@ module Pec::Handler
     def self.build(host)
       Pec::Logger.notice "image is #{host.image}"
       {
-        image_ref:  fetch_image(host).id
+        imageRef:  Yao::Image.list.find {|image| image.name == host.image}.id
       }
     end
   end

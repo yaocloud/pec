@@ -5,7 +5,7 @@ module Pec::Handler
     def self.build(host)
       Pec::Logger.notice "flavor is #{host.flavor}"
       {
-        flavor_ref: fetch_flavor(host).id,
+        flavorRef:  Yao::Flavor.list.find {|flavor| flavor.name == host.flavor}.id
       }
     end
   end

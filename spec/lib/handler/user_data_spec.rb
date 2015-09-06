@@ -8,8 +8,8 @@ describe Pec::Handler::UserData do
 
   subject {
     described_class.build(Pec.configure.first)
-  }  
-  
+  }
+
   it 'value_check' do
     expect(subject).to eq(
       {

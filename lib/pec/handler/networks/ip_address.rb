@@ -5,10 +5,10 @@ module Pec::Handler
       class << self
         def build(network)
           ip = IP.new(network[1]['ip_address'])
-          subnet = Pec.neutron.subnets.find {|s|s.cidr == ip.network.to_s}
+          subnet = Yao::Subnet.list.find {|s|s.cidr == ip.network.to_s}
 
           if ip.to_s != subnet.cidr
-            { 
+            {
               fixed_ips: [
                 { subnet_id: subnet.id, ip_address: ip.to_addr}
               ]

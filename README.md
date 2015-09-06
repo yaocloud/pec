@@ -39,7 +39,8 @@ pyama-test001:
   networks:
     eth0:
       bootproto: static
-      allowed_address_pairs: 10.1.1.5/24
+      allowed_address_pairs:
+      - 10.1.1.5/24
       ip_address: 10.1.1.1/24
       gateway: 10.1.1.254
       dns1: 8.8.8.8
@@ -83,7 +84,7 @@ pyama-test002:
 | bootproto             |    ○    | static or dhcp                                             |
 | ip_address            |    ※    | 10.1.1.1/24                                                |
 | path                  |         | default:/etc/sysconfig/network-scripts/ifcfg-[device_name] |
-| allowed_address_pairs |         | 10.1.1.2/24                                                |
+| allowed_address_pairs |         | [10.1.1.2/24]                                              |
 
 ※ bootproto=static is required
 Items other than the above are output to the configuration file with `KEY = value` format

@@ -21,21 +21,12 @@ module Pec
         end
       end
 
-      def create_fog_config
-        thor = Thor.new
-        if !File.exist?(File.expand_path("~/.fog")) || thor.yes?("Do you want to overwrite the existing ~/.fog? [y/N]")
-          thor.say("Start Configure by OpenStack", :yellow)
-          params = {}
-
-          params = %w(auth_url username api_key tenant).inject({}) do |user_input, c|
-            user_input["openstack_#{c}"] = thor.ask("openstack #{c}:")
-            user_input
-          end
-
-          thor.say("Configure Complete!", :blue) if open(File.expand_path("~/.fog"), "w") do |e|
-            YAML.dump({ "default" => params }, e)
-          end
-        end
+      def show_env_setting
+          thor = Thor.new
+          thor.say("please set env this paramater", :yellow)
+          puts " export OS_AUTH_URL=http://your_keystone_server:port/v2.0"
+          puts " export OS_USERNAME=your name"
+          puts " export OS_PASSWORD=your password"
       end
     end
   end

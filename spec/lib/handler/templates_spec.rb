@@ -8,8 +8,8 @@ describe Pec::Handler::Templates do
 
   subject {
     described_class.build(Pec.configure.first)
-  }  
-  
+  }
+
   it 'value_check' do
     expect(subject).to eq(
       {
