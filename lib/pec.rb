@@ -1,33 +1,25 @@
-require 'fog'
+require 'pp'
+require 'base64'
+require 'yao'
+require 'yaml'
+require 'thor'
 require 'ip'
 require 'colorator'
 require "pec/version"
 require "pec/logger"
 require "pec/configure"
-require "pec/director"
 require "pec/handler"
 require "pec/cli"
 
+
 module Pec
-  def self.compute
-    @_compute ||= Fog::Compute.new({
-      provider: 'openstack'
-    })
-    @_compute
-  end
-  
-  def self.neutron
-    @_neutron ||= Fog::Network.new({
-      provider: 'openstack'
-    })
-    @_neutron
-  end
-  
-  def self.identity
-    @_identity ||= Fog::Identity.new({
-      provider: 'openstack'
-    })
-    @_identity
+  def self.init_yao(_tenant_name=nil)
+    Yao.configure do
+      auth_url "#{ENV["OS_AUTH_URL"]}/tokens"
+      username ENV["OS_USERNAME"]
+      password ENV["OS_PASSWORD"]
+      tenant_name _tenant_name || ENV["OS_TENANT_NAME"]
+    end
   end
 
   def self.load_config(file_name=nil)
@@ -45,7 +37,6 @@ module Pec
 end
 
 class ::Hash
-
   def deep_merge(second)
     merger = proc { |key, v1, v2| Hash === v1 && Hash === v2 ? v1.merge(v2, &merger) : Array === v1 && Array === v2 ? v1 | v2 : [:undefined, nil, :nil].include?(v2) ? v1 : v2 }
     self.merge(second.to_h, &merger)
@@ -55,3 +46,4 @@ class ::Hash
     self.merge!(deep_merge(second))
   end
 end
+

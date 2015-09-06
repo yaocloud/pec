@@ -6,7 +6,7 @@ module Pec::Handler
         def build(network)
           if network[1]['allowed_address_pairs']
             pairs = network[1]['allowed_address_pairs'].map do |pair|
-              { ip_address: pair['ip_address'] }
+              { ip_address: pair }
             end
             { allowed_address_pairs: pairs }
           end
