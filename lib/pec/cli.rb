@@ -20,7 +20,6 @@ module Pec
           Pec::Logger.notice "already exists: #{host.name}"
           next
         end
-
         Pec::Logger.info "make start #{host.name}"
 
         attribute = { name: host.name}
@@ -31,13 +30,14 @@ module Pec
             end
           end
         end
+        p 1
         attribute[:user_data] = Base64.encode64("#cloud-config\n" + attribute[:user_data].to_yaml) if attribute[:user_data]
 
         Yao::Server.create(attribute)
         Pec::Logger.info "create success! #{host.name}"
       end
       rescue => e
-        Pec::Logger.critical(e)
+        print_exception(e)
     end
 
     option :force , type: :boolean, aliases: "-f"
@@ -60,7 +60,7 @@ module Pec
       end
 
       rescue => e
-        Pec::Logger.critical(e)
+        print_exception(e)
     end
 
     desc "status", "vm status"
@@ -92,7 +92,14 @@ module Pec
       end
 
       rescue => e
+        print_exception(e)
+    end
+    no_commands do
+
+      def print_exception(e)
         Pec::Logger.critical(e)
+        Pec::Logger.info("\t" + e.backtrace.join("\n\t"))
+      end
     end
   end
 end
