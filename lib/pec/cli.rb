@@ -92,7 +92,14 @@ module Pec
 
       rescue => e
         print_exception(e)
-    end
+      end
+
+      map %w[--version -v] => :__print_version
+
+      desc "--version, -v", "print the version"
+      def __print_version
+        puts Pec::VERSION
+      end
     no_commands do
 
       def print_exception(e)
