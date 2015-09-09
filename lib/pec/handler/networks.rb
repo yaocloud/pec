@@ -93,12 +93,11 @@ module Pec::Handler
         ) if network[CONFIG]['bootproto'] == "static"
 
         # delete option column
-        Pec::Handler::Networks.constants.each do |c|
-          network[CONFIG].delete(Object.const_get("Pec::Handler::Networks::#{c}").kind)
-        end
+        mask_column = Pec::Handler::Networks.constants.map {|c| Object.const_get("Pec::Handler::Networks::#{c}").kind }
+        mask_config = network[CONFIG].select {|k,v| !mask_column.include?(k)}
 
         base.merge!(
-          network[CONFIG]
+          mask_config
         )
         base.map {|k,v| "#{k.upcase}=#{v}"}.join("\n")
       end
