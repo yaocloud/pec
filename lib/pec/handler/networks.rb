@@ -103,8 +103,9 @@ module Pec::Handler
       end
 
       def security_group(host)
+        tenant = Yao::Tenant.list.find {|t| t.name == host.tenant }
         ids = host.security_group.map do |name|
-          sg = Yao::SecurityGroup.list.find {|sg| sg.name == name}
+          sg = Yao::SecurityGroup.list.find {|sg| sg.name == name && tenant.id == sg.tenant_id }
           raise "security group #{name} is not found" unless sg
           sg.id
         end
