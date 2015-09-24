@@ -17,6 +17,14 @@ describe Pec::CLI do
         name: 1
       })
     ])
+
+    allow(Yao::Tenant).to receive(:list).and_return([
+      OpenStruct.new({
+        id: 1,
+        name: "test_tenant"
+      })
+    ])
+
     allow(Yao::Image).to receive(:list).and_return([
       OpenStruct.new({
         id: 1,
@@ -32,6 +40,7 @@ describe Pec::CLI do
     allow(Yao::SecurityGroup).to receive(:list).and_return([
       OpenStruct.new({
         id: 1,
+        tenant_id: 1,
         name: 1
       })
     ])
