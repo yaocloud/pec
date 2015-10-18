@@ -18,13 +18,13 @@ create - /Pec.yaml
 create - /user_data/web_server.yaml.sample
 ```
 
-create VM by Pec.yaml
-
     $ pec up <hostname>
 
     $ pec destroy <hostname>
 
     $ pec status <hostname>
+
+    $ pec config
 
 ### Configure
 #### Pec.yaml

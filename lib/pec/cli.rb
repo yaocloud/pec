@@ -89,17 +89,24 @@ module Pec
           )
         end
       end
+    rescue => e
+      print_exception(e)
+    end
 
-      rescue => e
-        print_exception(e)
-      end
+    desc "config", "show configure"
+    def config
+      puts YAML.dump(
+        YAML.load_file("Pec.yaml").to_hash.reject {|c| c[0].to_s.match(/^_/)}
+      )
+    end
 
-      map %w[--version -v] => :__print_version
+    map %w[--version -v] => :__print_version
+    desc "--version, -v", "print the version"
+    def __print_version
+      puts Pec::VERSION
+    end
 
-      desc "--version, -v", "print the version"
-      def __print_version
-        puts Pec::VERSION
-      end
+
     no_commands do
 
       def print_exception(e)
