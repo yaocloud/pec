@@ -4,10 +4,11 @@ module Pec::Command
       unless server
         Pec::Logger.info "make start #{config.name}"
 
-        attribute = { name: config.name}
+        attribute = {name: config.name}
         config.keys.each do |k|
           Pec::Handler.constants.each do |c|
-            attribute.deep_merge!(Object.const_get("Pec::Handler::#{c}").build(config)) if Object.const_get("Pec::Handler::#{c}").kind == k
+            _handler = Object.const_get("Pec::Handler::#{c}")
+            attribute.deep_merge!(_handler.build(config)) if _handler.kind == k
           end
         end
 
