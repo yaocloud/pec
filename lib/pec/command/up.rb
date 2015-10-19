@@ -7,9 +7,7 @@ module Pec::Command
         attribute = { name: config.name}
         config.keys.each do |k|
           Pec::Handler.constants.each do |c|
-            if Object.const_get("Pec::Handler::#{c}").kind == k
-              attribute.deep_merge!(Object.const_get("Pec::Handler::#{c}").build(config))
-            end
+            attribute.deep_merge!(Object.const_get("Pec::Handler::#{c}").build(config)) if Object.const_get("Pec::Handler::#{c}").kind == k
           end
         end
 
