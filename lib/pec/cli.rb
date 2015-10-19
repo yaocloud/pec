@@ -11,29 +11,26 @@ module Pec
 
     desc 'up', 'create vm by Pec.yaml'
     def up(host_name = nil)
-      Pec.configure.each do |host|
-        next if host_name && host.name != host_name
-        Pec.init_yao(host.tenant)
-
-        server = Yao::Server.list_detail.find {|s|s.name == host.name}
+      Pec.servers(host_name) do |server,config|
         if server
-          Pec::Logger.notice "already exists: #{host.name}"
+          Pec::Logger.notice "already server: #{config.name}"
           next
         end
-        Pec::Logger.info "make start #{host.name}"
 
-        attribute = { name: host.name}
-        host.keys.each do |k|
+        Pec::Logger.info "make start #{config.name}"
+
+        attribute = { name: config.name}
+        config.keys.each do |k|
           Pec::Handler.constants.each do |c|
             if Object.const_get("Pec::Handler::#{c}").kind == k
-              attribute.deep_merge!(Object.const_get("Pec::Handler::#{c}").build(host))
+              attribute.deep_merge!(Object.const_get("Pec::Handler::#{c}").build(config))
             end
           end
         end
         attribute[:user_data] = Base64.encode64("#cloud-config\n" + attribute[:user_data].to_yaml) if attribute[:user_data]
 
         Yao::Server.create(attribute)
-        Pec::Logger.info "create success! #{host.name}"
+        Pec::Logger.info "create success! #{config.name}"
       end
       rescue => e
         print_exception(e)
@@ -42,19 +39,15 @@ module Pec
     option :force , type: :boolean, aliases: "-f"
     desc "destroy", "delete vm"
     def destroy(host_name = nil)
-      Pec.configure.each do |host|
-        next if host_name && host.name != host_name
-        Pec.init_yao(host.tenant)
-
-        server = Yao::Server.list_detail.find {|s|s.name == host.name}
+      Pec.servers(host_name) do |server,config|
         unless server
-          Pec::Logger.notice "not be created #{host.name}"
+          Pec::Logger.notice "not be created #{config.name}"
           next
         end
 
-        if options[:force] || yes?("#{host.name}: Are you sure you want to destroy the '#{host.name}' VM? [y/N]")
+        if options[:force] || yes?("#{config.name}: Are you sure you want to destroy the '#{config.name}' VM? [y/N]")
           Yao::Server.destroy(server.id)
-          Pec::Logger.info "#{host.name} is deleted!"
+          Pec::Logger.info "#{config.name} is deleted!"
         end
       end
 
@@ -65,12 +58,10 @@ module Pec
     desc "status", "vm status"
     def status(host_name = nil)
       say("Current machine stasus:", :yellow)
-      Pec.configure.each do |host|
-        next if host_name && host.name != host_name
-        Pec.init_yao(host.tenant)
-        if server = Yao::Server.list_detail.find {|s|s.name == host.name}
+      Pec.servers(host_name) do |server,config|
+        if server
           puts sprintf(" %-35s %-10s %-10s %-10s %-10s %-35s %-48s",
-            host.name,
+            config.name,
             server.status,
             Yao::Tenant.list.find {|tenant| tenant.id == server.tenant_id}.name,
             Yao::Flavor.get(server.flavor['id']).name,
@@ -84,7 +75,7 @@ module Pec
           )
         else
           puts sprintf(" %-35s %-10s",
-            host.name,
+            config.name,
             "uncreated"
           )
         end
@@ -106,9 +97,7 @@ module Pec
       puts Pec::VERSION
     end
 
-
     no_commands do
-
       def print_exception(e)
         Pec::Logger.critical(e)
         Pec::Logger.info("\t" + e.backtrace.join("\n\t"))
