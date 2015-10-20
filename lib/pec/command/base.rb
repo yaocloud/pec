@@ -1,5 +1,5 @@
 module Pec::Command
-  class Base < Thor
+  class Base
     def self.run(host_name, options)
       Pec.servers(host_name) do |server,config|
         task(host_name, options, server, config)

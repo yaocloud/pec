@@ -1,7 +1,7 @@
 module Pec::Command
   class Status < Base
     def self.task(host_name, options, server, config)
-      say("Current machine stasus:", :yellow)
+      Thor.new.say("Current machine stasus:", :yellow)
       if server
         puts sprintf(
           " %-35s %-10s %-10s %-10s %-10s %-35s %-48s",
@@ -21,11 +21,11 @@ module Pec::Command
       end
     end
 
-    def self.tenant_name(sever)
+    def self.tenant_name(server)
       Yao::Tenant.list.find {|tenant| tenant.id == server.tenant_id}.name
     end
 
-    def self.flavor_name(sever)
+    def self.flavor_name(server)
       Yao::Flavor.get(server.flavor['id']).name
     end
 
