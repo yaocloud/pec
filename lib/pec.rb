@@ -9,6 +9,7 @@ require "pec/version"
 require "pec/logger"
 require "pec/configure"
 require "pec/handler"
+require "pec/command"
 require "pec/sample"
 require "pec/init"
 require "pec/cli"
@@ -38,6 +39,15 @@ module Pec
     @_configure
   end
 
+  def self.servers(host_name)
+    self.configure.each do |host|
+      next if host_name && host.name != host_name
+      Pec.init_yao(host.tenant)
+      server = Yao::Server.list_detail.find {|s|s.name == host.name}
+      yield(server, host)
+    end
+  end
+
   def self.check_env
     %w(
       OS_AUTH_URL
@@ -47,7 +57,6 @@ module Pec
       raise "please set env #{name}" unless ENV[name]
     end
   end
-
 end
 
 class ::Hash
