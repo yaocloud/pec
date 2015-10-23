@@ -22,6 +22,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'ruby-ip', '~> 0.9.3'
   spec.add_dependency 'colorator', '~> 0.1'
   spec.add_development_dependency "bundler"
-  spec.add_development_dependency "rspec"
+  spec.add_development_dependency "rspec", ">= 3"
+  spec.add_development_dependency "rspec-mocks", ">= 3"
   spec.add_development_dependency "rake"
 end
