@@ -4,12 +4,13 @@ module Pec::Command
       Thor.new.say("Current machine stasus:", :yellow)
       if server
         puts sprintf(
-          " %-35s %-10s %-10s %-10s %-10s %-35s %-48s",
+          " %-35s %-10s %-10s %-10s %-10s %-10s %-35s %-48s",
           config.name,
           server.status,
           tenant_name(server),
           flavor_name(server),
           server.availability_zone,
+          server.key_name,
           server.ext_srv_attr_host,
           ip_addresses(server)
         )
