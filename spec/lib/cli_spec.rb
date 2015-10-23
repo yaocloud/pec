@@ -65,6 +65,13 @@ describe Pec::CLI do
         ]
       })
     )
+
+    allow(Yao::Keypair).to receive(:list).and_return([
+      OpenStruct.new({
+        id: 1,
+        name: "example001"
+      })
+    ])
   end
 
   subject { described_class.new.invoke(:up , [], nil) }

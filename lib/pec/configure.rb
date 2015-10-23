@@ -1,3 +1,5 @@
+require "pec/config_error"
+
 module Pec
   class Configure
     def initialize(config)
