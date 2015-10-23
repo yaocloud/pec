@@ -28,4 +28,35 @@ describe Pec::Handler::Keypair do
       )
     }
   end
+
+  context "invalid keypair name" do
+    let(:os_keypairs) do
+      [
+        OpenStruct.new({
+          id: 1,
+          name: "invalid-example001"
+        })
+      ]
+    end
+
+    it {
+      expect{ subject }.to raise_error(Pec::ConfigError)
+    }
+  end
+
+  context "no keypair" do
+    let(:os_keypairs) do
+      [
+        OpenStruct.new({
+          id: 1,
+          name: "example001"
+        })
+      ]
+    end
+
+    it {
+      allow(Pec.configure).to receive(:first).and_return(double(keypair: nil))
+      expect(subject).to eq({})
+    }
+  end
 end
