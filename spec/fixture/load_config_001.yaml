@@ -20,3 +20,4 @@ pyama-test001.test.com:
     hostname: pyama-test001
     users:
       - name: 1
+  keypair: "example001"

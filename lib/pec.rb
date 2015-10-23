@@ -69,4 +69,3 @@ class ::Hash
     self.merge!(deep_merge(second))
   end
 end
-
