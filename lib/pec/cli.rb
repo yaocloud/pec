@@ -3,34 +3,34 @@ module Pec
   class CLI < Thor
 
     desc 'init', 'create sample config'
-    def init
-      _sub_command(host_name, options)
+    def init(hosts=nil)
+      _sub_command(hosts, options)
     end
 
     desc 'up', 'create vm by Pec.yaml'
-    def up(host_name = nil)
-      _sub_command(host_name, options)
+    def up(hosts = nil)
+      _sub_command(hosts, options)
     end
 
     option :force , type: :boolean, aliases: "-f"
     desc "destroy", "delete vm"
-    def destroy(host_name = nil)
-      _sub_command(host_name, options)
+    def destroy(hosts = nil)
+      _sub_command(hosts, options)
     end
 
     desc "status", "vm status"
-    def status(host_name = nil)
-      _sub_command(host_name, options)
+    def status(hosts = nil)
+      _sub_command(hosts, options)
     end
 
     desc "list", "vm list"
-    def list(host_name = nil)
-      _sub_command(host_name, options)
+    def list(hosts = nil)
+      _sub_command(hosts, options)
     end
 
     desc "config", "show configure"
-    def config
-      _sub_command(host_name, options)
+    def config(hosts=nil)
+      _sub_command(hosts, options)
     end
 
     map %w[--version -v] => :__print_version
@@ -40,8 +40,8 @@ module Pec
     end
 
     no_commands do
-      def _sub_command(host_name, options)
-        Object.const_get("Pec::Command::#{caller[0][/`([^']*)'/, 1].capitalize}").run(host_name, options)
+      def _sub_command(hosts, options)
+        Object.const_get("Pec::Command::#{caller[0][/`([^']*)'/, 1].capitalize}").run(hosts, options)
       end
     end
   end
