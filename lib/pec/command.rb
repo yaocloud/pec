@@ -6,5 +6,6 @@ module Pec
     autoload :Status,  "pec/command/status"
     autoload :Config,  "pec/command/config"
     autoload :Init,    "pec/command/init"
+    autoload :List,    "pec/command/list"
   end
 end
