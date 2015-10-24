@@ -23,6 +23,11 @@ module Pec
       _sub_command(host_name, options)
     end
 
+    desc "list", "vm list"
+    def list(host_name = nil)
+      _sub_command(host_name, options)
+    end
+
     desc "config", "show configure"
     def config
       _sub_command(host_name, options)
