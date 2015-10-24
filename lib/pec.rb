@@ -39,14 +39,15 @@ module Pec
     @_configure
   end
 
-  def self.servers(host_name)
-    self.configure.each do |host|
-      next if host_name && host.name != host_name
-      Pec.init_yao(host.tenant)
-      server = Yao::Server.list_detail.find {|s|s.name == host.name}
-      yield(server, host)
+  def self.servers(hosts)
+    self.configure.each do |config|
+      next if hosts && hosts.none? {|name| config.name.match(/^#{name}/)}
+      Pec.init_yao(config.tenant)
+      server = Yao::Server.list_detail.find {|s|s.name == config.name}
+      yield(server, config)
     end
   end
+
 
   def self.check_env
     %w(

@@ -18,13 +18,13 @@ create - /Pec.yaml
 create - /user_data/web_server.yaml.sample
 ```
 
-    $ pec up <hostname>
+    $ pec up <hostname_regex> <hostname_regex>...
 
-    $ pec destroy <hostname>
+    $ pec destroy <hostname_regex> <hostname_regex>... 
 
-    $ pec status <hostname>
+    $ pec status <hostname_regex> <hostname_regex>...
 
-    $ pec config
+    $ pec config <hostname_regex> <hostname_regex>...
 
 ### Configure
 #### Pec.yaml

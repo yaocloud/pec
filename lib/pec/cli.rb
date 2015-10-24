@@ -3,33 +3,33 @@ module Pec
   class CLI < Thor
 
     desc 'init', 'create sample config'
-    def init(hosts=nil)
-      _sub_command(hosts, options)
+    def init
+      _sub_command(nil, options)
     end
 
     desc 'up', 'create vm by Pec.yaml'
-    def up(hosts = nil)
+    def up(*hosts)
       _sub_command(hosts, options)
     end
 
     option :force , type: :boolean, aliases: "-f"
     desc "destroy", "delete vm"
-    def destroy(hosts = nil)
+    def destroy(*hosts)
       _sub_command(hosts, options)
     end
 
     desc "status", "vm status"
-    def status(hosts = nil)
+    def status(*hosts)
       _sub_command(hosts, options)
     end
 
     desc "list", "vm list"
-    def list(hosts = nil)
-      _sub_command(hosts, options)
+    def list
+      _sub_command(nil, options)
     end
 
     desc "config", "show configure"
-    def config(hosts=nil)
+    def config(*hosts)
       _sub_command(hosts, options)
     end
 
