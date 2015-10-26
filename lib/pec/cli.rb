@@ -7,18 +7,18 @@ module Pec
       _sub_command(nil, options)
     end
 
-    desc 'up', 'create vm by Pec.yaml'
+    desc 'up [HOSTNAME1, HOSTNAME2, ...]', 'create vm by Pec.yaml'
     def up(*hosts)
       _sub_command(hosts, options)
     end
 
     option :force , type: :boolean, aliases: "-f"
-    desc "destroy", "delete vm"
+    desc "destroy [HOSTNAME1, HOSTNAME2, ...]", "delete vm"
     def destroy(*hosts)
       _sub_command(hosts, options)
     end
 
-    desc "status", "vm status"
+    desc "status [HOSTNAME1, HOSTNAME2, ...]", "vm status"
     def status(*hosts)
       _sub_command(hosts, options)
     end
@@ -28,7 +28,7 @@ module Pec
       _sub_command(nil, options)
     end
 
-    desc "config", "show configure"
+    desc "config [HOSTNAME1, HOSTNAME2, ...]", "show configure"
     def config(*hosts)
       _sub_command(hosts, options)
     end
