@@ -29,11 +29,17 @@ create - /user_data/web_server.yaml.sample
 ### Configure
 #### Pec.yaml
 ```
+# include config
+inludes: [path/to/a.yaml, path/to/b.yaml]
+
+# merge of yaml
 _default_: &def
   tenant: your_tenant
   image: centos-7.1_chef-12.3_puppet-3.7
   flavor: m1.small
   availability_zone: nova
+
+# vm config
 pyama-test001:
   <<: *def
   networks:
