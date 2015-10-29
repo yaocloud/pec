@@ -7,6 +7,10 @@ module Pec
       @_config = config
     end
 
+    def inspect
+      @_config
+    end
+
     def name
       @_config[0]
     end

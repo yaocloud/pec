@@ -29,11 +29,14 @@ create - /user_data/web_server.yaml.sample
 ### Configure
 #### Pec.yaml
 ```
+# merge of yaml
 _default_: &def
   tenant: your_tenant
   image: centos-7.1_chef-12.3_puppet-3.7
   flavor: m1.small
   availability_zone: nova
+
+# vm config
 pyama-test001:
   <<: *def
   networks:
@@ -60,6 +63,11 @@ pyama-test001:
 pyama-test002:
   <<: *def
 ・・・
+
+# include config
+inludes:
+  - path/to/a.yaml
+  - path/to/b.yaml
 
 ```
 ##### Detail
@@ -88,6 +96,19 @@ pyama-test002:
 
 ※ bootproto=static is required
 Items other than the above are output to the configuration file with `KEY = value` format
+
+#### Includes
+```yaml
+# example
+inludes:
+  - path/to/a.yaml
+  - path/to/b.yaml
+```
+
+Read order is this as
+1.Pec.yaml
+2.path/to/a.yaml
+3.path/to/b.yaml
 
 ## Author
 * pyama86

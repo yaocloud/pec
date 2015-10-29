@@ -1,10 +1,6 @@
-_default: &def
-  image: centos-7.1_chef-12.3_puppet-3.7
-  flavor: m1.small
-  availability_zone: nova
-pyama-test001.test.com:
+pyama-test002.test.com:
   <<: *def
-  tenant: test_tenant
+  tenant: include_test_tenant
   security_group :
     - 1
   networks:
@@ -21,5 +17,3 @@ pyama-test001.test.com:
     users:
       - name: 1
   keypair: "example001"
-includes:
-  - spec/fixture/load_config_002.yaml
