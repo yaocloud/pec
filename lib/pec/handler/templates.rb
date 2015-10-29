@@ -2,7 +2,7 @@ module Pec::Handler
   class Templates < Base
     self.kind = 'templates'
     class << self
-      def build(host) 
+      def build(host)
         { user_data: load_template(host) }
       end
 

@@ -14,7 +14,6 @@ require "pec/sample"
 require "pec/init"
 require "pec/cli"
 
-
 module Pec
   def self.init_yao(_tenant_name=nil)
     check_env
@@ -26,11 +25,20 @@ module Pec
     end
   end
 
-  def self.load_config(file_name=nil)
-    file_name ||= 'Pec.yaml'
-    @_configure = []
-    YAML.load_file(file_name).to_hash.reject {|c| c[0].to_s.match(/^_/)}.each do |host|
+  def self.load_config(config_name=nil)
+    @_configure ||= []
+    config_name ||= 'Pec.yaml'
+    all_config(config_name).to_hash.reject {|k,v| k[0].match(/\_/) || k.match(/^includes$/) }.each do |host|
       @_configure << Pec::Configure.new(host)
+    end
+  end
+
+  def self.all_config(config_name)
+    base_config = YAML.load_file(config_name)
+    if include_files = base_config.to_hash.find{|k,v| k.match(/^includes$/) && !v.nil? }
+      YAML.load(File.read(config_name) + include_files[1].map {|f|File.read(f)}.join("\n"))
+    else
+      base_config
     end
   end
 
@@ -70,3 +78,4 @@ class ::Hash
     self.merge!(deep_merge(second))
   end
 end
+
