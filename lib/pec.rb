@@ -28,12 +28,12 @@ module Pec
   def self.load_config(config_name=nil)
     @_configure ||= []
     config_name ||= 'Pec.yaml'
-    all_config(config_name).to_hash.reject {|k,v| k[0].match(/\_/) || k.match(/^includes$/) }.each do |host|
+    merge_config(config_name).to_hash.reject {|k,v| k[0].match(/\_/) || k.match(/^includes$/) }.each do |host|
       @_configure << Pec::Configure.new(host)
     end
   end
 
-  def self.all_config(config_name)
+  def self.merge_config(config_name)
     base_config = YAML.load_file(config_name)
     if include_files = base_config.to_hash.find{|k,v| k.match(/^includes$/) && !v.nil? }
       YAML.load(File.read(config_name) + include_files[1].map {|f|File.read(f)}.join("\n"))

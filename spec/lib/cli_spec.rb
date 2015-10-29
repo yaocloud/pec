@@ -22,6 +22,10 @@ describe Pec::CLI do
       OpenStruct.new({
         id: 1,
         name: "test_tenant"
+      }),
+      OpenStruct.new({
+        id: 1,
+        name: "include_test_tenant"
       })
     ])
 
