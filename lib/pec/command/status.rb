@@ -1,7 +1,7 @@
 module Pec::Command
   class Status < Base
+    @fetch = true
     def self.task(host_name, options, server, config)
-      Thor.new.say("Current machine status:", :yellow)
       if server
         puts sprintf(
           " %-35s %-10s %-10s %-10s %-10s %-10s %-35s %-48s",
@@ -36,6 +36,10 @@ module Pec::Command
           ether["addr"]
         end
       end.flatten.join(",")
+    end
+
+    def self.before_do
+      Thor.new.say("Current machine status:", :yellow)
     end
   end
 end

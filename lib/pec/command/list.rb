@@ -1,13 +1,14 @@
 module Pec::Command
   class List < Base
-    def self.run(host_name, options)
+    def self.task(host_name, options, server, config)
+      puts sprintf(
+        " %-35s",
+        config.name
+      )
+    end
+
+    def self.before_do
       Thor.new.say("vm list:", :yellow)
-      Pec.configure.each do |host|
-        puts sprintf(
-          " %-35s",
-          host.name,
-        )
-      end
     end
   end
 end
