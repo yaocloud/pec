@@ -7,10 +7,10 @@ module Pec::Coordinate
     def self.build(host, attribute)
       attribute.keys.each do |k|
         Pec::Coordinate::UserData.constants.each do |c|
-          user_data = Object.const_get("Pec::Coordinate::UserData::#{c}")
+          klass = Object.const_get("Pec::Coordinate::UserData::#{c}")
 
-          if user_data.kind.to_s == k.to_s
-            attribute.deep_merge!(user_data.build(host, attribute))
+          if klass.kind.to_s == k.to_s
+            attribute = klass.build(host, attribute)
           end
         end
       end
