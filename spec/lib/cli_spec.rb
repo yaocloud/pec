@@ -3,14 +3,13 @@ require 'ostruct'
 describe Pec::CLI do
   before do
     allow(Pec).to receive(:init_yao).and_return(true)
-    allow(Pec).to receive(:load_config).and_return(Pec.load_config("spec/fixture/load_config_001.yaml"))
+    allow(Pec).to receive(:load_config).and_return(Pec.load_config("spec/fixture/load_config_003.yaml"))
 
     # template
     allow(FileTest).to receive(:exist?).and_return(true)
     allow(YAML).to receive(:load_file).and_return(YAML.load_file("spec/fixture/user_data_template.yaml"))
 
     # resource
-    allow(Yao::Server).to receive(:create).and_return(true)
     allow(Yao::Server).to receive(:list_detail).and_return([
       OpenStruct.new({
         id: 1,
@@ -70,30 +69,44 @@ describe Pec::CLI do
       })
     )
 
+    allow(Yao::Port).to receive(:get).and_return(
+      OpenStruct.new({
+        id: 1,
+        name: "eth0",
+        mac_address: '00:00:00:00:00:00',
+        fixed_ips: [
+          {
+            'ip_address' => "10.10.10.10"
+          }
+        ]
+      })
+    )
+
+
     allow(Yao::Keypair).to receive(:list).and_return([
       OpenStruct.new({
         id: 1,
         name: "example001"
       })
     ])
+
+
+    expect(Yao::Server).to receive(:create).with(
+      {
+        :name=>"pyama-test001.test.com",
+        :imageRef=>1,
+        :flavorRef=>1,
+        :availability_zone=>"nova",
+        :networks=>[{:uuid=>nil, :port=>1}],
+        :user_data=> "I2Nsb3VkLWNvbmZpZwotLS0KdXNlcnM6Ci0gbmFtZTogMgotIG5hbWU6IDEK\naG9zdG5hbWU6IHB5YW1hLXRlc3QwMDEKZnFkbjogcHlhbWEtdGVzdDAwMS50\nZXN0LmNvbQo6d3JpdGVfZmlsZXM6Ci0gY29udGVudDogfC0KICAgIE5BTUU9\nZXRoMAogICAgREVWSUNFPWV0aDAKICAgIFRZUEU9RXRoZXJuZXQKICAgIE9O\nQk9PVD15ZXMKICAgIEhXQUREUj0wMDowMDowMDowMDowMDowMAogICAgTkVU\nTUFTSz0yNTUuMjU1LjI1NS4wCiAgICBJUEFERFI9MTAuMTAuMTAuMTAKICAg\nIEJPT1RQUk9UTz1zdGF0aWMKICAgIEdBVEVXQVk9MS4xLjEuMjU0CiAgb3du\nZXI6IHJvb3Q6cm9vdAogIHBhdGg6ICIvZXRjL3N5c2NvbmZpZy9uZXR3b3Jr\nLXNjcmlwdHMvaWZjZmctZXRoMCIKICBwZXJtaXNzaW9uczogJzA2NDQnCg==\n",
+        :key_name=>"example001"
+      }
+    )
   end
 
   subject { described_class.new.invoke(:up , [], nil) }
 
   it do
-    allow_any_instance_of(OpenStruct).to receive(:create).with(
-      {
-        :name => "pyama-test001.test.com",
-        :image_ref => 1,
-        :flavor_ref => 1,
-        :availability_zone => "nova",
-        :nics => [
-          {:port_id => 1}
-        ],
-        :user_data =>
-        "#cloud-config\n---\nwrite_files:\n- content: |-\n    NAME=eth0\n    DEVICE=eth0\n    TYPE=Ethernet\n    ONBOOT=yes\n    HWADDR=00:00:00:00:00:00\n    NETMASK=255.255.255.0\n    IPADDR=10.10.10.10\n    BOOTPROTO=static\n    GATEWAY=1.1.1.254\n  owner: root:root\n  path: \"/etc/sysconfig/network-scripts/ifcfg-eth0\"\n  permissions: '0644'\nusers:\n- name: 2\n- name: 1\nhostname: pyama-test001\nfqdn: pyama-test001.test.com\n"
-      }
-    )
     is_expected.to be_truthy
   end
 end
