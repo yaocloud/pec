@@ -15,7 +15,11 @@ module Pec::Coordinate
       end
 
       def default_path(port)
-        raise "undfined method"
+        raise "undfined method default_path"
+      end
+
+      def ifcfg_config(network, port)
+        raise "undfined method ifcfg_config"
       end
     end
   end
