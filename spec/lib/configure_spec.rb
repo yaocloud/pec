@@ -1,6 +1,7 @@
 require 'spec_helper'
 describe Pec do
   before do
+    Pec.config_reset
     Pec.load_config("spec/fixture/load_config_001.yaml")
   end
 

@@ -6,7 +6,6 @@ module Pec::Command
         Pec::Logger.info "make start #{config.name}"
 
         attribute = {name: config.name}
-
         make_attribute(config, Pec::Handler) do |key, klass|
           attribute.deep_merge!(klass.build(config))
         end
