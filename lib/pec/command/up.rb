@@ -7,24 +7,27 @@ module Pec::Command
 
         attribute = {name: config.name}
 
-        config.keys.each do |k|
-          Pec::Handler.constants.each do |c|
-            _handler = Object.const_get("Pec::Handler::#{c}")
-            attribute.deep_merge!(_handler.build(config)) if _handler.kind == k
-          end
+        make_attribute(config, Pec::Handler) do |key, klass|
+          attribute.deep_merge!(klass.build(config))
         end
 
-        attribute.keys.each do |k|
-          Pec::Coordinate.constants.each do |c|
-            _coordinate = Object.const_get("Pec::Coordinate::#{c}")
-            attribute.deep_merge!(_coordinate.build(config, attribute)) if _coordinate.kind.to_s == k.to_s
-          end
+        make_attribute(attribute, Pec::Coordinate) do |key, klass|
+          attribute.deep_merge!(klass.build(config, attribute))
         end
 
         Yao::Server.create(attribute)
         Pec::Logger.info "create success! #{config.name}"
       else
         Pec::Logger.notice "already server: #{config.name}"
+      end
+    end
+
+    def self.make_attribute(source, klass)
+      source.keys.each do |k|
+        Object.const_get(klass.to_s).constants.each do |c|
+          object = Object.const_get("#{klass.to_s}::#{c}")
+          yield k, object if  k.to_s == object.kind.to_s
+        end
       end
     end
   end
