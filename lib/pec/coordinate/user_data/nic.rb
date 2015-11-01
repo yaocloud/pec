@@ -2,27 +2,22 @@ module Pec::Coordinate
   class UserData::Nic < Base
     autoload :Base,   "pec/coordinate/user_data/nic/base"
     autoload :Rhel,   "pec/coordinate/user_data/nic/rhel"
+    autoload :Ubuntu, "pec/coordinate/user_data/nic/ubuntu"
     self.kind = 'networks'
 
     class << self
       NAME = 0
       CONFIG = 1
       def build(host, attribute)
-        nic_content = []
-        host.networks.each do |network|
-          nic = nil
-          port = ports(attribute).find {|p|p.name == network[NAME]}
-          nic = Pec::Coordinate::UserData::Nic.constants.find do |c|
-            host.os_type && Object.const_get("Pec::Coordinate::UserData::Nic::#{c}").os_type.include?(host.os_type)
-          end
-          nic ||= Pec::Coordinate::UserData::Nic::Rhel
-          nic_content << nic.gen_user_data(network, port)
+        nic = Pec::Coordinate::UserData::Nic.constants.find do |c|
+          host.os_type && Object.const_get("Pec::Coordinate::UserData::Nic::#{c}").os_type.include?(host.os_type)
         end
+        nic ||= Pec::Coordinate::UserData::Nic::Rhel
 
         attribute.deep_merge(
           {
             user_data: {
-              write_files: nic_content
+              write_files: nic.gen_user_data(host.networks, ports(attribute))
             }
           }
         )

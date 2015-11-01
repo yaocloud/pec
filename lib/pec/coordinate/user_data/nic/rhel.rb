@@ -17,15 +17,7 @@ module Pec::Coordinate
               "ipaddr"  => port.fixed_ips.first['ip_address']
             }
           ) if network[CONFIG]['bootproto'] == "static"
-
-          # delete option column
-          mask_column = Pec::Handler::Networks.constants.map {|c| Object.const_get("Pec::Handler::Networks::#{c}").kind }
-          mask_config = network[CONFIG].reject {|k,v| mask_column.include?(k)}
-
-          base.merge!(
-            mask_config
-          )
-          base.map {|k,v| "#{k.upcase}=#{v}"}.join("\n")
+          safe_merge(base, network).map {|k,v| "#{k.upcase}=#{v}"}.join("\n")
         end
 
         def default_path(port)
