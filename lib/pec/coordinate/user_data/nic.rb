@@ -9,10 +9,15 @@ module Pec::Coordinate
       NAME = 0
       CONFIG = 1
       def build(host, attribute)
-        nic = Pec::Coordinate::UserData::Nic.constants.find do |c|
+        _nic = Pec::Coordinate::UserData::Nic.constants.reject {|c|c.to_s.downcase == "base"}.find do |c|
           host.os_type && Object.const_get("Pec::Coordinate::UserData::Nic::#{c}").os_type.include?(host.os_type)
         end
-        nic ||= Pec::Coordinate::UserData::Nic::Rhel
+
+        nic = if _nic
+          Object.const_get("Pec::Coordinate::UserData::Nic::#{_nic}")
+        else
+          Pec::Coordinate::UserData::Nic::Rhel
+        end
 
         attribute.deep_merge(
           {
