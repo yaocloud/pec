@@ -12,13 +12,14 @@ module Pec::Coordinate
             port = ports.find {|p|p.name == network[NAME]}
             port_content << ifcfg_config(network, port)
           end
-
-          {
-            'content' => port_content.join("\n"),
-            'owner' => "root:root",
-            'path' => networks.first[CONFIG]['path'] || default_path(nil),
-            'permissions' => "0644"
-          }
+          [
+            {
+              'content' => port_content.join("\n"),
+              'owner' => "root:root",
+              'path' => networks.first[CONFIG]['path'] || default_path(nil),
+              'permissions' => "0644"
+            }
+          ]
         end
 
         def ifcfg_config(network, port)
@@ -33,7 +34,7 @@ module Pec::Coordinate
               "hwaddress ether"  => port.mac_address
             }
           ) if network[CONFIG]['bootproto'] == "static"
-          safe_merge(base, network).map {|k,v| "#{k} #{v}"}.join("\n")
+          safe_merge(base, network).reject {|k,v| k == "bootproto"}.map {|k,v| "#{k} #{v}"}.join("\n")
         end
 
         def default_path(port)
