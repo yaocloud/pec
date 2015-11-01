@@ -17,7 +17,7 @@ module Pec::Coordinate
         attribute.deep_merge(
           {
             user_data: {
-              write_files: nic.gen_user_data(host.networks, ports(attribute))
+              "write_files" => nic.gen_user_data(host.networks, ports(attribute))
             }
           }
         )
