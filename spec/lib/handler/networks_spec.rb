@@ -51,15 +51,7 @@ describe Pec::Handler::Networks do
               uuid: nil,
               port: 1
             }
-          ],
-          user_data: {
-            "write_files" => [
-                "content"     => "NAME=eth0\nDEVICE=eth0\nTYPE=Ethernet\nONBOOT=yes\nHWADDR=00:00:00:00:00:00\nNETMASK=255.255.255.0\nIPADDR=10.10.10.10\nBOOTPROTO=static\nGATEWAY=1.1.1.254",
-                "owner"       => "root:root",
-                "path"        => "/etc/sysconfig/network-scripts/ifcfg-eth0",
-                "permissions" => "0644"
-            ]
-          }
+          ]
         }
       )
     end

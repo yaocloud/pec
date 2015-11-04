@@ -11,21 +11,15 @@ module Pec::Handler
 
       def build(host)
         ports = []
-        user_data = []
-
         host.networks.each do |network|
           validate(network)
           Pec::Logger.notice "port create start : #{network[NAME]}"
           port = create_port(host, network)
           Pec::Logger.notice "assgin ip : #{port.fixed_ips.first["ip_address"]}"
           ports << port
-          user_data << gen_user_data(network, port)
         end
         {
-          networks: ports.map {|port| { uuid: nil, port: port.id }},
-          user_data: {
-            'write_files' => user_data
-          }
+          networks: ports.map {|port| { uuid: nil, port: port.id }}
         }
       end
 
@@ -65,41 +59,6 @@ module Pec::Handler
         end
 
         attribute
-      end
-
-      def gen_user_data(network, port)
-        path = network[CONFIG]['path'] || "/etc/sysconfig/network-scripts/ifcfg-#{port.name}"
-        {
-          'content' => ifcfg_config(network, port),
-          'owner' => "root:root",
-          'path' => path,
-          'permissions' => "0644"
-        }
-      end
-
-      def ifcfg_config(network, port)
-        base = {
-          "name"      => port.name,
-          "device"    => port.name,
-          "type"      => 'Ethernet',
-          "onboot"    => 'yes',
-          "hwaddr"    => port.mac_address
-        }
-        base.merge!(
-          {
-            "netmask" => IP.new(network[CONFIG]['ip_address']).netmask.to_s,
-            "ipaddr"  => port.fixed_ips.first['ip_address']
-          }
-        ) if network[CONFIG]['bootproto'] == "static"
-
-        # delete option column
-        mask_column = Pec::Handler::Networks.constants.map {|c| Object.const_get("Pec::Handler::Networks::#{c}").kind }
-        mask_config = network[CONFIG].select {|k,v| !mask_column.include?(k)}
-
-        base.merge!(
-          mask_config
-        )
-        base.map {|k,v| "#{k.upcase}=#{v}"}.join("\n")
       end
 
       def security_group(host)

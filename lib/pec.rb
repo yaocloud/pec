@@ -9,6 +9,7 @@ require "pec/version"
 require "pec/logger"
 require "pec/configure"
 require "pec/handler"
+require "pec/coordinate"
 require "pec/command"
 require "pec/sample"
 require "pec/init"
@@ -56,7 +57,6 @@ module Pec
     end
   end
 
-
   def self.check_env
     %w(
       OS_AUTH_URL
@@ -65,6 +65,10 @@ module Pec
     ).each do |name|
       raise "please set env #{name}" unless ENV[name]
     end
+  end
+
+  def self.config_reset
+    @_configure = nil
   end
 end
 
