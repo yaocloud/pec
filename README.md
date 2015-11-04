@@ -31,6 +31,7 @@ create - /user_data/web_server.yaml.sample
 ```
 # merge of yaml
 _default_: &def
+  os_type: centos
   tenant: your_tenant
   image: centos-7.1_chef-12.3_puppet-3.7
   flavor: m1.small
@@ -78,6 +79,7 @@ inludes:
 | tenant            |    ○    | your_tenant                     |
 | image             |    ○    | centos-7.1_chef-12.3_puppet-3.7 |
 | flavor            |    ○    | m1.small                        |
+| os_type           |    -    | centos(centos or ubuntu         |
 | networks          |    -    | []                              |
 | security_group    |    -    | [default,ssh]                   |
 | templates         |    -    | [base.yaml,webserver.yaml]      |
@@ -95,6 +97,7 @@ inludes:
 | allowed_address_pairs |         | [10.1.1.2/24]                                              |
 
 ※ bootproto=static is required
+
 Items other than the above are output to the configuration file with `KEY = value` format
 
 #### Includes
