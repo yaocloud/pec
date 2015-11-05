@@ -52,7 +52,7 @@ module Pec
     self.configure.each do |config|
       next if hosts.size > 0 && hosts.none? {|name| config.name.match(/^#{name}/)}
       Pec.init_yao(config.tenant)
-      server = Yao::Server.list_detail.find {|s|s.name == config.name} if fetch
+      server = Yao::Server.list_detail("name" => config.name).first if fetch
       yield(server, config)
     end
   end
