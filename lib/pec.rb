@@ -16,13 +16,23 @@ require "pec/init"
 require "pec/cli"
 
 module Pec
-  def self.init_yao(_tenant_name=nil)
+  def self.init_yao(_tenant_name)
+    return unless reload_yao?(_tenant_name)
     check_env
     Yao.configure do
       auth_url "#{ENV["OS_AUTH_URL"]}/tokens"
       username ENV["OS_USERNAME"]
       password ENV["OS_PASSWORD"]
-      tenant_name _tenant_name || ENV["OS_TENANT_NAME"]
+      tenant_name _tenant_name
+    end
+  end
+
+  def self.reload_yao?(_tenant_name)
+    if _tenant_name != @_last_tenant
+      @_last_tenant = _tenant_name
+      true
+    else
+      false
     end
   end
 

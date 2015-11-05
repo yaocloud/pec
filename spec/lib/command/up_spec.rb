@@ -6,12 +6,7 @@ describe Pec::Command::Up do
     allow(Pec).to receive(:init_yao).and_return(true)
 
     # resource
-    allow(Yao::Server).to receive(:list_detail).and_return([
-      OpenStruct.new({
-        id: 1,
-        name: 1
-      })
-    ])
+    allow(Yao::Server).to receive(:list_detail).and_return([])
 
     allow(Yao::Tenant).to receive(:list).and_return([
       OpenStruct.new({
