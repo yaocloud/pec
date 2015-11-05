@@ -23,7 +23,12 @@ module Pec::Command
     end
 
     def self.tenant_name(server)
-      Yao::Tenant.list.find {|tenant| tenant.id == server.tenant_id}.name
+      tenant_list.find {|tenant| tenant.id == server.tenant_id}.name
+    end
+
+    def self.tenant_list
+      @@_tenant_list ||= Yao::Tenant.list
+      @@_tenant_list
     end
 
     def self.flavor_name(server)
