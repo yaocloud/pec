@@ -66,7 +66,7 @@ pyama-test002:
 ・・・
 
 # include config
-inludes:
+includes:
   - path/to/a.yaml
   - path/to/b.yaml
 
@@ -103,7 +103,7 @@ Items other than the above are output to the configuration file with `KEY = valu
 #### Includes
 ```yaml
 # example
-inludes:
+includes:
   - path/to/a.yaml
   - path/to/b.yaml
 ```
