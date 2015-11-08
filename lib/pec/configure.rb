@@ -30,7 +30,7 @@ module Pec
         flavor
         networks
       ).each do |k|
-        raise "host key #{k} is require" unless host[1][k]
+        raise "#{host[0]}:host key #{k} is require" unless host[1][k]
       end
     end
   end

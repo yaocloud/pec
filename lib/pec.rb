@@ -28,12 +28,7 @@ module Pec
   end
 
   def self.reload_yao?(_tenant_name)
-    if _tenant_name != @_last_tenant
-      @_last_tenant = _tenant_name
-      true
-    else
-      false
-    end
+    @_last_tenant = _tenant_name if _tenant_name != @_last_tenant
   end
 
   def self.load_config(config_name=nil)
