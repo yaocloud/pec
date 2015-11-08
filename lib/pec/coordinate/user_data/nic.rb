@@ -1,7 +1,7 @@
 module Pec::Coordinate
   class UserData::Nic
     extend Pec::Core
-    autoload :Base,   "pec/coordinate/user_data/nic/Base"
+    autoload :Base,   "pec/coordinate/user_data/nic/base"
     autoload :Rhel,   "pec/coordinate/user_data/nic/rhel"
     autoload :Ubuntu, "pec/coordinate/user_data/nic/ubuntu"
     self.kind = 'networks'
