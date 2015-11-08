@@ -1,6 +1,7 @@
 module Pec::Handler
   class Networks
-    class AllowedAddressPairs< OptionBase
+    class AllowedAddressPairs
+      extend Pec::Core
       self.kind = 'allowed_address_pairs'
       class << self
         def build(network)

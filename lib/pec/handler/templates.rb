@@ -1,5 +1,6 @@
 module Pec::Handler
-  class Templates < Base
+  class Templates
+    extend Pec::Core
     self.kind = 'templates'
     class << self
       def build(host)

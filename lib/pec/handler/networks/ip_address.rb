@@ -1,12 +1,12 @@
 module Pec::Handler
   class Networks
-    class IpAddress < OptionBase
+    class IpAddress
+      extend Pec::Core
       self.kind = 'ip_address'
       class << self
         def build(network)
           ip = IP.new(network[1]['ip_address'])
           subnet = Yao::Subnet.list.find {|s|s.cidr == ip.network.to_s}
-
           if ip.to_s != subnet.cidr
             {
               fixed_ips: [

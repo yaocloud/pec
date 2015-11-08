@@ -1,5 +1,6 @@
 module Pec::Handler
-  class UserData < Base
+  class UserData
+    extend Pec::Core
     self.kind = 'user_data'
     class << self
       def build(host) 

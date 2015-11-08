@@ -1,5 +1,6 @@
 module Pec::Handler
-  class Keypair < Base
+  class Keypair
+    extend Pec::Core
     self.kind = 'keypair'
 
     def self.build(host)

@@ -1,13 +1,12 @@
 module Pec::Coordinate
-  class UserData::Nic < Base
-    autoload :Base,   "pec/coordinate/user_data/nic/base"
+  class UserData::Nic
+    extend Pec::Core
+    autoload :Base,   "pec/coordinate/user_data/nic/Base"
     autoload :Rhel,   "pec/coordinate/user_data/nic/rhel"
     autoload :Ubuntu, "pec/coordinate/user_data/nic/ubuntu"
     self.kind = 'networks'
 
     class << self
-      NAME = 0
-      CONFIG = 1
       def build(host, attribute)
         _nic = Pec::Coordinate::UserData::Nic.constants.reject {|c|c.to_s.downcase == "base"}.find do |c|
           host.os_type && Object.const_get("Pec::Coordinate::UserData::Nic::#{c}").os_type.include?(host.os_type)
