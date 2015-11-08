@@ -1,6 +1,5 @@
 module Pec
   module Handler
-    autoload :Base,             "pec/handler/base"
     autoload :AvailabilityZone, "pec/handler/availability_zone"
     autoload :Image,            "pec/handler/image"
     autoload :Flavor,           "pec/handler/flavor"

@@ -1,6 +1,6 @@
 module Pec::Coordinate
-  class UserData < Base
-    autoload :Base, "pec/coordinate/user_data/base"
+  class UserData
+    extend Pec::Core
     autoload :Nic,  "pec/coordinate/user_data/nic"
     self.kind = 'user_data'
 

@@ -5,6 +5,7 @@ require 'yaml'
 require 'thor'
 require 'ip'
 require 'colorator'
+require "pec/core"
 require "pec/version"
 require "pec/logger"
 require "pec/configure"

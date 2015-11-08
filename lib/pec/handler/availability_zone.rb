@@ -1,5 +1,6 @@
 module Pec::Handler
-  class AvailabilityZone < Base 
+  class AvailabilityZone
+    extend Pec::Core
     self.kind = 'availability_zone'
 
     def self.build(host)

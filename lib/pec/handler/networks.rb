@@ -1,7 +1,7 @@
 module Pec::Handler
-  class Networks < Base
+  class Networks
+    extend Pec::Core
     self.kind = 'networks'
-    autoload :OptionBase,          "pec/handler/networks/option_base"
     autoload :IpAddress,           "pec/handler/networks/ip_address"
     autoload :AllowedAddressPairs, "pec/handler/networks/allowed_address_pairs"
 
