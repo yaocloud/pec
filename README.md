@@ -1,5 +1,5 @@
 # Pec
-[![Build Status](https://travis-ci.org/pyama86/pec.svg?branch=master)](https://travis-ci.org/pyama86/pec)
+[![Build Status](https://travis-ci.org/yaocloud/pec.svg?branch=v0.7.7)](https://travis-ci.org/yaocloud/pec)
 [![Code Climate](https://codeclimate.com/github/pyama86/pec/badges/gpa.svg)](https://codeclimate.com/github/pyama86/pec)
 [![Test Coverage](https://codeclimate.com/github/pyama86/pec/badges/coverage.svg)](https://codeclimate.com/github/pyama86/pec/coverage)
 
