@@ -32,7 +32,12 @@ module Pec::Command
     end
 
     def self.flavor_name(server)
-      Yao::Flavor.get(server.flavor['id']).name
+      flavor_list(server).find {|f|f.id == server.flavor['id']}.name
+    end
+
+    def self.flavor_list(server)
+      @@_flavor_list ||= {}
+      @@_flavor_list[server.tenant_id] ||= Yao::Flavor.list
     end
 
     def self.ip_addresses(server)
