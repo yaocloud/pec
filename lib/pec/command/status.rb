@@ -7,8 +7,8 @@ module Pec::Command
           " %-35s %-10s %-10s %-10s %-10s %-10s %-35s %-48s",
           config.name,
           server.status,
-          tenant_name(server),
-          flavor_name(server),
+          Pec.fetch_tenant(server).name,
+          Pec.fetch_flavor(server).name,
           server.availability_zone,
           server.key_name,
           server.ext_srv_attr_host,
@@ -20,24 +20,6 @@ module Pec::Command
           "uncreated"
         )
       end
-    end
-
-    def self.tenant_name(server)
-      tenant_list.find {|tenant| tenant.id == server.tenant_id}.name
-    end
-
-    def self.tenant_list
-      @@_tenant_list ||= Yao::Tenant.list
-      @@_tenant_list
-    end
-
-    def self.flavor_name(server)
-      flavor_list(server).find {|f|f.id == server.flavor['id']}.name
-    end
-
-    def self.flavor_list(server)
-      @@_flavor_list ||= {}
-      @@_flavor_list[server.tenant_id] ||= Yao::Flavor.list
     end
 
     def self.ip_addresses(server)

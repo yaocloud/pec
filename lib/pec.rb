@@ -67,6 +67,22 @@ module Pec
     end
   end
 
+  def self.fetch_tenant(server)
+    tenant_list.find {|tenant| tenant.id == server.tenant_id}
+  end
+  def self.fetch_flavor(server)
+    flavor_list(server).find {|f|f.id == server.flavor['id']}
+  end
+
+  def self.tenant_list
+    @_tenant_list ||= Yao::Tenant.list
+  end
+
+  def self.flavor_list(server)
+    @_flavor_list ||= {}
+    @_flavor_list[server.tenant_id] ||= Yao::Flavor.list
+  end
+
   def self.check_env
     %w(
       OS_AUTH_URL
