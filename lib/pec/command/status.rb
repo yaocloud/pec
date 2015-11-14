@@ -7,7 +7,7 @@ module Pec::Command
           " %-35s %-10s %-10s %-10s %-10s %-10s %-35s %-48s",
           config.name,
           server.status,
-          Pec.fetch_tenant(server).name,
+          Pec.fetch_tenant_by_id(server).name,
           Pec.fetch_flavor(server).name,
           server.availability_zone,
           server.key_name,
