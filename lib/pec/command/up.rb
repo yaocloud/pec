@@ -2,7 +2,8 @@ module Pec::Command
   class Up < Base
     @fetch = true
     def self.task(host_name, options, server, config)
-      unless server
+      case
+      when server.nil?
         Pec::Logger.info "make start #{config.name}"
 
         attribute = {name: config.name}
@@ -16,6 +17,9 @@ module Pec::Command
 
         Yao::Server.create(attribute)
         Pec::Logger.info "create success! #{config.name}"
+      when server.status == "SHUTOFF"
+        Yao::Server.start(server.id)
+        Pec::Logger.info "start server: #{config.name}"
       else
         Pec::Logger.notice "already server: #{config.name}"
       end
