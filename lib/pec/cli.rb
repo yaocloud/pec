@@ -4,7 +4,7 @@ module Pec
 
     desc 'init', 'create sample config'
     def init
-      _sub_command(nil, options)
+      _sub_command([], options)
     end
 
     desc 'up [HOSTNAME1, HOSTNAME2, ...]', 'create vm by Pec.yaml'
@@ -25,7 +25,7 @@ module Pec
 
     desc "list", "vm list"
     def list
-      _sub_command(nil, options)
+      _sub_command([], options)
     end
 
     desc "config [HOSTNAME1, HOSTNAME2, ...]", "show configure"

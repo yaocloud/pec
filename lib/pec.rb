@@ -58,9 +58,39 @@ module Pec
     self.configure.each do |config|
       next if hosts.size > 0 && hosts.none? {|name| config.name.match(/^#{name}/)}
       Pec.init_yao(config.tenant)
-      server = Yao::Server.list_detail("name" => config.name).first if fetch
+      server = fetch_server(config) if fetch
       yield(server, config)
     end
+  end
+
+  def self.fetch_server(config)
+    server_list(config).find {|s|s.name == config.name}
+  end
+
+  def self.fetch_tenant_by_id(server)
+    tenant_list.find {|tenant| tenant.id == server.tenant_id}
+  end
+
+  def self.fetch_tenant_by_name(config)
+    tenant_list.find {|tenant| tenant.name == config.tenant}
+  end
+
+  def self.fetch_flavor(server)
+    flavor_list(server).find {|f|f.id == server.flavor['id']}
+  end
+
+  def self.server_list(config)
+    @_server_list ||= {}
+    @_server_list[config.tenant] ||= Yao::Server.list_detail({tenant_id: fetch_tenant_by_name(config).id})
+  end
+
+  def self.tenant_list
+    @_tenant_list ||= Yao::Tenant.list
+  end
+
+  def self.flavor_list(server)
+    @_flavor_list ||= {}
+    @_flavor_list[server.tenant_id] ||= Yao::Flavor.list
   end
 
   def self.check_env
