@@ -18,6 +18,11 @@ module Pec
       _sub_command(hosts, options)
     end
 
+    desc "halt [HOSTNAME1, HOSTNAME2, ...]", "halt vm"
+    def halt(*hosts)
+      _sub_command(hosts, options)
+    end
+
     desc "status [HOSTNAME1, HOSTNAME2, ...]", "vm status"
     def status(*hosts)
       _sub_command(hosts, options)

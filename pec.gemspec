@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
   spec.add_dependency 'thor', '~> 0.19.1'
-  spec.add_dependency 'yao', '~> 0.0.6'
+  spec.add_dependency 'yao', '~> 0.2.2'
   spec.add_dependency 'ruby-ip', '~> 0.9.3'
   spec.add_dependency 'colorator', '~> 0.1'
   spec.add_development_dependency "bundler"
