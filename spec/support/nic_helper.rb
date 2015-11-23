@@ -1,6 +1,6 @@
 def ports
   [
-    OpenStruct.new({
+    double(
       id: 1,
       name: "eth0",
       mac_address: '00:00:00:00:00:00',
@@ -9,8 +9,8 @@ def ports
           'ip_address' => "10.10.10.10"
         }
       ]
-    }),
-    OpenStruct.new({
+    ),
+    double(
       id: 1,
       name: "eth1",
       mac_address: '00:00:00:00:00:00',
@@ -19,7 +19,7 @@ def ports
           'ip_address' => "20.20.20.20"
         }
       ]
-    })
+    )
   ]
 end
 

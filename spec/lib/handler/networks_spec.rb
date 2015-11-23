@@ -3,38 +3,40 @@ require 'ostruct'
 describe Pec::Handler::Networks do
   before do
     Pec.load_config("spec/fixture/load_config_001.yaml")
-    allow(Yao::Port).to receive(:create).and_return(OpenStruct.new({
-      id: 1,
-      name: "eth0",
-      mac_address: '00:00:00:00:00:00',
-      fixed_ips: [
-        {
-          'ip_address' => "10.10.10.10"
-        }
-      ]
-    }))
+    allow(Yao::Port).to receive(:create).and_return(
+      double(
+        id: 1,
+        name: "eth0",
+        mac_address: '00:00:00:00:00:00',
+        fixed_ips: [
+          {
+            'ip_address' => "10.10.10.10"
+          }
+        ]
+      )
+    )
 
     allow(Yao::SecurityGroup).to receive(:list).and_return([
-      OpenStruct.new({
+      double(
         id: 1,
         tenant_id: 1,
         name: 1
-      })
+      )
     ])
 
     allow(Yao::Tenant).to receive(:list).and_return([
-      OpenStruct.new({
+      double(
         id: 1,
         name: "test_tenant"
-      })
+      )
     ])
 
     allow(Yao::Subnet).to receive(:list).and_return([
-      OpenStruct.new({
+      double(
         id: 1,
         network_id: 1,
         cidr: "1.1.1.0/24",
-      })
+      )
     ])
   end
 
@@ -65,11 +67,11 @@ describe Pec::Handler::Networks do
     context  'static' do
       before do
         allow(Yao::Subnet).to receive(:list).and_return([
-          OpenStruct.new({
+          double(
             id: 1,
             network_id: 1,
             cidr: "1.1.1.0/24",
-          })
+          )
         ])
       end
 
