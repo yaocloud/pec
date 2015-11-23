@@ -15,10 +15,10 @@ describe Pec::Handler::Keypair do
   context "Valid keypair name" do
     let(:os_keypairs) do
       [
-        OpenStruct.new({
+        double(
           id: 1,
           name: "example001"
-        })
+        )
       ]
     end
 
@@ -32,10 +32,10 @@ describe Pec::Handler::Keypair do
   context "invalid keypair name" do
     let(:os_keypairs) do
       [
-        OpenStruct.new({
+        double(
           id: 1,
           name: "invalid-example001"
-        })
+        )
       ]
     end
 
@@ -47,10 +47,10 @@ describe Pec::Handler::Keypair do
   context "no keypair" do
     let(:os_keypairs) do
       [
-        OpenStruct.new({
+        double(
           id: 1,
           name: "example001"
-        })
+        )
       ]
     end
 
