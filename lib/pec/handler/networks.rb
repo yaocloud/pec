@@ -2,6 +2,7 @@ module Pec::Handler
   class Networks
     extend Pec::Core
     self.kind = 'networks'
+    self.recover_kind = 'networks'
     autoload :IpAddress,           "pec/handler/networks/ip_address"
     autoload :AllowedAddressPairs, "pec/handler/networks/allowed_address_pairs"
 
@@ -21,6 +22,15 @@ module Pec::Handler
         {
           networks: ports.map {|port| { uuid: nil, port: port.id }}
         }
+      end
+
+      def recover(attribute)
+        Pec::Logger.notice "start port recovery"
+        attribute[:networks].each do |port|
+          Yao::Port.delete(port[:port])
+          Pec::Logger.notice "port delete id:#{port[:port]}"
+        end
+        Pec::Logger.notice "complete port recovery"
       end
 
       def validate(network)

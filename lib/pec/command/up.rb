@@ -5,18 +5,28 @@ module Pec::Command
       case
       when server.nil?
         Pec::Logger.info "make start #{config.name}"
-
         attribute = {name: config.name}
-        processor_matching(config, Pec::Handler) do |klass|
-          attribute.deep_merge!(klass.build(config))
+
+        begin
+          processor_matching(config, Pec::Handler) do |klass|
+            attribute.deep_merge!(klass.build(config))
+          end
+
+          processor_matching(attribute, Pec::Coordinate) do |klass|
+            attribute.deep_merge!(klass.build(config, attribute))
+          end
+          Yao::Server.create(attribute)
+          Pec::Logger.info "create success! #{config.name}"
+        rescue => e
+          Pec::Logger.critical(e)
+          Pec::Logger.warning "recovery start #{config.name}"
+
+          processor_matching(config, Pec::Handler) do |klass|
+            attribute.deep_merge!(klass.recover(attribute))
+          end
+          Pec::Logger.warning "recovery success! #{config.name}"
         end
 
-        processor_matching(attribute, Pec::Coordinate) do |klass|
-          attribute.deep_merge!(klass.build(config, attribute))
-        end
-
-        Yao::Server.create(attribute)
-        Pec::Logger.info "create success! #{config.name}"
       when server.status == "SHUTOFF"
         Yao::Server.start(server.id)
         Pec::Logger.info "start server: #{config.name}"
