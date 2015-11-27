@@ -9,11 +9,15 @@ module Pec::Command
 
         begin
           processor_matching(config, Pec::Handler) do |klass|
-            attribute.deep_merge!(klass.build(config))
+            if attr = klass.build(config)
+              attribute.deep_merge!(attr)
+            end
           end
 
           processor_matching(attribute, Pec::Handler) do |klass|
-            attribute.deep_merge!(klass.post_build(config, attribute))
+            if attr = klass.post_build(config, attribute)
+              attribute.deep_merge!(attr)
+            end
           end
 
           Yao::Server.create(attribute)
@@ -23,7 +27,7 @@ module Pec::Command
           Pec::Logger.warning "recovery start #{config.name}"
 
           processor_matching(config, Pec::Handler) do |klass|
-            attribute.deep_merge!(klass.recover(attribute))
+            klass.recover(attribute)
           end
           Pec::Logger.warning "recovery success! #{config.name}"
         end

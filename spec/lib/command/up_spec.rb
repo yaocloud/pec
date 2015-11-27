@@ -81,8 +81,9 @@ describe Pec::Command::Up do
     subject { described_class.run([], nil) }
 
     before do
-        allow(Pec).to receive(:load_config).and_return(Pec.load_config("spec/fixture/load_config_003.yaml"))
+      allow(Pec).to receive(:load_config).and_return(Pec.load_config("spec/fixture/load_config_003.yaml"))
       allow(Yao::Port).to receive(:destroy)
+      RSpec::Mocks.space.proxy_for(Yao::Server).reset
       allow(Yao::Server).to receive(:create).and_raise("create error")
     end
 
