@@ -5,18 +5,28 @@ module Pec::Command
       case
       when server.nil?
         Pec::Logger.info "make start #{config.name}"
-
         attribute = {name: config.name}
-        make_attribute(config, Pec::Handler) do |key, klass|
-          attribute.deep_merge!(klass.build(config))
+
+        begin
+          processor_matching(config, Pec::Handler) do |klass|
+            attribute.deep_merge!(klass.build(config))
+          end
+
+          processor_matching(attribute, Pec::Coordinate) do |klass|
+            attribute.deep_merge!(klass.build(config, attribute))
+          end
+          Yao::Server.create(attribute)
+          Pec::Logger.info "create success! #{config.name}"
+        rescue => e
+          Pec::Logger.critical(e)
+          Pec::Logger.warning "recovery start #{config.name}"
+
+          processor_matching(config, Pec::Handler) do |klass|
+            attribute.deep_merge!(klass.recover(attribute))
+          end
+          Pec::Logger.warning "recovery success! #{config.name}"
         end
 
-        make_attribute(attribute, Pec::Coordinate) do |key, klass|
-          attribute.deep_merge!(klass.build(config, attribute))
-        end
-
-        Yao::Server.create(attribute)
-        Pec::Logger.info "create success! #{config.name}"
       when server.status == "SHUTOFF"
         Yao::Server.start(server.id)
         Pec::Logger.info "start server: #{config.name}"
@@ -25,11 +35,11 @@ module Pec::Command
       end
     end
 
-    def self.make_attribute(source, klass)
+    def self.processor_matching(source, klass)
       source.keys.each do |k|
         Object.const_get(klass.to_s).constants.each do |c|
           object = Object.const_get("#{klass.to_s}::#{c}")
-          yield k, object if  k.to_s == object.kind.to_s
+          yield object if  k.to_s == object.kind.to_s
         end
       end
     end

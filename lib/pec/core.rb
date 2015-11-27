@@ -4,5 +4,7 @@ module Pec
     def build(*args)
       raise "#{self.class.name} not defined method build"
     end
+
+    def recover(*args); end
   end
 end

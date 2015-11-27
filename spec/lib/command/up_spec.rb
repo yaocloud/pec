@@ -76,6 +76,21 @@ describe Pec::Command::Up do
       end
     end
   end
+
+  context 'recovery' do
+    subject { described_class.run([], nil) }
+
+    before do
+        allow(Pec).to receive(:load_config).and_return(Pec.load_config("spec/fixture/load_config_003.yaml"))
+      allow(Yao::Port).to receive(:destroy)
+      allow(Yao::Server).to receive(:create).and_raise("create error")
+    end
+
+    it do
+      is_expected.to be_truthy
+      expect(Yao::Port).to have_received(:destroy).with(1)
+    end
+  end
 end
 
 def create_rhel

@@ -23,6 +23,15 @@ module Pec::Handler
         }
       end
 
+      def recover(attribute)
+        Pec::Logger.notice "start port recovery"
+        attribute[:networks].each do |port|
+          Yao::Port.destroy(port[:port])
+          Pec::Logger.notice "port delete id:#{port[:port]}"
+        end
+        Pec::Logger.notice "complete port recovery"
+      end
+
       def validate(network)
         %w(
           bootproto
