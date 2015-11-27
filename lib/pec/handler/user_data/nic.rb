@@ -1,21 +1,21 @@
-module Pec::Coordinate
+module Pec::Handler
   class UserData::Nic
     extend Pec::Core
-    autoload :Base,   "pec/coordinate/user_data/nic/base"
-    autoload :Rhel,   "pec/coordinate/user_data/nic/rhel"
-    autoload :Ubuntu, "pec/coordinate/user_data/nic/ubuntu"
+    autoload :Base,   "pec/handler/user_data/nic/base"
+    autoload :Rhel,   "pec/handler/user_data/nic/rhel"
+    autoload :Ubuntu, "pec/handler/user_data/nic/ubuntu"
     self.kind = 'networks'
 
     class << self
-      def build(host, attribute)
-        _nic = Pec::Coordinate::UserData::Nic.constants.reject {|c|c.to_s.downcase == "base"}.find do |c|
-          host.os_type && Object.const_get("Pec::Coordinate::UserData::Nic::#{c}").os_type.include?(host.os_type)
+      def post_build(host, attribute)
+        _nic = Pec::Handler::UserData::Nic.constants.reject {|c|c.to_s.downcase == "base"}.find do |c|
+          host.os_type && Object.const_get("Pec::Handler::UserData::Nic::#{c}").os_type.include?(host.os_type)
         end
 
         nic = if _nic
-          Object.const_get("Pec::Coordinate::UserData::Nic::#{_nic}")
+          Object.const_get("Pec::Handler::UserData::Nic::#{_nic}")
         else
-          Pec::Coordinate::UserData::Nic::Rhel
+          Pec::Handler::UserData::Nic::Rhel
         end
 
         attribute.deep_merge(

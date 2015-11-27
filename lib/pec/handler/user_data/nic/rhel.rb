@@ -1,4 +1,4 @@
-module Pec::Coordinate
+module Pec::Handler
   class UserData::Nic
     class Rhel < Base
       self.os_type = %w(centos rhel)
