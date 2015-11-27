@@ -82,13 +82,13 @@ describe Pec::Command::Up do
 
     before do
         allow(Pec).to receive(:load_config).and_return(Pec.load_config("spec/fixture/load_config_003.yaml"))
-      allow(Yao::Port).to receive(:delete)
+      allow(Yao::Port).to receive(:destroy)
       allow(Yao::Server).to receive(:create).and_raise("create error")
     end
 
     it do
       is_expected.to be_truthy
-      expect(Yao::Port).to have_received(:delete).with(1)
+      expect(Yao::Port).to have_received(:destroy).with(1)
     end
   end
 end
