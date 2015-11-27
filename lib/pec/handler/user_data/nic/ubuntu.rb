@@ -1,4 +1,4 @@
-module Pec::Coordinate
+module Pec::Handler
   class UserData::Nic
     class Ubuntu < Base
       self.os_type = %w(ubuntu)

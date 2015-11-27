@@ -12,9 +12,10 @@ module Pec::Command
             attribute.deep_merge!(klass.build(config))
           end
 
-          processor_matching(attribute, Pec::Coordinate) do |klass|
-            attribute.deep_merge!(klass.build(config, attribute))
+          processor_matching(attribute, Pec::Handler) do |klass|
+            attribute.deep_merge!(klass.post_build(config, attribute))
           end
+
           Yao::Server.create(attribute)
           Pec::Logger.info "create success! #{config.name}"
         rescue => e

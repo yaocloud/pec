@@ -1,4 +1,4 @@
-module Pec::Coordinate
+module Pec::Handler
   class UserData::Nic::Base
     class << self
       NAME = 0
