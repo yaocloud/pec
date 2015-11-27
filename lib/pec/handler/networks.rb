@@ -2,7 +2,6 @@ module Pec::Handler
   class Networks
     extend Pec::Core
     self.kind = 'networks'
-    self.recover_kind = 'networks'
     autoload :IpAddress,           "pec/handler/networks/ip_address"
     autoload :AllowedAddressPairs, "pec/handler/networks/allowed_address_pairs"
 
