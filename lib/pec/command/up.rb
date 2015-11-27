@@ -7,11 +7,11 @@ module Pec::Command
         Pec::Logger.info "make start #{config.name}"
 
         attribute = {name: config.name}
-        make_attribute(config, Pec::Handler) do |key, klass|
+        processor_matching(config, Pec::Handler) do |klass|
           attribute.deep_merge!(klass.build(config))
         end
 
-        make_attribute(attribute, Pec::Coordinate) do |key, klass|
+        processor_matching(attribute, Pec::Coordinate) do |klass|
           attribute.deep_merge!(klass.build(config, attribute))
         end
 
@@ -25,11 +25,11 @@ module Pec::Command
       end
     end
 
-    def self.make_attribute(source, klass)
+    def self.processor_matching(source, klass)
       source.keys.each do |k|
         Object.const_get(klass.to_s).constants.each do |c|
           object = Object.const_get("#{klass.to_s}::#{c}")
-          yield k, object if  k.to_s == object.kind.to_s
+          yield object if  k.to_s == object.kind.to_s
         end
       end
     end
