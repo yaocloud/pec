@@ -16,28 +16,9 @@ describe Pec::Handler::Networks do
       )
     )
 
-    allow(Yao::SecurityGroup).to receive(:list).and_return([
-      double(
-        id: 1,
-        tenant_id: 1,
-        name: 1
-      )
-    ])
-
-    allow(Yao::Tenant).to receive(:list).and_return([
-      double(
-        id: 1,
-        name: "test_tenant"
-      )
-    ])
-
-    allow(Yao::Subnet).to receive(:list).and_return([
-      double(
-        id: 1,
-        network_id: 1,
-        cidr: "1.1.1.0/24",
-      )
-    ])
+    allow(Yao::SecurityGroup).to receive(:list).and_return([double(id: 1, tenant_id: 1, name: 1)])
+    allow(Yao::Tenant).to receive(:list).and_return([double(id: 1, name: "test_tenant")])
+    allow(Yao::Subnet).to receive(:list).and_return([double(id: 1, network_id: 1, cidr: "1.1.1.0/24") ])
   end
 
   context 'build' do
@@ -46,16 +27,7 @@ describe Pec::Handler::Networks do
     }
 
     it do
-      expect(subject).to eq(
-        {
-          networks: [
-            {
-              uuid: nil,
-              port: 1
-            }
-          ]
-        }
-      )
+      expect(subject).to eq({networks: [{uuid: nil, port: 1}]})
     end
   end
 
@@ -66,13 +38,7 @@ describe Pec::Handler::Networks do
 
     context  'static' do
       before do
-        allow(Yao::Subnet).to receive(:list).and_return([
-          double(
-            id: 1,
-            network_id: 1,
-            cidr: "1.1.1.0/24",
-          )
-        ])
+        allow(Yao::Subnet).to receive(:list).and_return([double(id: 1, network_id: 1, cidr: "1.1.1.0/24")])
       end
 
       subject {
