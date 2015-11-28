@@ -52,7 +52,7 @@ describe Pec::Command::Up do
 
     context 'rhel' do
       before do
-        allow(Pec).to receive(:load_config).and_return(Pec.load_config("spec/fixture/load_config_003.yaml"))
+        allow(Pec).to receive(:load_config).and_return(Pec.load_config("spec/fixture/redhat_single_instance.yaml"))
       end
 
       it do
@@ -65,7 +65,7 @@ describe Pec::Command::Up do
 
     context 'ubuntu' do
       before do
-        allow(Pec).to receive(:load_config).and_return(Pec.load_config("spec/fixture/load_config_004.yaml"))
+        allow(Pec).to receive(:load_config).and_return(Pec.load_config("spec/fixture/ubuntu_single_instance.yaml"))
       end
 
       it do
@@ -81,7 +81,7 @@ describe Pec::Command::Up do
     subject { described_class.run([], nil) }
 
     before do
-      allow(Pec).to receive(:load_config).and_return(Pec.load_config("spec/fixture/load_config_003.yaml"))
+      allow(Pec).to receive(:load_config).and_return(Pec.load_config("spec/fixture/redhat_single_instance.yaml"))
       allow(Yao::Port).to receive(:destroy)
       RSpec::Mocks.space.proxy_for(Yao::Server).reset
       allow(Yao::Server).to receive(:create).and_raise("create error")

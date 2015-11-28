@@ -3,7 +3,7 @@ require 'ostruct'
 
 describe Pec::Handler::Keypair do
   before do
-    Pec.load_config("spec/fixture/load_config_001.yaml")
+    Pec.load_config("spec/fixture/basic_config.yaml")
 
     allow(Yao::Keypair).to receive(:list).and_return(os_keypairs)
   end

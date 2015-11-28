@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'ostruct'
 describe Pec::Handler::Networks do
   before do
-    Pec.load_config("spec/fixture/load_config_001.yaml")
+    Pec.load_config("spec/fixture/basic_config.yaml")
     allow(Yao::Port).to receive(:create).and_return(
       double(
         id: 1,
