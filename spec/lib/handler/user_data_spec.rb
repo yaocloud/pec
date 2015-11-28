@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'support/nic_helper'
 describe Pec::Handler::UserData do
   before do
-    Pec.load_config("spec/fixture/load_config_001.yaml")
+    Pec.load_config("spec/fixture/basic_config.yaml")
     allow(FileTest).to receive(:exist?).and_return(true)
     allow(YAML).to receive(:load_file).and_return(YAML.load_file("spec/fixture/user_data_template.yaml"))
   end

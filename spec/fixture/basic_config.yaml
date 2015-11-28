@@ -22,4 +22,4 @@ pyama-test001.test.com:
       - name: 1
   keypair: "example001"
 includes:
-  - spec/fixture/load_config_002.yaml
+  - spec/fixture/include_config.yaml
