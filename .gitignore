@@ -9,6 +9,7 @@
 /tmp/
 /vendor
 /*.yaml
+/*.erb
 *.sample
 /user_datas
 .ruby-version
