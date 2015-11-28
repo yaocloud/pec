@@ -24,10 +24,14 @@ module Pec::Handler
       end
 
       def recover(attribute)
+        return unless attribute[:networks]
+
         Pec::Logger.notice "start port recovery"
         attribute[:networks].each do |port|
-          Yao::Port.destroy(port[:port])
-          Pec::Logger.notice "port delete id:#{port[:port]}"
+          if port[:port]
+            Yao::Port.destroy(port[:port])
+            Pec::Logger.notice "port delete id:#{port[:port]}"
+          end
         end
         Pec::Logger.notice "complete port recovery"
       end
