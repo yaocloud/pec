@@ -31,7 +31,8 @@ create - /user_data/web_server.yaml.sample
     $ pec config <hostname_regex> <hostname_regex>...
 
 ### Configure
-#### Pec.yaml
+#### Pec.yaml or Pec.yaml.erb
+support format yaml,erb
 ```
 # merge of yaml
 _default_: &def
@@ -72,7 +73,7 @@ pyama-test002:
 # include config
 includes:
   - path/to/a.yaml
-  - path/to/b.yaml
+  - path/to/b.yaml.erb
 
 ```
 ##### Detail
