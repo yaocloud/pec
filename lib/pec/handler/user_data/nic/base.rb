@@ -35,5 +35,6 @@ module Pec::Handler
         raise "undfined method ifcfg_config"
       end
     end
+    self.os_type = []
   end
 end

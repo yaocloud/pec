@@ -8,12 +8,11 @@ module Pec::Handler
 
     class << self
       def post_build(host, attribute)
-        _nic = Pec::Handler::UserData::Nic.constants.reject {|c|c.to_s.downcase == "base"}.find do |c|
-          host.os_type && Object.const_get("Pec::Handler::UserData::Nic::#{c}").os_type.include?(host.os_type)
-        end
-
-        nic = if _nic
-          Object.const_get("Pec::Handler::UserData::Nic::#{_nic}")
+        nic = if host.os_type
+          os = Pec::Handler::UserData::Nic.constants.find do |c|
+            Object.const_get("Pec::Handler::UserData::Nic::#{c}").os_type.include?(host.os_type)
+          end
+          Object.const_get("Pec::Handler::UserData::Nic::#{os}")
         else
           Pec::Handler::UserData::Nic::Rhel
         end
