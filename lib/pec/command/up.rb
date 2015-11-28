@@ -1,6 +1,5 @@
 module Pec::Command
   class Up < Base
-    @fetch = true
     def self.task(host_name, options, server, config)
       case
       when server.nil?

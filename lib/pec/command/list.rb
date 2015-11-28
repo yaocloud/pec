@@ -10,5 +10,9 @@ module Pec::Command
     def self.before_do
       Thor.new.say("vm list:", :yellow)
     end
+
+    def self.not_fetch
+      true
+    end
   end
 end

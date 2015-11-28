@@ -1,6 +1,5 @@
 module Pec::Command
   class Status < Base
-    @fetch = true
     def self.task(host_name, options, server, config)
       if server
         puts sprintf(

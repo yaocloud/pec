@@ -3,5 +3,9 @@ module Pec::Command
     def self.task(host_name, options, server, config)
       puts YAML.dump(config.inspect[0] => config.inspect[1])
     end
+
+    def self.not_fetch
+      true
+    end
   end
 end

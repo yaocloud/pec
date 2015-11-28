@@ -47,11 +47,11 @@ module Pec
     @_configure
   end
 
-  def self.servers(hosts, options, fetch=false)
+  def self.servers(hosts, options, not_fetch)
     self.configure.each do |config|
       next if hosts.size > 0 && hosts.none? {|name| config.name.match(/^#{name}/)}
       Pec.init_yao(config.tenant)
-      server = fetch_server(config) if fetch
+      server = fetch_server(config) unless not_fetch
       yield(server, config)
     end
   end
