@@ -62,12 +62,9 @@ module Pec::Handler
           security_group(host)
         ) if host.security_group
 
-        network[CONFIG].keys.each do |k|
-          Pec::Handler::Networks.constants.each do |c|
-            if Object.const_get("Pec::Handler::Networks::#{c}").kind == k && ops = Object.const_get("Pec::Handler::Networks::#{c}").build(network)
-              attribute.deep_merge!(ops)
-            end
-          end
+        Pec.processor_matching(network[CONFIG], Pec::Handler::Networks) do |klass|
+          ops = klass.build(network)
+          attribute.deep_merge!(ops) if ops
         end
 
         attribute

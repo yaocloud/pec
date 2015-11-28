@@ -11,14 +11,8 @@ module Pec::Handler
     end
 
     def self.post_build(host, attribute)
-      attribute.keys.each do |k|
-        Pec::Handler::UserData.constants.each do |c|
-          klass = Object.const_get("Pec::Handler::UserData::#{c}")
-
-          if klass.kind.to_s == k.to_s
-            attribute = klass.post_build(host, attribute)
-          end
-        end
+      Pec.processor_matching(attribute, Pec::Handler::UserData) do |klass|
+        attribute = klass.post_build(host, attribute)
       end
       attribute[:user_data] = Base64.encode64("#cloud-config\n" + attribute[:user_data].to_yaml) if attribute[:user_data]
       attribute

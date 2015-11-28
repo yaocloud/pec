@@ -7,13 +7,13 @@ module Pec::Command
         attribute = {name: config.name}
 
         begin
-          processor_matching(config, Pec::Handler) do |klass|
+          Pec.processor_matching(config, Pec::Handler) do |klass|
             if attr = klass.build(config)
               attribute.deep_merge!(attr)
             end
           end
 
-          processor_matching(attribute, Pec::Handler) do |klass|
+          Pec.processor_matching(attribute, Pec::Handler) do |klass|
             if attr = klass.post_build(config, attribute)
               attribute.deep_merge!(attr)
             end
@@ -25,7 +25,7 @@ module Pec::Command
           Pec::Logger.critical(e)
           Pec::Logger.warning "recovery start #{config.name}"
 
-          processor_matching(config, Pec::Handler) do |klass|
+          Pec.processor_matching(config, Pec::Handler) do |klass|
             klass.recover(attribute)
           end
           Pec::Logger.warning "recovery success! #{config.name}"
@@ -39,13 +39,5 @@ module Pec::Command
       end
     end
 
-    def self.processor_matching(source, klass)
-      source.keys.each do |k|
-        Object.const_get(klass.to_s).constants.each do |c|
-          object = Object.const_get("#{klass.to_s}::#{c}")
-          yield object if  k.to_s == object.kind.to_s
-        end
-      end
-    end
   end
 end

@@ -96,6 +96,15 @@ module Pec
     end
   end
 
+  def self.processor_matching(source, klass)
+    source.keys.each do |k|
+      Object.const_get(klass.to_s).constants.each do |c|
+        object = Object.const_get("#{klass.to_s}::#{c}")
+        yield object if  k.to_s == object.kind.to_s
+      end
+    end
+  end
+
   def self.config_reset
     @_configure = nil
   end
