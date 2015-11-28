@@ -3,7 +3,7 @@ module Pec
   class ConfigFile
     attr_accessor :config_name
     def initialize(config_name)
-      self.config_name = config_name
+      self.config_name = File.exist?("#{config_name}.erb") ? "#{config_name}.erb" : config_name
     end
 
     def load
@@ -14,14 +14,18 @@ module Pec
     end
 
     def read_file(file_name)
-      case
-        when File.exist?("#{file_name}.erb")
-          erb = ERB.new(File.read("#{file_name}.erb"),nil, '%-')
-          erb.result
-        when File.exist?(file_name)
-          File.read(file_name)
-        else
-          raise "not file exiets! #{file_name}"
+      if File.exist?(file_name)
+        case
+          when file_name.match(/.erb$/)
+            erb = ERB.new(File.read(file_name), nil, '%-')
+            erb.result
+          when file_name.match(/.yaml$/) || file_name.match(/.yml$/)
+            File.read(file_name)
+          else
+            raise "not match file type must be yaml or erb"
+        end
+      else
+        raise "not file exiets! #{file_name}"
       end
     end
   end

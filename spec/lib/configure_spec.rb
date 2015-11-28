@@ -4,12 +4,12 @@ describe Pec do
     Pec.config_reset
   end
 
-  context 'yaml' do
+  shared_examples_for 'value_check' do
     before do
-      Pec.load_config("spec/fixture/basic_config.yaml")
+      Pec.load_config(file_name)
     end
 
-    it 'value_check' do
+    it do
       expect(Pec.configure.first.name).to eq("pyama-test001.test.com")
       expect(Pec.configure.first.tenant).to eq("test_tenant")
       expect(Pec.configure.first.availability_zone).to eq("nova")
@@ -17,8 +17,13 @@ describe Pec do
       expect(Pec.configure.last.tenant).to eq("include_test_tenant")
     end
   end
+  context 'yaml' do
+    let(:file_name) {"spec/fixture/basic_config.yaml"}
+    it_behaves_like 'value_check'
+  end
 
   context 'erb' do
-
+    let(:file_name) {"spec/fixture/erb_basic_config.yaml.erb"}
+    it_behaves_like 'value_check'
   end
 end
