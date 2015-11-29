@@ -47,9 +47,9 @@ module Pec
     @_configure
   end
 
-  def self.servers(hosts, options, not_fetch)
+  def self.servers(filter_hosts, not_fetch)
     self.configure.each do |config|
-      next if hosts.size > 0 && hosts.none? {|name| config.name.match(/^#{name}/)}
+      next if filter_hosts.size > 0 && filter_hosts.none? {|name| config.name.match(/^#{name}/)}
       Pec.init_yao(config.tenant)
       server = fetch_server(config) unless not_fetch
       yield(server, config)
@@ -106,7 +106,20 @@ module Pec
   end
 
   def self.config_reset
-    @_configure = nil
+    %w(
+      _configure
+      _tenant_list
+      _server_list
+      _flavor_list
+    ).each do |name|
+      instance_variable_set("@#{name}".to_sym, nil)
+    end
+  end
+
+  def self.options(opt=nil)
+    @_opt ||= {}
+    @_opt = opt if opt
+    @_opt
   end
 end
 

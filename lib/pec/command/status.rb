@@ -1,13 +1,21 @@
 module Pec::Command
   class Status < Base
-    def self.task(host_name, options, server, config)
+    def self.task(server, config)
       if server
+        tenant_name = safe_delete(config.name, config.tenant, :tenant) do
+          Pec.fetch_tenant_by_id(server).name
+        end
+
+        flavor_name = safe_delete(config.name, config.flavor, :flavor) do
+          Pec.fetch_flavor(server).name
+        end
+
         puts sprintf(
           " %-35s %-10s %-10s %-10s %-10s %-10s %-35s %-48s",
           config.name,
           server.status,
-          Pec.fetch_tenant_by_id(server).name,
-          Pec.fetch_flavor(server).name,
+          tenant_name,
+          flavor_name,
           server.availability_zone,
           server.key_name,
           server.ext_srv_attr_host,
@@ -30,7 +38,22 @@ module Pec::Command
     end
 
     def self.before_do
-      Thor.new.say("Current machine status:", :yellow)
+      @_error = nil
+      Pec::Logger.warning "Current machine status:"
+    end
+
+    def self.after_do
+      Pec::Logger.warning @_error.join("\n") if @_error
+    end
+
+    def self.safe_delete(host_name, default ,resource_name, &blk)
+      begin
+        blk.call
+      rescue
+        @_error ||= []
+        @_error << "#{host_name}:#{resource_name} is unmatch id. may be id has changed"
+        default
+      end
     end
   end
 end

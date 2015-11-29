@@ -1,6 +1,6 @@
 module Pec::Command
   class List < Base
-    def self.task(host_name, options, server, config)
+    def self.task(server, config)
       puts sprintf(
         " %-35s",
         config.name
