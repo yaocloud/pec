@@ -1,6 +1,6 @@
 module Pec::Command
   class Status < Base
-    def self.task(host_name, options, server, config)
+    def self.task(options, server, config)
       if server
         tenant_name = safe_delete(config.name, config.tenant, :tenant) do
           Pec.fetch_tenant_by_id(server).name

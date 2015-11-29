@@ -1,6 +1,6 @@
 module Pec::Command
   class Up < Base
-    def self.task(host_name, options, server, config)
+    def self.task(options, server, config)
       case
       when server.nil?
         Pec::Logger.info "make start #{config.name}"

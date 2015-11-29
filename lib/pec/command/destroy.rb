@@ -1,6 +1,6 @@
 module Pec::Command
   class Destroy < Base
-    def self.task(host_name, options, server, config)
+    def self.task(options, server, config)
       unless server
         Pec::Logger.notice "not be created #{config.name}"
       else
