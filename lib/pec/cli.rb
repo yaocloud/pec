@@ -8,24 +8,24 @@ module Pec
     end
 
     desc 'up [HOSTNAME1, HOSTNAME2, ...]', 'create vm by Pec.yaml'
-    def up(*hosts)
-      _sub_command(hosts, options)
+    def up(*filter_hosts)
+      _sub_command(filter_hosts, options)
     end
 
     option :force , type: :boolean, aliases: "-f"
     desc "destroy [HOSTNAME1, HOSTNAME2, ...]", "delete vm"
-    def destroy(*hosts)
-      _sub_command(hosts, options)
+    def destroy(*filter_hosts)
+      _sub_command(filter_hosts, options)
     end
 
     desc "halt [HOSTNAME1, HOSTNAME2, ...]", "halt vm"
-    def halt(*hosts)
-      _sub_command(hosts, options)
+    def halt(*filter_hosts)
+      _sub_command(filter_hosts, options)
     end
 
     desc "status [HOSTNAME1, HOSTNAME2, ...]", "vm status"
-    def status(*hosts)
-      _sub_command(hosts, options)
+    def status(*filter_hosts)
+      _sub_command(filter_hosts, options)
     end
 
     desc "list", "vm list"
@@ -34,8 +34,8 @@ module Pec
     end
 
     desc "config [HOSTNAME1, HOSTNAME2, ...]", "show configure"
-    def config(*hosts)
-      _sub_command(hosts, options)
+    def config(*filter_hosts)
+      _sub_command(filter_hosts, options)
     end
 
     map %w[--version -v] => :__print_version
@@ -45,8 +45,9 @@ module Pec
     end
 
     no_commands do
-      def _sub_command(hosts, options)
-        Object.const_get("Pec::Command::#{caller[0][/`([^']*)'/, 1].capitalize}").run(hosts, options)
+      def _sub_command(filter_hosts, options)
+        Pec.options options
+        Object.const_get("Pec::Command::#{caller[0][/`([^']*)'/, 1].capitalize}").run(filter_hosts)
       end
     end
   end

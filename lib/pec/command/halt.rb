@@ -1,6 +1,6 @@
 module Pec::Command
   class Halt < Base
-    def self.task(options, server, config)
+    def self.task(server, config)
       case
       when server.nil?
         Pec::Logger.notice "not be created #{config.name}"

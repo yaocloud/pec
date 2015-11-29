@@ -44,7 +44,7 @@ describe Pec::Command::Up do
   end
 
   context 'create_instance' do
-    subject { described_class.run([], nil) }
+    subject { described_class.run([]) }
 
     before do
       allow(Yao::Server).to receive(:create)
@@ -78,7 +78,7 @@ describe Pec::Command::Up do
   end
 
   context 'recovery' do
-    subject { described_class.run([], nil) }
+    subject { described_class.run([]) }
 
     before do
       allow(Pec).to receive(:load_config).and_return(Pec.load_config("spec/fixture/redhat_single_instance.yaml"))
