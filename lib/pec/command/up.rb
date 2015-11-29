@@ -7,17 +7,8 @@ module Pec::Command
         attribute = {name: config.name}
 
         begin
-          Pec.processor_matching(config, Pec::Handler) do |klass|
-            if attr = klass.build(config)
-              attribute.deep_merge!(attr)
-            end
-          end
-
-          Pec.processor_matching(attribute, Pec::Handler) do |klass|
-            if attr = klass.post_build(config, attribute)
-              attribute.deep_merge!(attr)
-            end
-          end
+          attribute = build(config, attribute)
+          attribute = post_build(config, attribute)
 
           Yao::Server.create(attribute)
           Pec::Logger.info "create success! #{config.name}"
@@ -39,5 +30,28 @@ module Pec::Command
       end
     end
 
+    class << self
+      %i(
+        build
+        post_build
+      ).each do |name|
+        define_method(name) do |config,attribute|
+          source = config
+          input = [config]
+
+          if name == :post_build
+            source = attribute
+            input = [config, attribute]
+          end
+
+          Pec.processor_matching(source, Pec::Handler) do |klass|
+            if attr = klass.send(name, *input)
+              attribute.deep_merge!(attr)
+            end
+          end
+          attribute
+        end
+      end
+    end
   end
 end
