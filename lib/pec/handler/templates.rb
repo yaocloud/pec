@@ -15,7 +15,7 @@ module Pec::Handler
           raise "#{template} not fond!" unless FileTest.exist?("user_data/#{template}")
           merge_template.deep_merge!(YAML.load_file("user_data/#{template}").to_hash)
         end if host.templates
-      end 
+      end
     end
   end
 end

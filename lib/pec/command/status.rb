@@ -38,6 +38,7 @@ module Pec::Command
     end
 
     def self.before_do
+      @_error = nil
       Pec::Logger.warning "Current machine status:"
     end
 

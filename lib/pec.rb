@@ -106,7 +106,14 @@ module Pec
   end
 
   def self.config_reset
-    @_configure = nil
+    %w(
+      _configure
+      _tenant_list
+      _server_list
+      _flavor_list
+    ).each do |name|
+      instance_variable_set("@#{name}".to_sym, nil)
+    end
   end
 
   def self.options(opt=nil)
