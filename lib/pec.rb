@@ -74,7 +74,7 @@ module Pec
 
   def self.server_list(config)
     @_server_list ||= {}
-    @_server_list[config.tenant] ||= Yao::Server.list_detail({tenant_id: fetch_tenant_by_name(config).id})
+    @_server_list[config.tenant] ||= Yao::Server.list_detail({tenant_id: config.tenant_id || fetch_tenant_by_name(config).id})
   end
 
   def self.tenant_list
