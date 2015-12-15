@@ -38,6 +38,7 @@ support format yaml,erb
 _default_: &def
   os_type: centos
   tenant: your_tenant
+  tenant_id: your_tenan_id(using a member roll)
   image: centos-7.1_chef-12.3_puppet-3.7
   flavor: m1.small
   availability_zone: nova
