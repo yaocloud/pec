@@ -64,8 +64,8 @@ module Pec
     tenant_list.find {|tenant| tenant.id == server.tenant_id}
   end
 
-  def self.fetch_tenant_by_name(config)
-    tenant_list.find {|tenant| tenant.name == config.tenant}
+  def self.get_tenant_id(config)
+    config.tenant_id || tenant_list.find {|tenant| tenant.name == config.tenant}.id
   end
 
   def self.fetch_flavor(server)
@@ -74,7 +74,7 @@ module Pec
 
   def self.server_list(config)
     @_server_list ||= {}
-    @_server_list[config.tenant] ||= Yao::Server.list_detail({tenant_id: config.tenant_id || fetch_tenant_by_name(config).id})
+    @_server_list[config.tenant] ||= Yao::Server.list_detail({tenant_id: get_tenant_id(config)})
   end
 
   def self.tenant_list
