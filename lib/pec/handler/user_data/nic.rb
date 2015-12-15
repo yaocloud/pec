@@ -7,10 +7,10 @@ module Pec::Handler
     self.kind = 'networks'
 
     class << self
-      def post_build(host, attribute)
-        nic = if host.os_type
+      def post_build(config, attribute)
+        nic = if config.os_type
           os = Pec::Handler::UserData::Nic.constants.find do |c|
-            Object.const_get("Pec::Handler::UserData::Nic::#{c}").os_type.include?(host.os_type)
+            Object.const_get("Pec::Handler::UserData::Nic::#{c}").os_type.include?(config.os_type)
           end
           Object.const_get("Pec::Handler::UserData::Nic::#{os}")
         else
@@ -20,7 +20,7 @@ module Pec::Handler
         attribute.deep_merge(
           {
             user_data: {
-              "write_files" => nic.gen_user_data(host.networks, ports(attribute))
+              "write_files" => nic.gen_user_data(config.networks, ports(attribute))
             }
           }
         )

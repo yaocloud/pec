@@ -3,10 +3,10 @@ module Pec::Handler
     extend Pec::Core
     self.kind = 'availability_zone'
 
-    def self.build(host)
-      Pec::Logger.notice "availability_zone is #{host.availability_zone}"
+    def self.build(config)
+      Pec::Logger.notice "availability_zone is #{config.availability_zone}"
       {
-        availability_zone: host.availability_zone
+        availability_zone: config.availability_zone
       }
     end
   end
