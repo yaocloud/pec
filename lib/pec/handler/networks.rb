@@ -9,12 +9,12 @@ module Pec::Handler
       NAME = 0
       CONFIG = 1
 
-      def build(host)
+      def build(config)
         ports = []
-        host.networks.each do |network|
+        config.networks.each do |network|
           validate(network)
           Pec::Logger.notice "port create start : #{network[NAME]}"
-          port = create_port(host, network)
+          port = create_port(config, network)
           Pec::Logger.notice "assgin ip : #{port.fixed_ips.first["ip_address"]}"
           ports << port
         end
@@ -45,12 +45,12 @@ module Pec::Handler
         end
       end
 
-      def create_port(host, network)
-        attribute = gen_port_attribute(host, network)
+      def create_port(config, network)
+        attribute = gen_port_attribute(config, network)
         Yao::Port.create(attribute)
       end
 
-      def gen_port_attribute(host, network)
+      def gen_port_attribute(config, network)
         ip = IP.new(network[CONFIG]['ip_address'])
         subnet = Yao::Subnet.list.find {|s|s.cidr == ip.network.to_s}
         attribute = {
@@ -59,8 +59,8 @@ module Pec::Handler
         }
 
         attribute.merge!(
-          security_group(host)
-        ) if host.security_group
+          security_group(config)
+        ) if config.security_group
 
         Pec.processor_matching(network[CONFIG], Pec::Handler::Networks) do |klass|
           ops = klass.build(network)
@@ -70,10 +70,10 @@ module Pec::Handler
         attribute
       end
 
-      def security_group(host)
-        tenant = Yao::Tenant.list.find {|t| t.name == host.tenant }
-        ids = host.security_group.map do |name|
-          sg = Yao::SecurityGroup.list.find {|sg| sg.name == name && tenant.id == sg.tenant_id }
+      def security_group(config)
+        tenant_id = config.tenant_id || Yao::Tenant.list.find {|t| t.name == config.tenant }.id
+        ids = config.security_group.map do |name|
+          sg = Yao::SecurityGroup.list.find {|sg| sg.name == name && tenant_id == sg.tenant_id }
           raise "security group #{name} is not found" unless sg
           sg.id
         end

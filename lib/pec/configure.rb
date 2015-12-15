@@ -23,14 +23,14 @@ module Pec
       @_config[1][method.to_s]
     end
 
-    def validate(host)
+    def validate(config)
       %w(
         tenant
         image
         flavor
         networks
       ).each do |k|
-        raise "#{host[0]}:host key #{k} is require" unless host[1][k]
+        raise "#{config[0]}:host key #{k} is require" unless config[1][k]
       end
     end
   end
