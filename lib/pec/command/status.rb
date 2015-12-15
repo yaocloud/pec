@@ -2,11 +2,11 @@ module Pec::Command
   class Status < Base
     def self.task(server, config)
       if server
-        tenant_name = save_was_delete(config.name, config.tenant, :tenant) do
+        tenant_name = safe_was_delete(config.name, config.tenant, :tenant) do
           fetch_tenant(server).name
         end
 
-        flavor_name = save_was_delete(config.name, config.flavor, :flavor) do
+        flavor_name = safe_was_delete(config.name, config.flavor, :flavor) do
           fetch_flavor(server).name
         end
 
@@ -54,7 +54,7 @@ module Pec::Command
       Pec::Logger.warning @_error.join("\n") if @_error
     end
 
-    def self.save_was_delete(host_name, default ,resource_name, &blk)
+    def self.safe_was_delete(host_name, default ,resource_name, &blk)
       begin
         blk.call
       rescue
