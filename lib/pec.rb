@@ -60,16 +60,8 @@ module Pec
     server_list(config).find {|s|s.name == config.name}
   end
 
-  def self.fetch_tenant_by_id(server)
-    tenant_list.find {|tenant| tenant.id == server.tenant_id}
-  end
-
   def self.get_tenant_id(config)
     config.tenant_id || tenant_list.find {|tenant| tenant.name == config.tenant}.id
-  end
-
-  def self.fetch_flavor(server)
-    flavor_list(server).find {|f|f.id == server.flavor['id']}
   end
 
   def self.server_list(config)

@@ -2,12 +2,12 @@ module Pec::Command
   class Status < Base
     def self.task(server, config)
       if server
-        tenant_name = safe_delete(config.name, config.tenant, :tenant) do
-          Pec.fetch_tenant_by_id(server).name
+        tenant_name = save_was_delete(config.name, config.tenant, :tenant) do
+          fetch_tenant(server).name
         end
 
-        flavor_name = safe_delete(config.name, config.flavor, :flavor) do
-          Pec.fetch_flavor(server).name
+        flavor_name = save_was_delete(config.name, config.flavor, :flavor) do
+          fetch_flavor(server).name
         end
 
         puts sprintf(
@@ -29,6 +29,14 @@ module Pec::Command
       end
     end
 
+    def self.fetch_tenant(server)
+      Pec.tenant_list.find {|tenant| tenant.id == server.tenant_id}
+    end
+
+    def self.fetch_flavor(server)
+      Pec.flavor_list(server).find {|f|f.id == server.flavor['id']}
+    end
+
     def self.ip_addresses(server)
       server.addresses.map do |ethers|
         ethers[1].map do |ether|
@@ -46,7 +54,7 @@ module Pec::Command
       Pec::Logger.warning @_error.join("\n") if @_error
     end
 
-    def self.safe_delete(host_name, default ,resource_name, &blk)
+    def self.save_was_delete(host_name, default ,resource_name, &blk)
       begin
         blk.call
       rescue
