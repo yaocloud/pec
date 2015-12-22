@@ -1,3 +1,4 @@
+require "pec/port_error"
 module Pec::Handler
   class Networks
     extend Pec::Core
@@ -21,6 +22,8 @@ module Pec::Handler
         {
           networks: ports.map {|port| { uuid: nil, port: port.id }}
         }
+      rescue Yao::Conflict => e
+        raise(Pec::PortError.new(ports), e)
       end
 
       def recover(attribute)
