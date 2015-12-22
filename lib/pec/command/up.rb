@@ -16,6 +16,8 @@ module Pec::Command
           Pec::Logger.critical(e)
           Pec::Logger.warning "recovery start #{config.name}"
 
+          attribute.deep_merge!(e.attribute) if e.is_a?(Pec::PortError) && e.attribute
+
           Pec.processor_matching(config, Pec::Handler) do |klass|
             klass.recover(attribute)
           end
