@@ -8,5 +8,6 @@ module Pec
     autoload :Config,  "pec/command/config"
     autoload :Init,    "pec/command/init"
     autoload :List,    "pec/command/list"
+    autoload :Hosts,   "pec/command/hosts"
   end
 end
