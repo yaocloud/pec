@@ -28,6 +28,8 @@ create - /user_data/web_server.yaml.sample
 
     $ pec list
 
+    $ pec hosts
+
     $ pec config <hostname_regex> <hostname_regex>...
 
 ### Configure

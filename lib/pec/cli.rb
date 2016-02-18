@@ -38,6 +38,11 @@ module Pec
       _sub_command(filter_hosts, options)
     end
 
+    desc "hosts", "/etc/hosts records"
+    def hosts
+      _sub_command([], options)
+    end
+
     map %w[--version -v] => :__print_version
     desc "--version, -v", "print the version"
     def __print_version
