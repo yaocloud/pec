@@ -28,11 +28,11 @@ module Pec::Command
 
     def self.before_do
       @_error = nil
-      Pec::Logger.warning "------ #{Date.today.strftime("%Y%m%d%H%M%S")} pec add start ------"
+      Pec::Logger.warning "# ------ #{Date.today.strftime("%Y%m%d%H%M%S")} pec add start ------"
     end
 
     def self.after_do
-      m = ("-" * 16)
+      m = "# " + ("-" * 16)
       n = ("-" * 17)
       Pec::Logger.warning  m + " pec end " + n
     end
