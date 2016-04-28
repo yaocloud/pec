@@ -5,8 +5,8 @@ module Pec::Handler
     self.kind = 'user_data'
 
     def self.build(config)
-      user_data = config.user_data || {}
-      user_data['fqdn'] = config.name if config.user_data && !config.user_data['fqdn']  
+      user_data = config.user_data ? config.user_data.dup : {}
+      user_data['fqdn'] = config.name if config.user_data && !config.user_data['fqdn']
       { user_data: user_data }
     end
 
