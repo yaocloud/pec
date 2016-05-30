@@ -17,7 +17,7 @@ module Pec::Handler
               "ipaddr"  => port.fixed_ips.first['ip_address']
             }
           ) if network[CONFIG]['bootproto'] == "static"
-          safe_merge(base, network).map {|k,v| "#{k.upcase}=#{v}"}.join("\n")
+          safe_merge(base, network).map {|k,v| "#{k.upcase}=#{v}\n"}.join
         end
 
         def default_path(port)
