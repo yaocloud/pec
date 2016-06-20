@@ -1,13 +1,14 @@
 require 'pec'
 module Pec
   class CLI < Thor
+    class_option :config_file , type: :string, aliases: "-c"
 
     desc 'init', 'create sample config'
     def init
       _sub_command([], options)
     end
 
-    desc 'up [HOSTNAME1, HOSTNAME2, ...]', 'create vm by Pec.yaml'
+    desc 'up [HOSTNAME1, HOSTNAME2, ...]', 'vm create'
     def up(*filter_hosts)
       _sub_command(filter_hosts, options)
     end
