@@ -1,6 +1,7 @@
 require 'pec'
 module Pec
   class CLI < Thor
+    option :config_file , type: :string, aliases: "-c"
 
     desc 'init', 'create sample config'
     def init
