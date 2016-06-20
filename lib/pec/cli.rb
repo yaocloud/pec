@@ -8,7 +8,7 @@ module Pec
       _sub_command([], options)
     end
 
-    desc 'up [HOSTNAME1, HOSTNAME2, ...]', 'create vm by Pec.yaml'
+    desc 'up [HOSTNAME1, HOSTNAME2, ...]', 'vm create'
     def up(*filter_hosts)
       _sub_command(filter_hosts, options)
     end
