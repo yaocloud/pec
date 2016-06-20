@@ -25,7 +25,7 @@ module Pec
             raise "not match file type must be yaml or erb"
         end
       else
-        raise "not file exiets! #{file_name}"
+        raise " #{file_name} not exiets!"
       end
     end
   end
