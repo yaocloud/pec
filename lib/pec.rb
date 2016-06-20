@@ -34,7 +34,7 @@ module Pec
 
   def self.load_config(config_name="Pec.yaml")
     @_configure ||= []
-    ConfigFile.new(config_name).load.to_hash.reject {|k,v| k[0].match(/\_/) || k.match(/^includes$/) }.each do |config|
+    ConfigFile.new(Pec.options[:config_file] || config_name).load.to_hash.reject {|k,v| k[0].match(/\_/) || k.match(/^includes$/) }.each do |config|
       @_configure << Pec::Configure.new(config)
     end
   rescue => e
