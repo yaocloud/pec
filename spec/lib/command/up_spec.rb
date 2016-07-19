@@ -4,6 +4,8 @@ describe Pec::Command::Up do
     Pec.config_reset
 
     allow(Pec).to receive(:init_yao).and_return(true)
+ 
+    allow(Yao).to receive(:current_tenant_id).and_return(1)
 
     allow(Yao::Tenant).to receive(:list).and_return([
       double(id: 1, name: "test_tenant"),
