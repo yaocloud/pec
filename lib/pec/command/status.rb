@@ -6,9 +6,8 @@ module Pec::Command
         flavor_name = safe_was_delete(config.name, config.flavor, :flavor) do
           fetch_flavor(server).name
         end
-
         puts sprintf(
-          " %-35s %-10s %-10s %-10s %-10s %-10s %-35s %-48s",
+          " %-35s %-10s %-10s %-10s %-10s %-10s %-35s %-40s",
           config.name,
           server.status,
           tenant_name,
