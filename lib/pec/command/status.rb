@@ -7,7 +7,7 @@ module Pec::Command
           fetch_flavor(server).name
         end
         puts sprintf(
-          " %-35s %-10s %-10s %-10s %-10s %-10s %-35s %-40s",
+          " %-35s %-10s %-10s %-10s %-10s %-10s %-35s %-48s",
           config.name,
           server.status,
           tenant_name,
