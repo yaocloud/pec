@@ -2,10 +2,7 @@ module Pec::Command
   class Status < Base
     def self.task(server, config)
       if server
-        tenant_name = safe_was_delete(config.name, config.tenant, :tenant) do
-          fetch_tenant(server).name
-        end
-
+        tenant_name = config.tenant
         flavor_name = safe_was_delete(config.name, config.flavor, :flavor) do
           fetch_flavor(server).name
         end
@@ -27,10 +24,6 @@ module Pec::Command
           "uncreated"
         )
       end
-    end
-
-    def self.fetch_tenant(server)
-      Pec.tenant_list.find {|tenant| tenant.id == server.tenant_id}
     end
 
     def self.fetch_flavor(server)

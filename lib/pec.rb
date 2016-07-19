@@ -60,17 +60,13 @@ module Pec
     server_list(config).find {|s|s.name == config.name}
   end
 
-  def self.get_tenant_id(config)
-    config.tenant_id || tenant_list.find {|tenant| tenant.name == config.tenant}.id
+  def self.get_tenant_id
+    Yao.current_tenant_id
   end
 
   def self.server_list(config)
     @_server_list ||= {}
-    @_server_list[config.tenant] ||= Yao::Server.list_detail({tenant_id: get_tenant_id(config)})
-  end
-
-  def self.tenant_list
-    @_tenant_list ||= Yao::Tenant.list
+    @_server_list[config.tenant] ||= Yao::Server.list_detail({ tenant_id: get_tenant_id })
   end
 
   def self.flavor_list(server)

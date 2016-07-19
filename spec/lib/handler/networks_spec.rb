@@ -16,6 +16,7 @@ describe Pec::Handler::Networks do
       )
     )
 
+    allow(Yao).to receive(:current_tenant_id).and_return(1)
     allow(Yao::SecurityGroup).to receive(:list).and_return([double(id: 1, tenant_id: 1, name: 1)])
     allow(Yao::Tenant).to receive(:list).and_return([double(id: 1, name: "test_tenant")])
     allow(Yao::Subnet).to receive(:list).and_return([double(id: 1, network_id: 1, cidr: "1.1.1.0/24") ])
