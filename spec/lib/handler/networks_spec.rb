@@ -28,7 +28,7 @@ describe Pec::Handler::Networks do
     }
 
     it do
-      expect(subject).to eq({networks: [{uuid: nil, port: 1}]})
+      expect(subject).to eq({networks: [{uuid: '', port: 1}]})
     end
   end
 
