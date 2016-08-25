@@ -20,7 +20,7 @@ module Pec::Handler
           ports << port
         end
         {
-          networks: ports.map {|port| { uuid: nil, port: port.id }}
+          networks: ports.map {|port| { uuid: '', port: port.id }}
         }
       rescue Yao::Conflict => e
         raise(Pec::PortError.new(ports), e)
