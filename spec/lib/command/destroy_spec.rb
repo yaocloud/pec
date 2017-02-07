@@ -10,6 +10,10 @@ describe Pec::Command::Destroy do
       double(id: 2, name: "include_test_tenant"),
     ])
 
+    allow(Yao::Port).to receive(:destroy)
+    allow(Yao::Port).to receive(:list).and_return([
+      double(id: 1)
+    ])
     allow(Yao::Server).to receive(:list_detail).and_return(servers)
   end
 
@@ -37,6 +41,7 @@ describe Pec::Command::Destroy do
           expect { subject }.not_to raise_error
           expect(Yao::Server).to have_received(:destroy).with(1)
           expect(Yao::Server).to have_received(:destroy).with(2)
+          expect(Yao::Port).to have_received(:destroy).with(1).twice
         end
       end
 
