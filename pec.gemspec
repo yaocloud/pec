@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
   spec.add_dependency 'json'
   spec.add_dependency 'thor', '~> 0.19.1'
-  spec.add_dependency 'yao', '~> 0.2.13'
+  spec.add_dependency 'yao', '~> 0.3.3'
   spec.add_dependency 'ruby-ip', '~> 0.9.3'
   spec.add_dependency 'colorator', '~> 0.1'
   spec.add_development_dependency "bundler"
