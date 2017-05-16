@@ -25,6 +25,9 @@ module Pec
       username ENV["OS_USERNAME"]
       password ENV["OS_PASSWORD"]
       tenant_name _tenant_name
+      client_cert ENV['OS_CERT']
+      client_key  ENV['OS_KEY']
+      region_name ENV['OS_REGION_NAME']
     end
   end
 
