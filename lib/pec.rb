@@ -21,7 +21,7 @@ module Pec
     return unless reload_yao?(_tenant_name)
     check_env
     Yao.configure do
-      auth_url "#{ENV["OS_AUTH_URL"]}/tokens"
+      auth_url ENV["OS_AUTH_URL"]
       username ENV["OS_USERNAME"]
       password ENV["OS_PASSWORD"]
       tenant_name _tenant_name
